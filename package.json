@@ -6,6 +6,6 @@
   "scripts": {
     "build": "node tools/build.mjs",
     "preview": "node tools/serve.mjs",
-    "test": "node --test tools/site.test.mjs"
+    "test": "node --test tools/site.test.mjs tools/beta-core.test.mjs"
   }
 }

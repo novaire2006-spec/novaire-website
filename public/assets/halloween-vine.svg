@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="104" viewBox="0 0 360 104" fill="none">
+  <defs>
+    <linearGradient id="leaf" x1="110" y1="12" x2="172" y2="78" gradientUnits="userSpaceOnUse"><stop stop-color="#8B9362"/><stop offset="1" stop-color="#414B35"/></linearGradient>
+    <linearGradient id="gourd" x1="271" y1="33" x2="298" y2="65" gradientUnits="userSpaceOnUse"><stop stop-color="#C99A65"/><stop offset="1" stop-color="#805133"/></linearGradient>
+  </defs>
+  <path d="M12 75c31-18 52-17 78-24 29-8 47-31 81-23 32 7 45 32 74 28 29-4 50-24 103-10" stroke="#68764E" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M14 78c32-19 56-21 77-25m45-15c22-11 32-8 44-4m43 20c20 9 39 3 58-3" stroke="#B3A77A" stroke-opacity=".36" stroke-width="1" stroke-linecap="round"/>
+  <path d="M71 56c-16-1-26-9-23-20 2-8 12-10 15-3 3 6-4 10-8 5M170 29c-10-11-7-23 3-24 8-1 11 8 5 11-4 2-7-1-6-4M224 53c-2 18 9 33 21 25 8-6 2-17-6-13-5 3-2 7 1 6M319 42c5-13 18-20 22-11 4 7-6 12-9 6" stroke="#79875B" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M90 49c-3-18-16-29-27-31 0 16 11 31 27 31ZM111 43c12-2 24-11 27-23-16-3-29 11-27 23ZM154 29c-8-12-22-13-33-7 12 9 20 10 33 7ZM198 41c6-15 19-19 31-14-4 13-15 20-31 14ZM262 53c-8-13-21-17-34-12 8 12 20 15 34 12ZM307 41c-6-12-18-13-29-6 10 8 19 8 29 6Z" fill="url(#leaf)"/>
+  <path d="m88 48-19-23m46 15 17-14m66 14 25-10m32 21-22-8" stroke="#B8B18A" stroke-opacity=".33" stroke-width="1" stroke-linecap="round"/>
+  <path d="M279 38c-2-7 0-12 4-15l3 3c-3 2-4 5-3 11" fill="#7C7852"/>
+  <path d="M282 36c5-7 12-7 16-4-5 3-10 4-16 4Z" fill="#768457"/>
+  <ellipse cx="275" cy="52" rx="13" ry="17" fill="url(#gourd)"/>
+  <ellipse cx="290" cy="52" rx="13" ry="17" fill="url(#gourd)"/>
+  <ellipse cx="282" cy="52" rx="10" ry="18" fill="#AE7849"/>
+  <path d="M280 35c-6 9-5 24 2 35m3-35c6 9 6 24 0 34M265 45c-3 5-3 11-1 15" stroke="#E2B980" stroke-opacity=".43" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="m34 72-5 10m25-20-3 7m272-24 7 6" stroke="#879466" stroke-opacity=".6" stroke-width="1" stroke-linecap="round"/>
+</svg>

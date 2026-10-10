@@ -1,4 +1,34 @@
 /* No analytics, storage, network calls or external dependencies. */
+// A small, deterministic star field is decorative only. Legal and support pages
+// do not opt in; creating it never starts a JavaScript animation or resize loop.
+if (document.body.classList.contains('seasonal-site')) {
+  const stars = document.createElement('div');
+  stars.className = 'seasonal-starfield';
+  stars.setAttribute('aria-hidden', 'true');
+  stars.setAttribute('inert', '');
+  stars.setAttribute('data-seasonal-stars', '');
+  const fragment = document.createDocumentFragment();
+  const colors = ['white', 'white', 'blue', 'white', 'yellow', 'white'];
+  for (let i = 0; i < 72; i += 1) {
+    const star = document.createElement('span');
+    star.className = `seasonal-star seasonal-star-${colors[i % colors.length]}`;
+    // Incommensurate sequences spread points without a repeating grid or
+    // randomness changing their positions between page visits.
+    star.style.setProperty('--star-x', `${((i * 61.803398875 + 8.7) % 100).toFixed(3)}%`);
+    star.style.setProperty('--star-y', `${((i * 37.217391304 + 5.1) % 100).toFixed(3)}%`);
+    star.style.setProperty('--star-size', `${(i % 9 === 0 ? 1.65 : 0.85 + (i % 4) * 0.2).toFixed(2)}px`);
+    star.style.setProperty('--star-opacity', (0.23 + (i % 5) * 0.055).toFixed(3));
+    if (i % 6 === 0) {
+      star.classList.add('seasonal-star-twinkle');
+      star.style.setProperty('--star-duration', `${12 + (i % 5) * 3}s`);
+      star.style.setProperty('--star-delay', `${-(i % 11)}s`);
+    }
+    fragment.append(star);
+  }
+  stars.append(fragment);
+  document.body.prepend(stars);
+}
+
 const menu = document.querySelector('.menu');
 document.addEventListener('click', (event) => {
   if (menu?.open && (!menu.contains(event.target) || event.target.closest('nav a'))) menu.open = false;

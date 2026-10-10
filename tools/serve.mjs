@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 const root = path.resolve(fileURLToPath(new URL('../public/', import.meta.url)));
 const config = JSON.parse(await readFile(new URL('../vercel.json', import.meta.url)));
-const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.svg':'image/svg+xml','.txt':'text/plain; charset=utf-8'};
+const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2','.svg':'image/svg+xml','.txt':'text/plain; charset=utf-8'};
 const port = Number(process.env.PORT || 4173);
 http.createServer(async (req, res) => {
   for (const header of config.headers[0].headers) res.setHeader(header.key, header.value);
