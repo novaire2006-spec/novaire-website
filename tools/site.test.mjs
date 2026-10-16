@@ -6,6 +6,63 @@ import path from 'node:path';
 const root = fileURLToPath(new URL('../public/', import.meta.url));
 const pages = (await readdir(root)).filter((file) => file.endsWith('.html'));
 const backendOrigin = 'https://naafzrrhjsfaqqrnhrcn.supabase.co';
+
+
+test('public pages are indexable and have a single production canonical URL', async () => {
+  for (const filename of pages) {
+    const source = await readFile(path.join(root, filename), 'utf8');
+    const head = source.match(/<head>([\s\S]*?)<\/head>/i)?.[1];
+    assert.ok(head, filename);
+    const robots = [...head.matchAll(/<meta name="robots" content="([^"]+)">/g)];
+    assert.equal(robots.length, 1, filename);
+    if (filename === '404.html') {
+      assert.equal(robots[0][1], 'noindex');
+      assert.doesNotMatch(head, /rel="canonical"/);
+      continue;
+    }
+    assert.equal(robots[0][1], 'index, follow', filename);
+    assert.doesNotMatch(head, /noindex|nofollow|noarchive/i);
+    const canonical = [...head.matchAll(/<link rel="canonical" href="([^"]+)">/g)];
+    assert.equal(canonical.length, 1, filename);
+    const pathname = filename === 'index.html' ? '/' : '/' + filename.replace(/\.html$/, '');
+    assert.equal(canonical[0][1], 'https://www.novaireai.de' + pathname, filename);
+    if (filename === 'index.html' || filename === 'beta.html') {
+      assert.equal(head.match(/<meta property="og:url" content="([^"]+)">/)?.[1], canonical[0][1]);
+    }
+  }
+});
+
+test('robots and sitemap expose only canonical public pages, never 404 or internal files', async () => {
+  const robots = await readFile(path.join(root, 'robots.txt'), 'utf8');
+  assert.equal(robots, 'User-agent: *\nAllow: /\n\nSitemap: https://www.novaireai.de/sitemap.xml\n');
+  const sitemap = await readFile(path.join(root, 'sitemap.xml'), 'utf8');
+  assert.match(sitemap, /^<\?xml version="1.0" encoding="UTF-8"\?>/);
+  assert.match(sitemap, /<urlset xmlns="http:\/\/www.sitemaps.org\/schemas\/sitemap\/0.9">/);
+  const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  const expected = pages.filter((filename) => filename !== '404.html')
+    .map((filename) => 'https://www.novaireai.de' + (filename === 'index.html' ? '/' : '/' + filename.replace(/\.html$/, '')));
+  assert.deepEqual(locations.sort(), expected.sort());
+  assert.equal(locations.length, new Set(locations).size);
+  assert.doesNotMatch(sitemap, /404|vercel\.app|\.zip|LAUNCH-CHECKLIST|BETA-OPERATIONS|lastmod/);
+});
+
+test('Vercel config no longer adds a site-wide indexing ban and keeps safety headers', async () => {
+  const config = JSON.parse(await readFile(new URL('../vercel.json', import.meta.url), 'utf8'));
+  assert.equal(config.cleanUrls, true);
+  assert.equal(config.trailingSlash, false);
+  for (const rule of config.headers) {
+    for (const header of rule.headers) {
+      if (header.key.toLowerCase() === 'x-robots-tag') {
+        assert.doesNotMatch(header.value, /\b(?:noindex|nofollow|none)\b/i);
+      }
+    }
+  }
+  const headers = config.headers.find((rule) => rule.source === '/(.*)').headers;
+  assert.ok(headers.some((header) => header.key === 'X-Content-Type-Options' && header.value === 'nosniff'));
+  assert.ok(headers.some((header) => header.key === 'X-Frame-Options' && header.value === 'DENY'));
+  assert.ok(headers.some((header) => header.key === 'Content-Security-Policy'));
+});
+
 test('seven standalone German HTML pages exist', () => {
   assert.deepEqual(pages.sort(), ['404.html','agb.html','beta.html','datenschutz.html','impressum.html','index.html','support.html']);
 });
@@ -164,7 +221,9 @@ test('subtle star backdrop belongs only to the two seasonal marketing pages', as
 test('Halloween caption uses a local licensed display face without moving the application deadline', async () => {
   for (const filename of ['index.html','beta.html']) {
     const source = await readFile(path.join(root,filename),'utf8');
-    const caption = source.match(/<[^>]+\bdata-halloween-caption\b[^>]*>([\s\S]*?)<\//)?.[1];
+    const captionMarkup = source.match(/<p[^>]+\bdata-halloween-caption\b[^>]*>([\s\S]*?)<\/p>/)?.[1];
+    assert.match(captionMarkup || '', /<span class="halloween-celebrate">feiern<\/span>/);
+    const caption = captionMarkup?.replace(/<[^>]+>/g, '');
     assert.ok(caption, `${filename}: Halloween caption is present`);
     assert.match(caption,/Endet vor Halloween/);
     assert.match(caption,/damit ihr feiern könnt/);
@@ -175,6 +234,8 @@ test('Halloween caption uses a local licensed display face without moving the ap
   const css = await readFile(path.join(root,'styles.css'),'utf8');
   assert.match(css,/@font-face\s*\{[^}]*font-family:\s*["'](?:Creepster|Novaire Halloween)["'][^}]*creepster-latin\.woff2[^}]*\}/);
   assert.match(css,/@font-face\s*\{[^}]*font-display:\s*swap/);
+  assert.match(css, /\.halloween-deadline\{[^}]*color:#f4a04e/);
+  assert.match(css, /\.halloween-celebrate\{color:#b5f54a\}/);
   const fonts = path.join(root,'assets','fonts');
   const names = await readdir(fonts);
   assert.ok(names.some((name) => /creepster[^/]*\.(?:woff2?|ttf)$/i.test(name)), 'display face is bundled locally');

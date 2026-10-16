@@ -155,10 +155,11 @@
 
 /* Only the seasonal sign-off uses this locally hosted display face. */
 @font-face{font-family:"Novaire Halloween";src:url("assets/fonts/creepster-latin.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
-.halloween-deadline{font-family:"Novaire Halloween",Impact,fantasy;font-weight:400;font-size:clamp(23px,2.5vw,30px);line-height:1.35;letter-spacing:.045em;color:#dbc09a;margin:21px 0 0;text-wrap:balance}
+.halloween-deadline{font-family:"Novaire Halloween",Impact,fantasy;font-weight:400;font-size:clamp(23px,2.5vw,30px);line-height:1.35;letter-spacing:.045em;color:#f4a04e;margin:21px 0 0;text-wrap:balance}
+.halloween-celebrate{color:#b5f54a}
 .beta-invitation .halloween-deadline{margin-top:30px}
 @media(max-width:600px){.halloween-deadline{font-size:24px;max-width:290px;margin-left:auto;margin-right:auto}.beta-invitation .halloween-deadline{margin-left:0}}
-@media(prefers-contrast:more){.halloween-deadline{color:#f7e4c9}}
+@media(prefers-contrast:more){.halloween-deadline{color:#f7e4c9}.halloween-celebrate{color:#d6ff9d}}
 
 /* Keep the richer cutouts inside the frame instead of clipping their faces. */
 @media(max-width:700px){.beta-seasonal-left{left:7px;transform:rotate(-6deg)}.beta-seasonal-right{right:6px;transform:rotate(4deg)}}
