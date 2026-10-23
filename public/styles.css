@@ -9,6 +9,23 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.brand-light{display:none}.reveal.pending{opacity:1;transform:none}}
 .provider img[src$="openai.svg"]{filter:invert(1)}
 .legal-main{overflow-wrap:anywhere;hyphens:auto}
+.legal-main .privacy-summary{margin:30px 0;padding:24px;border:1px solid var(--line);border-radius:18px;background:#101114}
+.legal-main .privacy-kicker{margin:0 0 14px;font-size:10px;font-weight:600;letter-spacing:.13em;color:#d4d6de}
+.legal-main .privacy-summary ul{list-style:none;margin:0 0 18px;padding:0}
+.legal-main .privacy-summary li{margin:0 0 14px;font-size:14px;line-height:1.75}
+.legal-main .privacy-summary strong{color:#f1f2f6;font-weight:600}
+.legal-main .privacy-summary>a{font-size:13px;display:inline-block;padding:8px 0}
+.legal-main .privacy-navigation{display:flex;flex-wrap:wrap;gap:4px 22px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.legal-main .privacy-navigation a{display:inline-flex;align-items:center;min-height:44px;font-size:13px}
+.legal-main .privacy-providers{list-style:none;margin:24px 0;padding:0}
+.legal-main .privacy-providers>li{padding:24px 0;margin:0;border-top:1px solid var(--line)}
+.legal-main .privacy-providers h3{margin:0 0 12px;color:#f1f2f6;font-size:20px;font-weight:600;letter-spacing:-.025em}
+.legal-main .privacy-providers h3 span{display:block;margin-top:5px;color:#9699a6;font-size:12px;font-weight:400;letter-spacing:0}
+.legal-main .privacy-providers p{margin:0 0 10px}
+.legal-main .privacy-providers a{display:inline-block;padding:6px 0;font-size:13px}
+.legal-main h2[id]{scroll-margin-top:24px}
+@media(max-width:400px){.legal-main .privacy-summary{padding:20px}.legal-main .privacy-navigation{column-gap:16px}}
+@media(forced-colors:active){.legal-main .privacy-summary,.legal-main .privacy-navigation,.legal-main .privacy-providers>li{border-color:CanvasText}.legal-main .privacy-providers h3,.legal-main .privacy-providers h3 span,.legal-main .privacy-summary strong{color:CanvasText}}
 
 /* Autumn accents stay quiet, local and outside the interactive content. */
 .seasonal-pumpkin{position:absolute;pointer-events:none;user-select:none;opacity:.58;filter:saturate(.6);width:clamp(44px,6vw,76px);height:auto}
@@ -31,6 +48,16 @@
 .beta-hero h1{font-size:clamp(58px,8vw,112px);font-weight:400;line-height:1;letter-spacing:-.064em;margin:0}
 .beta-hero h1>span{color:#8b8d98}
 .beta-lead{margin:30px auto 0;font-size:clamp(15px,1.8vw,19px);line-height:1.75;letter-spacing:-.015em;color:#b6b7c1}
+.beta-expansion{position:relative;z-index:1;display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;gap:20px;max-width:650px;margin:32px auto 0;padding:22px 24px;text-align:left;border:1px solid #e9b78328;border-radius:22px;background:linear-gradient(120deg,#e9a3670c,#ffffff03);box-shadow:inset 0 1px 0 #fff5df05}
+.beta-expansion-heart{color:#e9b783;flex-shrink:0}
+.beta-expansion p{margin:7px 0 0;font-size:13px;line-height:1.75;color:#b4b1af}
+.beta-expansion .beta-expansion-title{margin:0;color:#f3ede7;font-size:16px;line-height:1.4;letter-spacing:-.025em}
+.beta-expansion strong{color:#f1d0ae;font-weight:500;white-space:nowrap}
+.beta-expansion-extra{display:flex;flex-direction:column;gap:5px;align-items:center;padding-left:20px;border-left:1px solid #e9b78326;font-size:10px;letter-spacing:.02em;color:#bfb0a0}
+.beta-expansion-extra>span{color:#f1d0ae;font-size:30px;line-height:1.1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.beta-expansion+.beta-countdown-wrap{margin-top:38px}
+@media(max-width:600px){.beta-expansion{grid-template-columns:minmax(0,1fr) auto;gap:16px;margin-top:26px;padding:18px;border-radius:18px}.beta-expansion-heart{display:none}.beta-expansion .beta-expansion-title{font-size:15px}.beta-expansion p{font-size:12px}.beta-expansion-extra{padding-left:16px}.beta-expansion-extra>span{font-size:27px}.beta-expansion+.beta-countdown-wrap{margin-top:32px}}
+@media(prefers-contrast:more){.beta-expansion{background:#101116;border-color:#b4b5be}.beta-expansion p,.beta-expansion-extra{color:#d3c9bf}.beta-expansion-extra{border-color:#b4b5be}}
 .beta-countdown-wrap{max-width:800px;margin:64px auto 35px}
 .beta-countdown-label{font-size:12px;color:#b7b8c3;margin:0 0 22px}
 .beta-countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,3vw,35px)}
