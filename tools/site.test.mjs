@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, access } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { BETA_PRIVACY_VERSION } from '../public/beta-core.js';
 const root = fileURLToPath(new URL('../public/', import.meta.url));
 const pages = (await readdir(root)).filter((file) => file.endsWith('.html'));
 const backendOrigin = 'https://naafzrrhjsfaqqrnhrcn.supabase.co';
@@ -101,6 +102,67 @@ test('public copy has no editorial drafts, unconfirmed operator or invented prom
   assert.match(privacy, /16/);
   assert.match(privacy, /Einwilligung|Zustimmung/);
 });
+test('privacy lists the four website, beta and mail providers with their actual roles', async () => {
+  const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
+  const providerList = privacy.match(/<ul class="privacy-providers">([\s\S]*?)<\/ul>/)?.[1];
+  assert.ok(providerList, 'dedicated provider list is present');
+  const providers = [...providerList.matchAll(/<li>([\s\S]*?)<\/li>/g)].map((match) => match[1]);
+  assert.equal(providers.length, 4, 'only providers used for these website and mail workflows are listed');
+  const expected = [
+    ['Vercel', 'Website-Hosting', 'https://vercel.com/legal/privacy-notice'],
+    ['Supabase', 'Bewerbungen und App-Konten', 'https://supabase.com/privacy'],
+    ['IONOS', 'Postfächer und persönliche Antworten', 'https://www.ionos.de/terms-gtc/terms-privacy'],
+    ['Resend', 'Automatische Kontomails', 'https://resend.com/legal/privacy-policy'],
+  ];
+  for (const [index, [name, role, privacyUrl]] of expected.entries()) {
+    assert.ok(providers[index].includes(`<h3>${name} <span>${role}</span></h3>`), `${name}: distinct role`);
+    assert.ok(providers[index].includes(`href="${privacyUrl}"`), `${name}: direct provider privacy link`);
+  }
+  assert.doesNotMatch(providerList, /PostHog|Stripe|Google|Vertex AI|Gemini|Versandregion Irland/);
+  for (const id of ['beta', 'email', 'dienstleister', 'rechte']) {
+    assert.ok(privacy.includes(`id="${id}"`), `stable section anchor: ${id}`);
+  }
+});
+test('privacy explains private Frankfurt beta storage and keeps form submission separate from account mail', async () => {
+  const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
+  const beta = privacy.match(/<h2 id="beta">([\s\S]*?)<h2>4\./)?.[1];
+  assert.ok(beta, 'beta data flow has its own section');
+  assert.match(beta, /verschlüsselt direkt an eine Supabase-Backend-Funktion/);
+  assert.match(beta, /privaten Datenbank[\s\S]*?Frankfurt \(eu-central-1\)/);
+  assert.match(beta, /Andere Website-Besucher und App-Nutzer können die Bewerbungen nicht abrufen/);
+  assert.match(beta, /nicht im öffentlichen Website-Code oder GitHub-Repository gespeichert/);
+  assert.match(beta, /weder eine automatische E-Mail noch eine TestFlight-Einladung versendet und kein App-Konto angelegt/);
+  assert.match(privacy, /Die vollständige Beta-Bewerbung wird beim Absenden des Formulars nicht an Resend übertragen/);
+  assert.match(privacy, /Supabase Auth ausgelöst und über Resend versendet/);
+  assert.match(privacy, /Resend ist für diesen Versand zuständig, nicht für unsere IONOS-Postfächer/);
+});
+test('privacy does not invent active DPAs, EU-only processing or enabled website analytics', async () => {
+  const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
+  assert.doesNotMatch(privacy, /(?:Auftragsverarbeitungsverträge|DPAs?)[^<.]{0,160}(?:sind aktiv|aktiviert|alle abgeschlossen)/i);
+  assert.match(privacy, /Frankfurt bedeutet nicht, dass sämtliche Daten ausschließlich in Deutschland oder der EU verarbeitet werden/);
+  assert.match(privacy, /Verarbeitung außerhalb des Europäischen Wirtschaftsraums/);
+  assert.match(privacy, /Wir binden hier weder PostHog noch Vercel Web Analytics oder Werbepixel ein/);
+  assert.doesNotMatch(privacy, /(?:PostHog|Vercel Analytics)[^<.]{0,100}(?:starten erst|nachdem du[^<.]*zugestimmt)/i);
+  assert.doesNotMatch(privacy, /<script[^>]+src="https?:|googletagmanager|google-analytics|posthog\.com/i);
+});
+test('privacy retains beta consent, retention and guardian information without silently changing the consent version', async () => {
+  const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
+  assert.match(privacy, /Art\. 6 Abs\. 1 lit\. a DSGVO/);
+  assert.match(privacy, /Unter 16 muss ein sorgeberechtigtes Elternteil die Bewerbung ausfüllen/);
+  assert.match(privacy, /seine eigene Kontakt-E-Mail verwenden/);
+  assert.match(privacy, /90 Tage nach Ende der Bewerbungsfrist/);
+  assert.match(privacy, /29\. Januar 2027, 00:00 Uhr deutscher Zeit/);
+  assert.match(privacy, /nach sieben Tagen zur Löschung fällig/);
+  assert.match(privacy, /Widerruf|widerrufen/);
+  assert.equal(BETA_PRIVACY_VERSION, '2026-10-beta-v1', 'clarification does not relabel prior consent or break the backend contract');
+});
+test('only the updated privacy page receives the new legal publication date', async () => {
+  for (const filename of ['datenschutz.html', 'impressum.html', 'agb.html', 'support.html']) {
+    const source = await readFile(path.join(root, filename), 'utf8');
+    const date = source.match(/<p class="updated">Novaire · Stand ([^<]+)<\/p>/)?.[1];
+    assert.equal(date, filename === 'datenschutz.html' ? '23. Oktober 2026' : '10. Oktober 2026', filename);
+  }
+});
 test('one exact beta endpoint is the only external runtime call; no keys or trackers', async () => {
   const names = (await readdir(root)).filter((file) => /\.(?:js|css)$/.test(file));
   const scripts = await Promise.all(names.map((file) => readFile(path.join(root, file), 'utf8')));
@@ -123,7 +185,8 @@ test('one exact beta endpoint is the only external runtime call; no keys or trac
 });
 test('beta application has transparent limits, guardian flow and non-JavaScript fallback', async () => {
   const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
-  assert.match(beta, /50/);
+  assert.match(beta, /JETZT 100 PLÄTZE/);
+  assert.match(beta, /Wir wählen 100 passende Tester/);
   assert.match(beta, /30\.\s*Oktober/);
   assert.match(beta, /2026/);
   assert.match(beta, /Überraschung/);
@@ -141,6 +204,20 @@ test('beta application has transparent limits, guardian flow and non-JavaScript 
   assert.match(beta, /maxlength="2000"/);
   assert.match(beta, /href="datenschutz\.html#[^"]+"/);
   assert.doesNotMatch(beta, /automatisch angenommen|garantiert(?:e|er)? (?:Platz|Zugang)|unbegrenzte|lebenslang/i);
+});
+test('expanded beta capacity is consistent across public copy and generated pages', async () => {
+  const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
+  assert.match(beta, /Ihr zeigt Liebe\. Wir machen Platz\./);
+  assert.match(beta, /von 50 auf <strong>100 Beta-Plätze<\/strong>/);
+  for (const filename of ['index.html', 'beta.html', 'agb.html', 'support.html']) {
+    const source = await readFile(path.join(root, filename), 'utf8');
+    assert.match(source, /100 (?:Beta-Plätze|Plätze|Personen|passende Tester)/, filename);
+    assert.doesNotMatch(source, /(?:rund|etwa|ca\.?|mit|wählen)\s+50\s+(?:Plätze|Personen|Tester)/i, filename);
+  }
+  for (const name of ['description', 'og:description']) {
+    const meta = beta.match(new RegExp(`<meta (?:name|property)="${name}" content="([^"]+)"`))?.[1];
+    assert.match(meta || '', /100/);
+  }
 });
 test('seasonal graphics are local and inert, the body font is native and motion optional', async () => {
   const svgNames = (await readdir(path.join(root, 'assets'))).filter((file) => file.endsWith('.svg'));
