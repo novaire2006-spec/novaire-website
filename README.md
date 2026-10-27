@@ -1,8 +1,28 @@
-# Novaire Website – Update vom 16. Oktober 2026
+# Novaire Website – Update vom 27. Oktober 2026
 
 Fertiger Website-Code für das bestehende Repository
-`novaire2006-spec/novaire-website`. Dieses Paket wurde lokal getestet,
-nicht zu GitHub gepusht und nicht auf Vercel veröffentlicht.
+`novaire2006-spec/novaire-website`. Vercel baut den Stand von `main` mit
+`node tools/build.mjs`; ausgeliefert wird ausschließlich `public`.
+
+## Neu: App-Einblicke, Live-Zähler und Englisch
+
+- Vier echte Flutter-Ansichten mit Beispielinhalten: Nova Live, Karteikarten,
+  Podcasts und Coding. Die Screenshots selbst zeigen die deutschsprachige App.
+- Der öffentliche Zähler liest ausschließlich `{count, updatedAt}` über
+  `GET https://naafzrrhjsfaqqrnhrcn.supabase.co/functions/v1/beta-application/count`.
+  Höchstens ein Abruf pro Minute bei sichtbarer Seite, fünf Sekunden Timeout.
+  Fehler zeigen keine erfundene Null; ein alter Wert wird als veraltet markiert.
+- Der Supabase-Endpunkt nutzt einen serverseitigen HEAD-Abruf mit exakter
+  Gesamtzahl, 60-Sekunden-Cache und drei Sekunden Timeout. Keine öffentlichen
+  Tabellenrechte oder Bewerbungstexte. Backend im separaten App-Repository,
+  Versionsheader `2026-10-27-beta-v3-public-count`.
+- Alle sieben Seiten unterstützen `?lang=en`. Der DE/EN-Button übersetzt
+  Texte, Metadaten, Formularhinweise und Fehler lokal mit kurzem Blur-Übergang.
+  Keine Übersetzungs-API, kein Browser-Speicher. Formulareingaben bleiben erhalten.
+  Bei reduzierten Bewegungen erfolgt der Wechsel ohne Animation.
+- Rechtstexte werden aus `tools/legal-content.mjs` generiert. Neue öffentliche
+  Texte auch in `public/translations-en.js` ergänzen; deutsche Seiten bleiben
+  die kanonischen URLs. Bestehendes Halloween-Design und Bewerbungsfrist bleiben.
 
 ## Hochladen
 
@@ -32,7 +52,8 @@ ist nicht automatisch bereits indexiert.
 - 404 bleibt `noindex`; interne Dateien stehen nicht in der Sitemap.
 - Nur „feiern“ ist Halloween-Grün, der übrige Halloween-Schriftzug orange.
   Wortlaut und Bewerbungsfrist bleiben unverändert.
-- Keine Änderungen an Formular-Versand, Supabase, Designstruktur oder App.
+- Der bestehende Bewerbungs-POST, Einwilligungsversion und Frist bleiben unverändert.
+  Der zusätzliche Supabase-Abruf ist nur der öffentliche Gesamtzähler.
 
 Vercels Standard-Preview-URLs behalten ihren plattformseitigen noindex-Schutz.
 Bei eigenen Preview-Domains den Schutz gesondert prüfen. noindex ist keine
@@ -46,8 +67,9 @@ npm test
 npm run preview
 ```
 
-24 Tests bestanden, darunter Indexierung, Canonicals, Sitemap, lokale Links,
-Sicherheitsheader, Formularvalidierung, Frist und Halloween-Farben.
+48 Website-Tests bestanden, darunter Indexierung, Canonicals, Sitemap, lokale Links,
+Sicherheitsheader, Formularvalidierung, Frist, Halloween-Farben, Sprache und Counter.
+Zusätzlich 33 Backend-Tests bestanden (Node-Kompatibilitätsrunner im App-Projekt).
 Zusätzlich lokal per HTTP geprüft: sechs öffentliche Seiten 200 ohne
 noindex-Header, robots.txt und Sitemap 200, unbekannte URL 404 mit noindex.
 Keine echte Bewerbung wurde im Rahmen dieses Updates abgeschickt.
