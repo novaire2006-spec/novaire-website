@@ -160,10 +160,10 @@ test('only the updated privacy page receives the new legal publication date', as
   for (const filename of ['datenschutz.html', 'impressum.html', 'agb.html', 'support.html']) {
     const source = await readFile(path.join(root, filename), 'utf8');
     const date = source.match(/<p class="updated">Novaire · Stand ([^<]+)<\/p>/)?.[1];
-    assert.equal(date, filename === 'datenschutz.html' ? '23. Oktober 2026' : '10. Oktober 2026', filename);
+    assert.equal(date, filename === 'datenschutz.html' ? '27. Oktober 2026' : '10. Oktober 2026', filename);
   }
 });
-test('one exact beta endpoint is the only external runtime call; no keys or trackers', async () => {
+test('only the two exact beta endpoints are reachable; no keys or trackers', async () => {
   const names = (await readdir(root)).filter((file) => /\.(?:js|css)$/.test(file));
   const scripts = await Promise.all(names.map((file) => readFile(path.join(root, file), 'utf8')));
   assert.doesNotMatch(scripts.join('\n'), /XMLHttpRequest|sendBeacon|localStorage|sessionStorage|document\.cookie|\beval\s*\(|new Function\s*\(|\b(?:sk-proj-|sk_live_|service_role|SUPABASE_SERVICE_ROLE_KEY)/);
@@ -171,13 +171,13 @@ test('one exact beta endpoint is the only external runtime call; no keys or trac
   const app = await readFile(path.join(root,'app.js'),'utf8');
   assert.doesNotMatch(app, /\bfetch\s*\(/);
   const urls = [...scripts.join('\n').matchAll(/https?:\/\/[^\s'"`<>]+/g)].map((match) => match[0]);
-  assert.deepEqual([...new Set(urls)], [`${backendOrigin}/functions/v1/beta-application`]);
+  assert.deepEqual([...new Set(urls)].sort(), [`${backendOrigin}/functions/v1/beta-application`, `${backendOrigin}/functions/v1/beta-application/count`].sort());
   const config = JSON.parse(await readFile(new URL('../vercel.json',import.meta.url),'utf8'));
   assert.equal(config.outputDirectory, 'public');
   const csp = config.headers[0].headers.find((header) => header.key === 'Content-Security-Policy')?.value;
   assert.ok(csp);
   const connect = csp.split(';').map((directive) => directive.trim()).find((directive) => directive.startsWith('connect-src'));
-  assert.equal(connect, `connect-src ${backendOrigin}/functions/v1/beta-application`);
+  assert.equal(connect, `connect-src ${backendOrigin}/functions/v1/beta-application ${backendOrigin}/functions/v1/beta-application/count`);
   assert.doesNotMatch(csp, /unsafe-inline|unsafe-eval|\*/);
   assert.ok(csp.includes("object-src 'none'"));
   assert.ok(csp.includes("form-action 'none'"));
