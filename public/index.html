@@ -15,7 +15,10 @@
   <title>Novaire — Dein Universum mit Wissen</title>
   <link rel="icon" href="assets/novaire-logo.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="locale.css">
   <script src="app.js" defer></script>
+  <script type="module" src="i18n.js"></script>
+  <script type="module" src="application-count.js"></script>
 </head>
 <body class="seasonal-site">
   <a class="skip-link" href="#inhalt">Zum Inhalt</a>
@@ -35,7 +38,10 @@
       </nav>
     </details>
     <a class="header-wordmark" href="#inhalt" aria-label="Novaire Startseite">NOVAIRE</a>
-    <a class="header-link header-beta-link" href="beta.html">Beta testen <span aria-hidden="true">↗</span></a>
+    <div class="header-actions">
+      <button type="button" class="language-toggle" data-language-toggle aria-label="Sprache ändern" hidden><span data-language-label>EN</span></button>
+      <a class="header-link header-beta-link" href="beta.html">Beta testen <span aria-hidden="true">↗</span></a>
+    </div>
   </header>
 
   <main id="inhalt">
@@ -53,6 +59,13 @@
         <p class="eyebrow">DEIN UNIVERSUM MIT WISSEN</p>
         <p class="hero-tagline">Nicht einfach Antworten.<br><span>Deine Aha-Momente.</span></p>
         <a class="text-link" href="#entdecken">Entdecke Novaire <span aria-hidden="true">↓</span></a>
+        <div class="application-counter" data-application-counter data-state="loading" aria-labelledby="application-count-label">
+          <div class="application-count-topline"><span class="application-count-dot" aria-hidden="true"></span><span data-count-badge data-no-translate>BETA</span></div>
+          <div class="application-count-total" aria-live="polite" aria-atomic="true"><strong data-count-value data-no-translate>—</strong><span id="application-count-label">Bewerbungen für die Beta</span></div>
+          <p class="application-count-status" data-count-status data-no-translate>Die aktuelle Anzahl wird geladen …</p>
+          <p class="application-count-note">Gesamtzahl der Bewerbungen — keine Anzeige freier Plätze.</p>
+          <noscript><p class="application-count-note">Aktiviere JavaScript, um die aktuelle Anzahl zu sehen.</p></noscript>
+        </div>
       </div>
       <span class="hero-note">FÜR DEINEN EIGENEN WEG.</span>
       <span class="hero-index" aria-hidden="true">01 — 06</span>
@@ -82,16 +95,25 @@
     <section class="section product-section seasonal-section" aria-labelledby="product-title">
       <div class="seasonal-scene section-seasonal-corner" aria-hidden="true"><img class="seasonal-cluster" src="assets/halloween-pumpkins-real.webp" alt="" width="240" height="140" loading="lazy" data-seasonal-decoration></div>
       <div class="section-heading reveal"><p class="eyebrow">EINBLICKE IN DEIN LERNUNIVERSUM</p><h2 id="product-title">Frag nach.<br><span class="muted">Denk weiter.</span></h2></div>
-      <div class="product-grid">
+      <div class="product-grid app-gallery">
         <article class="product reveal">
-          <a class="product-visual orb-visual" href="assets/orb.png" data-preview data-title="Nova Live — der Orb aus der App" aria-label="Nova Orb größer ansehen"><img src="assets/orb.png" alt="Weißer Nova-Partikel-Orb auf schwarzem Hintergrund" width="1080" height="1920" loading="lazy"><span class="visual-tag">NOVA LIVE</span><span class="expand" aria-hidden="true">↗</span></a>
-          <div class="product-caption"><span class="number">01</span><div><h3>Ein Gespräch. Ein Aha.</h3><p>Gedanken laut aussprechen und mit Nova über dein Thema sprechen. Nova Live bringt die Stimme in dein Lernuniversum.</p></div></div>
+          <a class="product-visual app-shot app-shot-live" href="assets/app-nova-live.png" data-preview data-title="Nova Live — Sonnenenergie anschaulich erklärt" aria-label="Nova-Live-Lernbild größer ansehen"><img src="assets/app-nova-live.png" alt="Nova Live erklärt den Weg vom Sonnenlicht über Solarmodul und Wechselrichter bis nach Hause, mit einem Diagramm und Alltagsbeispiel" width="780" height="1688" loading="lazy" decoding="async"><span class="visual-tag">NOVA LIVE</span><span class="expand" aria-hidden="true">↗</span></a>
+          <div class="product-caption"><span class="number">01</span><div><h3>Nicht nur hören. Auch sehen.</h3><p>Sprich mit Nova über dein Thema. Lernbilder, klare Schritte und Beispiele aus dem Alltag machen Zusammenhänge anschaulich.</p></div></div>
         </article>
         <article class="product reveal">
-          <a class="product-visual phone-visual" href="assets/chat-welcome.png" data-preview data-title="Dein Einstieg in den Nova-Chat · Beispielprofil Tessa" aria-label="Chat-Willkommensansicht größer ansehen"><img src="assets/chat-welcome.png" alt="Leerer Nova-Chat mit persönlicher Begrüßung für das Beispielprofil Tessa, Themenvorschlägen und Eingabefeld" width="780" height="1688" loading="lazy"><span class="expand" aria-hidden="true">↗</span></a>
-          <div class="product-caption"><span class="number">02</span><div><h3>Platz für jede Frage.</h3><p>Kein leeres Blatt, vor dem du sitzen bleibst. Dein Chat begrüßt dich persönlich und gibt dir Ideen für den ersten Schritt.</p></div></div>
+          <a class="product-visual app-shot app-shot-cards" href="assets/app-flashcards.png" data-preview data-title="Karteikarten — dein Wissen aktiv abrufen" aria-label="Karteikarten-Ansicht größer ansehen"><img src="assets/app-flashcards.png" alt="Zellbiologie-Karteikarte mit der Frage nach der Aufgabe der Mitochondrien und den Optionen zum Wiederholen oder Bestätigen" width="780" height="1688" loading="lazy" decoding="async"><span class="visual-tag">KARTEIKARTEN</span><span class="expand" aria-hidden="true">↗</span></a>
+          <div class="product-caption"><span class="number">02</span><div><h3>Aus Wiederholen wird Wissen.</h3><p>Eine Frage nach der anderen. Teste dich selbst und behalte im Blick, was schon sitzt und was du noch einmal üben möchtest.</p></div></div>
+        </article>
+        <article class="product reveal">
+          <a class="product-visual app-shot app-shot-podcast" href="assets/app-podcast.png" data-preview data-title="Lernpodcasts — Zellatmung in fünf Minuten" aria-label="Lernpodcast-Player größer ansehen"><img src="assets/app-podcast.png" alt="Novaire-Podcast-Player mit dem Biologie-Podcast Zellatmung in fünf Minuten, Wiedergabesteuerung, Kapiteln und Mitlesefunktion" width="402" height="874" loading="lazy" decoding="async"><span class="visual-tag">LERNPODCASTS</span><span class="expand" aria-hidden="true">↗</span></a>
+          <div class="product-caption"><span class="number">03</span><div><h3>Dein Thema. Zum Zuhören.</h3><p>Lerninhalte als Gespräch, das du mitnehmen kannst. Mit Kapiteln, einstellbarem Tempo und Text zum Mitlesen.</p></div></div>
+        </article>
+        <article class="product reveal">
+          <a class="product-visual app-shot app-shot-coding" href="assets/app-coding.png" data-preview data-title="Coding — dein Einstieg mit Python, JavaScript oder Java" aria-label="Coding-Bereich größer ansehen"><img src="assets/app-coding.png" alt="Coding-Einstieg in Novaire mit Python, JavaScript und Java, kurzen Beschreibungen und farbigen Codebeispielen" width="780" height="1688" loading="lazy" decoding="async"><span class="visual-tag">CODING</span><span class="expand" aria-hidden="true">↗</span></a>
+          <div class="product-caption"><span class="number">04</span><div><h3>Verstehen, was dein Code macht.</h3><p>Wähle deine Sprache und starte mit verständlichen Beispielen und kleinen Aufgaben. Ohne Vorkenntnisse, Schritt für Schritt.</p></div></div>
         </article>
       </div>
+      <p class="fine-print app-gallery-note">Einblicke aus der App mit Beispielinhalten. Die Beta entwickelt sich weiter. Die App-Ansichten sind auf Deutsch.</p>
     </section>
 
     <section class="section onboarding-section" aria-labelledby="onboarding-title">
