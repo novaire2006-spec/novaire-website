@@ -1,0 +1,15 @@
+html:not(.i18n-ready) [data-language-toggle] { display: none; }
+.header-actions { display: flex; align-items: center; gap: 18px; }
+.language-toggle { border: 1px solid #ffffff28; border-radius: 100px; color: #eeeef0; background: #151518; min-width: 44px; min-height: 44px; padding: 9px 12px; font: 600 12px/1 system-ui, sans-serif; cursor: pointer; transition: background 180ms, border-color 180ms; }
+.language-toggle:hover { background: #252529; border-color: #ffffff60; }
+.language-toggle:focus-visible { outline: 2px solid #fafafa; outline-offset: 4px; }
+:is(main, footer, header, dialog) :is(h1,h2,h3,h4,p,li,label,th,td,legend,summary,button,a,.countdown-unit,.eyebrow,.updated) { transition: filter 160ms ease, opacity 160ms ease; }
+.language-changing :is(main, footer, header, dialog) :is(h1,h2,h3,h4,p,li,label,th,td,legend,.countdown-unit,.updated),
+.language-changing :is(header, footer) a:not([data-preview]) { filter: blur(3px); opacity: .32; }
+.legal-header .language-toggle { margin-left: auto; }
+@media (max-width: 600px) { .header-actions { gap: 10px; } .header-actions .header-link { font-size: 11px; } }
+@media (max-width: 390px) { .header-actions { gap: 8px; } .site-header:has(.header-actions) .header-wordmark { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  :is(main, footer, header, dialog) :is(h1,h2,h3,h4,p,li,label,th,td,legend,summary,button,a,.countdown-unit,.eyebrow,.updated) { transition: none !important; }
+  .language-changing :is(main, footer, header, dialog) * { filter: none !important; opacity: 1 !important; }
+}

@@ -15,7 +15,9 @@
   <title>Sei einer der Ersten. — Novaire Beta</title>
   <link rel="icon" href="assets/novaire-logo.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="locale.css">
   <script src="app.js" defer></script>
+  <script src="i18n.js" type="module"></script>
   <script src="beta.js" type="module"></script>
 </head>
 <body class="seasonal-site beta-page">
@@ -33,7 +35,7 @@
       </nav>
     </details>
     <a class="header-wordmark" href="index.html" aria-label="Novaire Startseite">NOVAIRE</a>
-    <a class="header-link header-beta-link" href="#bewerbung">Jetzt bewerben <span aria-hidden="true">↓</span></a>
+    <div class="header-actions"><button type="button" class="language-toggle" data-language-toggle aria-label="Sprache ändern"><span data-language-label>EN</span></button><a class="header-link header-beta-link" href="#bewerbung">Jetzt bewerben <span aria-hidden="true">↓</span></a></div>
   </header>
 
   <main id="inhalt">

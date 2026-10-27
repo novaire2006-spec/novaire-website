@@ -198,3 +198,33 @@
 .seasonal-site .closing h2{line-height:1.32}
 .beta-application-copy .seasonal-title-vine,.seasonal-site .closing .seasonal-title-vine{width:2.6em;max-width:75%;min-width:0;left:18%;top:-.4em;transform:rotate(-3deg)}
 @media(max-width:600px){.seasonal-site .closing .section-seasonal-corner{top:-8px}}
+
+/* Real app captures and an aggregate beta count; existing seasonal art stays. */
+.header-actions{display:flex;align-items:center;gap:22px}
+.language-toggle{display:inline-flex;justify-content:center;align-items:center;min-width:44px;min-height:44px;padding:0 12px;border:1px solid #ffffff24;border-radius:999px;background:#ffffff05;color:#eeeef2;font-size:11px;font-weight:500;letter-spacing:.06em;transition:background .2s,border-color .2s}
+.language-toggle:hover{background:#ffffff0d;border-color:#ffffff45}
+.application-counter{position:relative;isolation:isolate;max-width:400px;margin:32px auto 0;padding:20px 25px 18px;border:1px solid #ffffff18;border-radius:22px;background:linear-gradient(135deg,#171619d9,#0a0b0dd9);box-shadow:inset 0 1px 0 #ffffff04;text-align:left}
+.application-count-topline{display:flex;align-items:center;gap:7px;font-size:9px;font-weight:500;letter-spacing:.17em;color:#b1b0b8}
+.application-count-dot{width:5px;height:5px;flex-shrink:0;border-radius:50%;background:#87838a;transition:background .4s,box-shadow .4s}
+.application-counter[data-state="ready"] .application-count-dot{background:#b9da9a;box-shadow:0 0 10px #b9da9a40}
+.application-count-total{display:flex;align-items:baseline;gap:14px;margin-top:7px}
+.application-count-total>strong{font-size:clamp(29px,3.4vw,40px);font-weight:500;letter-spacing:-.055em;font-variant-numeric:tabular-nums;color:#f1f0f4;line-height:1.2;min-width:1ch}
+.application-count-total>span{font-size:12px;line-height:1.5;color:#d1cfd7}
+.application-count-status{margin:9px 0 0;font-size:10px;line-height:1.6;color:#aaa6b1}
+.application-count-note{margin:6px 0 0;font-size:9px;line-height:1.65;color:#8f8a97}
+.application-counter[data-state="unavailable"] .application-count-status,.application-counter[data-state="stale"] .application-count-status{color:#d5b99b}
+.app-gallery{row-gap:65px}
+.app-gallery .app-shot{height:600px;align-items:flex-end;padding:64px 28px 25px;background:linear-gradient(150deg,#13161c,#090a0d 70%);border:1px solid #ffffff12}
+.app-gallery .app-shot>img{width:auto;height:100%;max-width:100%;object-fit:contain;border:1px solid #ffffff1b;border-radius:23px;box-shadow:0 15px 45px #0008;transition:transform .65s var(--ease)}
+.app-gallery .app-shot-cards{background:linear-gradient(150deg,#151518,#090a0d 70%)}
+.app-gallery .app-shot-podcast{background:linear-gradient(150deg,#18221e,#090d0b 70%)}
+.app-gallery .app-shot-coding{background:linear-gradient(150deg,#13161b,#090a0d 70%)}
+.app-gallery .visual-tag{top:27px;left:28px;letter-spacing:.19em;font-size:9px;color:#c8c5cf}
+.app-gallery-note{margin-top:36px;max-width:650px}
+@media(min-width:1100px){.app-gallery .app-shot{height:620px}}
+@media(max-width:900px){.header-actions{gap:15px}.app-gallery .app-shot{height:530px;padding:58px 20px 24px}.app-gallery .visual-tag{left:22px;top:24px}}
+@media(max-width:600px){.header-actions{gap:10px}.language-toggle{padding:0 10px;min-width:36px;font-size:10px}.header-actions .header-link{gap:5px;font-size:10px}.application-counter{margin-top:25px;max-width:340px;width:100%;padding:17px 19px;border-radius:18px}.application-count-total{gap:12px}.application-count-total>span{font-size:11px}.application-count-status{font-size:9px}.application-count-note{font-size:9px}.app-gallery{gap:48px}.app-gallery .app-shot{height:560px;padding:57px 22px 22px}.app-gallery .app-shot>img{border-radius:19px}.app-gallery .product-caption{margin-top:22px}.app-gallery .product-caption h3{font-size:22px}.app-gallery .visual-tag{top:24px;left:23px}.app-gallery .expand{width:36px;height:36px;right:14px;bottom:14px}.app-gallery-note{margin-top:25px}}
+@media(max-width:380px){.site-header:has(.header-actions) .header-wordmark{display:none}.app-gallery .app-shot{height:500px}.application-count-total{gap:10px}.application-count-total>strong{font-size:32px}.application-count-total>span{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.application-count-dot,.language-toggle,.app-gallery .app-shot>img{transition:none}.app-gallery .app-shot:hover>img{transform:none}}
+@media(prefers-contrast:more){.application-counter{background:#111;border-color:#b4b5be}.application-count-status,.application-count-note{color:#c6c8d1}.app-gallery .app-shot{border-color:#8a8b94}.language-toggle{border-color:#c6c8d1}}
+@media(forced-colors:active){.application-counter,.app-gallery .app-shot,.language-toggle{background:Canvas;color:CanvasText;border-color:CanvasText}.application-count-dot{background:CanvasText!important;box-shadow:none!important}}
