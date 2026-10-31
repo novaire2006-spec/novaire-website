@@ -86,3 +86,15 @@ if (dialog && typeof dialog.showModal === 'function') {
   });
   dialog.addEventListener('close', () => opener?.focus({ preventScroll: true }));
 }
+
+// Native controls remain usable without JavaScript. Never start a recording
+// automatically, and keep only the recording the visitor selected playing.
+const demos = [...document.querySelectorAll('.app-demo')];
+for (const video of demos) {
+  video.addEventListener('play', () => {
+    for (const other of demos) if (other !== video) other.pause();
+  });
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) for (const video of demos) video.pause();
+});

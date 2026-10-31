@@ -228,3 +228,20 @@
 @media(prefers-reduced-motion:reduce){.application-count-dot,.language-toggle,.app-gallery .app-shot>img{transition:none}.app-gallery .app-shot:hover>img{transform:none}}
 @media(prefers-contrast:more){.application-counter{background:#111;border-color:#b4b5be}.application-count-status,.application-count-note{color:#c6c8d1}.app-gallery .app-shot{border-color:#8a8b94}.language-toggle{border-color:#c6c8d1}}
 @media(forced-colors:active){.application-counter,.app-gallery .app-shot,.language-toggle{background:Canvas;color:CanvasText;border-color:CanvasText}.application-count-dot{background:CanvasText!important;box-shadow:none!important}}
+
+/* Local, on-demand recordings. The entire app screen stays visible. */
+.hero-explore-links{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 28px}
+.hero-explore-links>a:last-child{color:#aeb1bc}
+.demo-section{border-top:1px solid var(--line);padding-top:100px}
+.demo-grid{row-gap:60px}
+.demo-stage{display:flex;flex-direction:column;align-items:center;padding:24px 24px 28px;border:1px solid #ffffff14;border-radius:24px;background:linear-gradient(145deg,#141519,#09090c 75%);overflow:hidden}
+.demo-meta{display:flex;justify-content:space-between;align-items:center;gap:16px;width:100%;margin-bottom:24px;color:#b7b8c3;font-size:10px;letter-spacing:.14em}
+.demo-meta>span:last-child{font-variant-numeric:tabular-nums;letter-spacing:.04em;color:#92949f}
+.app-demo{display:block;max-width:100%;width:auto;height:560px;object-fit:contain;background:#000;border:1px solid #ffffff1b;border-radius:18px;box-shadow:0 16px 45px #0006}
+.app-demo:focus-visible{outline:2px solid #a5bbeb;outline-offset:5px}
+.demo-direct-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;margin-top:6px;font-size:11px;color:#bbbcc5;text-decoration:underline;text-decoration-color:#555863;text-underline-offset:4px}
+.demo-direct-link:hover{color:#fff}
+@media(max-width:900px){.app-demo{height:480px}.demo-stage{padding:20px 18px 24px}.demo-meta{font-size:9px;letter-spacing:.1em}}
+@media(max-width:600px){.demo-section{padding-top:65px}.demo-grid{row-gap:44px}.demo-stage{padding:20px 16px 22px;border-radius:20px}.app-demo{height:auto;width:min(100%,280px);border-radius:15px}.demo-meta{margin-bottom:20px}.demo-grid .product-caption{margin-top:22px}}
+@media(prefers-contrast:more){.demo-stage,.app-demo{border-color:#b4b5be}.demo-meta,.demo-meta>span:last-child,.demo-direct-link{color:#d7d8df}}
+@media(forced-colors:active){.demo-stage,.app-demo{border-color:CanvasText;background:Canvas}.demo-meta,.demo-meta>span:last-child,.demo-direct-link{color:CanvasText}}
