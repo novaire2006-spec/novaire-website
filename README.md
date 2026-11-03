@@ -8,6 +8,11 @@ Fertiger Website-Code für das bestehende Repository
 
 - Zeitloses Schwarz-Weiß-Layout, neue Hero-Aufteilung und ruhigere Abstände.
   Halloween-Dekorationen, Saison-Schrift und zugehörige Assets entfernt.
+- Silberner Stern mit einer ruhigen 180-Sekunden-Drehung; Schriftzug bleibt fest.
+  Pause-Taste, reduzierte Bewegung und Pause außerhalb des Sichtbereichs.
+- Updates direkt unter dem Einstieg: bevorstehende Beta, echter Bewerbungszähler
+  und drei klar als abgeschlossen/nächster Schritt/Ziel markierte Meilensteine.
+  Keine erfundenen Anmeldezahlen, Fortschrittsprozente oder Starttermine.
 - Die Bewerbungsrunde vom 30. Oktober ist geschlossen. Die Website öffnet
   keine neue Runde; Frist, Einwilligungsversion und Backend-Vertrag bleiben gleich.
 - Datenschutz: abgegrenzte Elternzustimmung unter 16, HTTPS/TLS und Frankfurt
@@ -76,7 +81,7 @@ npm test
 npm run preview
 ```
 
-59 Website-Tests, darunter Indexierung, Canonicals, Sitemap, lokale Links,
+62 Website-Tests, darunter Indexierung, Canonicals, Sitemap, lokale Links,
 Sicherheitsheader, Formularvalidierung, Frist, Sprache, Counter, Video-Streaming
 und die neue Eltern-Löschanleitung. Keine Backend-Änderungen in diesem Release.
 

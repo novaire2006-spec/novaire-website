@@ -11,6 +11,28 @@ document.addEventListener('keydown', (event) => {
 });
 
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
+// The logo is decorative. Keep a manual pause control and suspend GPU work
+// outside the viewport, in background tabs, and when reduced motion is requested.
+const brandSymbol = document.querySelector('[data-brand-symbol]');
+const brandToggle = document.querySelector('[data-brand-motion-toggle]');
+if (brandSymbol && brandToggle) {
+  let manuallyPaused = false;
+  let inView = true;
+  const updateBrandMotion = () => {
+    brandSymbol.dataset.motionState = !manuallyPaused && inView && !document.hidden && !motion.matches ? 'running' : 'paused';
+    brandToggle.hidden = motion.matches;
+    brandToggle.setAttribute('aria-pressed', String(manuallyPaused));
+  };
+  brandToggle.addEventListener('click', () => { manuallyPaused = !manuallyPaused; updateBrandMotion(); });
+  document.addEventListener('visibilitychange', updateBrandMotion);
+  motion.addEventListener('change', updateBrandMotion);
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; updateBrandMotion(); });
+    observer.observe(brandSymbol);
+  }
+  updateBrandMotion();
+}
+
 if ('IntersectionObserver' in window && !motion.matches) {
   const observer = new IntersectionObserver((entries) => {
     for (const entry of entries) {

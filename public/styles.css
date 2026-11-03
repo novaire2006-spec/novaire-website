@@ -238,3 +238,67 @@
 @media(max-width:700px){.marketing-page .hero{display:flex;flex-direction:column;gap:0;min-height:0;padding:105px var(--gutter) 95px;text-align:center}.marketing-page .brand-art{width:210px;margin:-25px 0 -16px}.marketing-page .hero-copy{width:100%;max-width:480px}.marketing-page .hero-copy .eyebrow{font-size:9px;margin-bottom:18px}.marketing-page .hero-tagline{font-size:clamp(36px,7.8vw,52px);line-height:1.1}.hero-description{font-size:15px;max-width:350px;margin:22px auto 26px}.marketing-page .hero-explore-links{justify-content:center;gap:12px 20px}.marketing-page .hero-explore-links .beta-button{padding:14px 22px;font-size:13px;min-height:48px}.marketing-page .application-counter{max-width:340px;margin:28px auto 0;text-align:left}.marketing-page .hero-note{display:none}.marketing-page .hero-index{position:absolute;left:var(--gutter);right:var(--gutter);bottom:18px;justify-content:center;font-size:8px}.marketing-page .intro{padding-top:72px;padding-bottom:72px}.marketing-page .product-grid{gap:44px}.marketing-page .beta-invitation{padding:32px 26px;margin-top:20px;margin-bottom:20px;border-radius:22px}.marketing-page .beta-invitation-bottom{gap:24px}.marketing-page .closing{padding-top:80px;padding-bottom:85px}.legal-main{padding:48px 24px 72px}.legal-main .privacy-delete-box{padding:22px}.legal-main .privacy-delete-box h3{font-size:20px}}
 @media(prefers-contrast:more){.marketing-page .muted,.marketing-page .hero-tagline span,.marketing-page .closing .heading-emphasis{color:#c8cad3}.legal-main .privacy-delete-box{border-width:2px}}
 @media(forced-colors:active){.legal-main .privacy-delete-box{border-color:LinkText}.marketing-page .hero-tagline span,.marketing-page .closing .heading-emphasis{color:CanvasText}.marketing-page .product-visual,.marketing-page .demo-stage,.marketing-page .beta-invitation{border-color:CanvasText;background:Canvas}}
+
+/* Living brand, quiet editorial updates. The original logo asset is unchanged. */
+.marketing-page .hero{min-height:740px;padding-top:155px;padding-bottom:120px}
+.marketing-page .brand-signature{display:flex;flex-direction:column;align-items:center;max-width:430px;isolation:isolate}
+.brand-symbol{position:relative;width:88%;aspect-ratio:1;overflow:hidden;mix-blend-mode:screen;mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 96%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 96%,transparent 100%);animation:brand-orbit 180s linear infinite;animation-play-state:paused}
+.brand-symbol[data-motion-state="running"]{animation-play-state:running}
+.brand-symbol img{position:absolute;width:195.9375%;max-width:none;left:-47.96875%;top:-34.0625%;height:auto}
+.brand-wordmark-crop{position:relative;width:100%;aspect-ratio:780/108;overflow:hidden;margin-top:22px;mix-blend-mode:screen}
+.brand-wordmark-crop img{position:absolute;width:160.76923077%;max-width:none;left:-30.76923077%;top:-814.81481481%;height:auto}
+@keyframes brand-orbit{to{transform:rotate(360deg)}}
+.brand-motion-toggle{position:absolute;left:var(--gutter);bottom:64px;display:grid;place-items:center;width:36px;height:36px;border:1px solid #ffffff16;border-radius:50%;background:transparent;color:#9496a1;transition:border-color .2s,color .2s}
+.brand-motion-toggle:hover{border-color:#ffffff50;color:#fff}
+.motion-control-icon{width:9px;height:10px;border-left:2px solid currentColor;border-right:2px solid currentColor}
+.brand-motion-toggle[aria-pressed="true"] .motion-control-icon{width:0;height:0;border:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid currentColor;margin-left:2px}
+.hero-status-link{display:inline-flex;align-items:center;gap:10px;margin-top:30px;font-size:12px;color:#b6b8c1;min-height:36px}
+.hero-status-link>span:last-child{margin-left:8px;color:#8f919c}
+.status-spark{display:inline-block;flex:none;width:5px;height:5px;border-radius:50%;background:#e4e7ee;box-shadow:0 0 9px #ffffff35}
+.launch-section{padding-top:85px;padding-bottom:90px;border-top:1px solid var(--line)}
+.launch-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:36px;margin-bottom:42px}
+.launch-heading h2{font-size:clamp(36px,4.4vw,60px)}
+.launch-heading>.reveal,.launch-heading>p{max-width:240px}
+.launch-heading>p{font-size:14px;line-height:1.8;color:var(--muted);margin:0 0 4px}
+.launch-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px}
+.launch-update,.marketing-page .milestone-counter{border:1px solid #ffffff15;border-radius:26px;background:#0c0d10;min-width:0;padding:36px}
+.launch-update{display:flex;flex-direction:column;position:relative;overflow:hidden}
+.launch-update-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;font-size:10px;color:#8f929e}
+.launch-status{display:inline-flex;align-items:center;gap:9px;color:#d8dae2;letter-spacing:.08em;font-size:9px}
+.launch-update-number{font-size:11px;letter-spacing:.12em;color:#7d808b;margin:48px 0 16px}
+.launch-update h3{font-weight:500;font-size:clamp(28px,2.8vw,39px);letter-spacing:-.045em;line-height:1.15;margin:0 0 20px;text-wrap:balance}
+.launch-update>p:not(.launch-update-number){font-size:14px;line-height:1.85;color:var(--muted);max-width:410px;margin:0 0 24px}
+.launch-update .text-link{align-self:flex-start;margin-top:auto;font-size:12px;gap:16px}
+.marketing-page .milestone-counter{max-width:none;margin:0;display:flex;flex-direction:column;background:#08090c;box-shadow:none}
+.milestone-counter-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:44px}
+.milestone-counter-top .eyebrow{margin:0;font-size:9px;letter-spacing:.13em}
+.milestone-counter .application-count-topline{font-size:9px}
+.marketing-page .milestone-counter .application-count-total{display:flex;flex-direction:column;align-items:flex-start;gap:12px;line-height:1.2}
+.marketing-page .milestone-counter .application-count-total>strong{font-size:clamp(58px,7vw,96px);font-weight:400;letter-spacing:-.065em;line-height:.95;font-variant-numeric:tabular-nums}
+.milestone-counter .application-count-total>span{font-size:15px;color:#e1e2e8}
+.milestone-thanks{color:var(--muted);font-size:13px;line-height:1.8;margin:25px 0 30px;max-width:310px}
+.milestone-counter-footer{margin-top:auto;padding-top:20px;border-top:1px solid var(--line)}
+.milestone-counter-footer .application-count-status{margin:0 0 8px;font-size:10px}
+.milestone-counter-footer .application-count-note{font-size:9px;line-height:1.6;margin:0}
+.milestone-heading{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin:60px 0 30px}
+.milestone-heading h3{font-size:22px;letter-spacing:-.035em;font-weight:500;margin:0}
+.milestone-heading p{color:var(--muted);font-size:11px;margin:0}
+.launch-roadmap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;margin:0;padding:0}
+.launch-roadmap li{padding-right:32px;min-width:0}
+.milestone-track{position:relative;height:40px}
+.milestone-track:after{content:"";position:absolute;left:25px;right:-7px;top:9px;border-top:1px solid #ffffff1a}
+.launch-roadmap li:last-child .milestone-track:after{display:none}
+.milestone-dot{display:grid;place-items:center;position:relative;z-index:1;width:19px;height:19px;border:1px solid #555865;border-radius:50%;font-size:10px;color:#111;background:var(--bg)}
+.milestone-complete .milestone-dot{background:#c8cad4;border-color:#c8cad4}
+.milestone-current .milestone-dot{border-color:#edeef5;box-shadow:0 0 0 5px #ffffff09}
+.milestone-current .milestone-dot:after{content:"";width:5px;height:5px;border-radius:50%;background:#edeef5}
+.launch-roadmap .milestone-state{font-size:9px;letter-spacing:.12em;color:#8b8e9a;margin:0 0 12px}
+.launch-roadmap .milestone-current .milestone-state{color:#e8e9ee}
+.launch-roadmap h4{font-weight:500;font-size:20px;letter-spacing:-.025em;margin:0 0 10px}
+.launch-roadmap li>p:not(.milestone-state){font-size:12px;line-height:1.8;color:var(--muted);margin:0 0 18px}
+.launch-roadmap time,.milestone-detail{font-size:10px;color:#9598a4;line-height:1.7}
+@media(max-width:1000px){.launch-update,.marketing-page .milestone-counter{padding:28px}.launch-update-meta{gap:10px}.marketing-page .hero{min-height:720px}.brand-wordmark-crop{margin-top:18px}}
+@media(max-width:700px){.marketing-page .hero{min-height:0;padding-top:140px;padding-bottom:100px}.marketing-page .brand-signature{width:225px;max-width:75vw;margin:0 0 42px}.brand-symbol{width:86%}.brand-wordmark-crop{margin-top:18px}.hero-status-link{margin-top:22px;font-size:11px}.brand-motion-toggle{left:auto;right:var(--gutter);top:94px;bottom:auto;width:32px;height:32px}.launch-section{padding-top:62px;padding-bottom:66px}.launch-heading{display:block;margin-bottom:30px}.launch-heading>p{margin-top:22px;font-size:13px}.launch-grid{grid-template-columns:1fr;gap:16px}.launch-update,.marketing-page .milestone-counter{padding:28px;border-radius:22px}.launch-update-number{margin-top:38px}.launch-update h3{font-size:32px}.launch-update>p:not(.launch-update-number){font-size:13px}.milestone-counter-top{margin-bottom:34px}.marketing-page .milestone-counter .application-count-total>strong{font-size:76px}.milestone-thanks{max-width:100%}.milestone-heading{margin-top:46px;margin-bottom:28px}.milestone-heading h3{font-size:20px}.milestone-heading p{font-size:10px}.launch-roadmap{grid-template-columns:1fr;gap:0}.launch-roadmap li{position:relative;padding:0 0 32px 42px;min-height:142px}.launch-roadmap li:last-child{padding-bottom:0;min-height:0}.milestone-track{position:absolute;top:0;bottom:0;left:0;height:auto;width:19px}.milestone-track:after{left:9px;top:26px;bottom:9px;right:auto;border-top:0;border-left:1px solid #ffffff1a}.launch-roadmap h4{font-size:20px}.launch-roadmap .milestone-state{padding-top:4px;margin-bottom:11px}.launch-roadmap li>p:not(.milestone-state){margin-bottom:12px}.marketing-page .intro{padding-top:70px}}
+@media(prefers-reduced-motion:reduce){.brand-symbol{animation:none!important}.brand-motion-toggle{display:none!important}}
+@media(prefers-contrast:more){.launch-update,.marketing-page .milestone-counter{border-color:#90939f}.launch-roadmap .milestone-state,.launch-update-meta,.milestone-detail{color:#c7c9d2}}
+@media(forced-colors:active){.launch-update,.marketing-page .milestone-counter{border-color:CanvasText}.milestone-dot{border-color:CanvasText}.milestone-current .milestone-dot:after{background:CanvasText}.milestone-track:after{border-color:CanvasText}}

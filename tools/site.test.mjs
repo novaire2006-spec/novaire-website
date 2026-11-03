@@ -4,9 +4,67 @@ import { readFile, readdir, access } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { BETA_PRIVACY_VERSION } from '../public/beta-core.js';
+import { en } from '../public/translations-en.js';
+import vm from 'node:vm';
 const root = fileURLToPath(new URL('../public/', import.meta.url));
 const pages = (await readdir(root)).filter((file) => file.endsWith('.html'));
 const backendOrigin = 'https://naafzrrhjsfaqqrnhrcn.supabase.co';
+
+test('premium updates keep a single real aggregate and distinguish completed, next and future milestones', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const updates = html.match(/<section[^>]+id="updates"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(updates);
+  assert.equal([...html.matchAll(/data-application-counter\b/g)].length, 1);
+  assert.match(updates, /data-count-value data-no-translate>—<\/strong>/);
+  assert.doesNotMatch(updates, /3[.,]?712|\d+\s*%|ausverkauft/i);
+  assert.match(updates, /aria-current="step"/);
+  assert.match(updates, /In Vorbereitung · Termin noch offen/);
+  for (const match of updates.matchAll(/>([^<>]+)</g)) {
+    const text = match[1].replace(/\s+/g, ' ').trim();
+    if (!text || /^[✓↗—]$|^BETA$/.test(text)) continue;
+    assert.ok(en[text], `Missing update translation: ${text}`);
+  }
+});
+
+test('only the cropped star rotates slowly; wordmark stays fixed with a pause and reduced-motion alternative', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const css = await readFile(path.join(root, 'styles.css'), 'utf8');
+  assert.match(html, /data-brand-symbol/);
+  assert.match(html, /class="brand-wordmark-crop"/);
+  assert.match(html, /data-brand-motion-toggle aria-pressed="false"/);
+  assert.doesNotMatch(html, /class="brand-light"/);
+  assert.match(css, /animation:brand-orbit 180s linear infinite;animation-play-state:paused/);
+  assert.match(css, /prefers-reduced-motion:reduce\)\{\.brand-symbol\{animation:none!important/);
+});
+
+test('logo respects manual pause, viewport, background tabs and changing motion preferences', async () => {
+  const callbacks = {}, observers = [];
+  const symbol = { dataset: {} };
+  const toggle = { hidden: true, attributes: {}, addEventListener: (event, callback) => { callbacks.click = callback; }, setAttribute(name, value) { this.attributes[name] = value; } };
+  const motion = { matches: false, addEventListener: (event, callback) => { (callbacks.motion ||= []).push(callback); } };
+  const document = { hidden: false, querySelector: selector => selector === '[data-brand-symbol]' ? symbol : selector === '[data-brand-motion-toggle]' ? toggle : null, querySelectorAll: () => [], addEventListener: (event, callback) => { (callbacks[event] ||= []).push(callback); } };
+  class Observer { constructor(callback) { this.callback = callback; observers.push(this); } observe() {} disconnect() {} }
+  const source = await readFile(path.join(root, 'app.js'), 'utf8');
+  vm.runInNewContext(source, { document, window: { IntersectionObserver: Observer }, IntersectionObserver: Observer, matchMedia: () => motion });
+  assert.equal(symbol.dataset.motionState, 'running');
+  callbacks.click();
+  assert.equal(symbol.dataset.motionState, 'paused');
+  assert.equal(toggle.attributes['aria-pressed'], 'true');
+  callbacks.click();
+  observers[0].callback([{ isIntersecting: false }]);
+  assert.equal(symbol.dataset.motionState, 'paused');
+  observers[0].callback([{ isIntersecting: true }]);
+  assert.equal(symbol.dataset.motionState, 'running');
+  document.hidden = true;
+  callbacks.visibilitychange.forEach(callback => callback());
+  assert.equal(symbol.dataset.motionState, 'paused');
+  document.hidden = false;
+  callbacks.visibilitychange.forEach(callback => callback());
+  motion.matches = true;
+  callbacks.motion.forEach(callback => callback({ matches: true }));
+  assert.equal(symbol.dataset.motionState, 'paused');
+  assert.equal(toggle.hidden, true);
+});
 
 
 test('public pages are indexable and have a single production canonical URL', async () => {
