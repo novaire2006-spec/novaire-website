@@ -150,7 +150,7 @@ for (const file of pages) {
 }
 test('public copy has no editorial drafts, unconfirmed operator or invented promises', async () => {
   const all = await Promise.all(pages.map((p)=>readFile(path.join(root,p),'utf8')));
-  assert.doesNotMatch(all.join(''), /draft-notice|pending-detail|Arbeitsentwurf|Rechtstexte noch in Prüfung|Vor Veröffentlichung zu klären|Christian Flore|Gräfenhof|\d+[,.]\d{2}\s*€/);
+  assert.doesNotMatch(all.join(''), /draft-notice|pending-detail|Arbeitsentwurf|Rechtstexte noch in Prüfung|Vor Veröffentlichung zu klären|\d+[,.]\d{2}\s*€/);
   const imprint = await readFile(path.join(root, 'impressum.html'), 'utf8');
   assert.match(imprint, /Armin Brnicanin/);
   assert.match(imprint, /Hopfenstraße 60/);
@@ -159,6 +159,18 @@ test('public copy has no editorial drafts, unconfirmed operator or invented prom
   assert.match(privacy, /Supabase/);
   assert.match(privacy, /16/);
   assert.match(privacy, /Einwilligung|Zustimmung/);
+});
+test('confirmed co-founder has a separate imprint section without changing the provider or controller', async () => {
+  const imprint = await readFile(path.join(root, 'impressum.html'), 'utf8');
+  assert.match(imprint, /<h2>Anbieter<\/h2><address>Armin Brnicanin<br>Novaire<br>Hopfenstraße 60<br>51109 Köln<br>Deutschland<\/address>/);
+  assert.match(imprint, /<h2>Co-Founder von Novaire<\/h2><address>Christian Flore<br>Am Gräfenhof 40<br>51109 Köln<br>Deutschland<\/address>/);
+  assert.doesNotMatch(imprint, /Gräfenhof 42|Geschäftsführer|Handelsregister|UG\s*\(haftungsbeschränkt\)/);
+  assert.equal(en['Co-Founder von Novaire'], 'Co-founder of Novaire');
+  for (const filename of ['datenschutz.html', 'agb.html']) {
+    const source = await readFile(path.join(root, filename), 'utf8');
+    assert.match(source, /Armin Brnicanin/);
+    assert.doesNotMatch(source, /Christian Flore|Gräfenhof/);
+  }
 });
 test('privacy lists the four website, beta and mail providers with their actual roles', async () => {
   const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
@@ -214,11 +226,11 @@ test('privacy retains beta consent, retention and guardian information without s
   assert.match(privacy, /Widerruf|widerrufen/);
   assert.equal(BETA_PRIVACY_VERSION, '2026-10-beta-v1', 'clarification does not relabel prior consent or break the backend contract');
 });
-test('updated legal and support copy has the current publication date; imprint remains unchanged', async () => {
+test('updated legal and support copy has the current publication date', async () => {
   for (const filename of ['datenschutz.html', 'impressum.html', 'agb.html', 'support.html']) {
     const source = await readFile(path.join(root, filename), 'utf8');
     const date = source.match(/<p class="updated">Novaire · Stand ([^<]+)<\/p>/)?.[1];
-    assert.equal(date, filename === 'impressum.html' ? '10. Oktober 2026' : '3. November 2026', filename);
+    assert.equal(date, '3. November 2026', filename);
   }
 });
 test('only the two exact beta endpoints are reachable; no keys or trackers', async () => {

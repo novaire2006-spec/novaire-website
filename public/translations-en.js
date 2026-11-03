@@ -429,6 +429,7 @@ export const en = {
   'Impressum — Novaire': 'Legal notice — Novaire',
   'Deutschland': 'Germany',
   'Gründer von Novaire: Armin Brnicanin.': 'Founder of Novaire: Armin Brnicanin.',
+  'Co-Founder von Novaire': 'Co-founder of Novaire',
   'Kontakt': 'Contact',
   'E-Mail:': 'Email:',
   'Inhalte und Marken': 'Content and trademarks',

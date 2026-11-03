@@ -3,7 +3,9 @@
 export const pages = {
   impressum: {
     title: 'Impressum',
+    updated: '3. November 2026',
     body: `<h2>Anbieter</h2><address>Armin Brnicanin<br>Novaire<br>Hopfenstraße 60<br>51109 Köln<br>Deutschland</address><p>Gründer von Novaire: Armin Brnicanin.</p>
+    <h2>Co-Founder von Novaire</h2><address>Christian Flore<br>Am Gräfenhof 40<br>51109 Köln<br>Deutschland</address>
     <h2>Kontakt</h2><p>E-Mail: <a href="mailto:support@novaireai.de">support@novaireai.de</a><br>Website: <a href="https://www.novaireai.de">www.novaireai.de</a></p>
     <h2>Inhalte und Marken</h2><p>Novaire ist eine eigenständige Lern-App. OpenAI und Anthropic werden als eingesetzte Technologieanbieter genannt. Daraus ergibt sich keine Partnerschaft oder Empfehlung dieser Unternehmen. Rechte an fremden Marken verbleiben bei ihren jeweiligen Inhabern.</p><p>Die App-Abbildungen zeigen Entwicklungsstände mit einem Beispielprofil. Gestaltung und Funktionen können sich bis zur Veröffentlichung ändern.</p>`
   },
