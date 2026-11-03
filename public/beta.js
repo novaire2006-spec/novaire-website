@@ -25,6 +25,7 @@ function isClosed() {
 function renderCountdown() {
   const parts = countdownParts();
   const closed = parts.closed || closedByServer;
+  document.body.dataset.betaState = closed ? 'closed' : 'open';
   for (const [unit, value] of Object.entries(parts)) {
     const label = document.querySelector(`[data-countdown="${unit}"]`);
     if (label) label.textContent = String(closed ? 0 : value).padStart(2, '0');

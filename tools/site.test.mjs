@@ -125,7 +125,7 @@ test('privacy lists the four website, beta and mail providers with their actual 
 });
 test('privacy explains private Frankfurt beta storage and keeps form submission separate from account mail', async () => {
   const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
-  const beta = privacy.match(/<h2 id="beta">([\s\S]*?)<h2>4\./)?.[1];
+  const beta = privacy.match(/<h2 id="beta">([\s\S]*?)<h2 id="kinder">4\./)?.[1];
   assert.ok(beta, 'beta data flow has its own section');
   assert.match(beta, /verschlüsselt direkt an eine Supabase-Backend-Funktion/);
   assert.match(beta, /privaten Datenbank[\s\S]*?Frankfurt \(eu-central-1\)/);
@@ -156,11 +156,11 @@ test('privacy retains beta consent, retention and guardian information without s
   assert.match(privacy, /Widerruf|widerrufen/);
   assert.equal(BETA_PRIVACY_VERSION, '2026-10-beta-v1', 'clarification does not relabel prior consent or break the backend contract');
 });
-test('only the updated privacy page receives the new legal publication date', async () => {
+test('updated legal and support copy has the current publication date; imprint remains unchanged', async () => {
   for (const filename of ['datenschutz.html', 'impressum.html', 'agb.html', 'support.html']) {
     const source = await readFile(path.join(root, filename), 'utf8');
     const date = source.match(/<p class="updated">Novaire · Stand ([^<]+)<\/p>/)?.[1];
-    assert.equal(date, filename === 'datenschutz.html' ? '27. Oktober 2026' : '10. Oktober 2026', filename);
+    assert.equal(date, filename === 'impressum.html' ? '10. Oktober 2026' : '3. November 2026', filename);
   }
 });
 test('only the two exact beta endpoints are reachable; no keys or trackers', async () => {
@@ -185,7 +185,7 @@ test('only the two exact beta endpoints are reachable; no keys or trackers', asy
 });
 test('beta application has transparent limits, guardian flow and non-JavaScript fallback', async () => {
   const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
-  assert.match(beta, /JETZT 100 PLÄTZE/);
+  assert.match(beta, /NOVAIRE BETA · 100 PLÄTZE/);
   assert.match(beta, /Wir wählen 100 passende Tester/);
   assert.match(beta, /30\.\s*Oktober/);
   assert.match(beta, /2026/);
@@ -207,9 +207,9 @@ test('beta application has transparent limits, guardian flow and non-JavaScript 
 });
 test('expanded beta capacity is consistent across public copy and generated pages', async () => {
   const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
-  assert.match(beta, /Ihr zeigt Liebe\. Wir machen Platz\./);
-  assert.match(beta, /von 50 auf <strong>100 Beta-Plätze<\/strong>/);
-  for (const filename of ['index.html', 'beta.html', 'agb.html', 'support.html']) {
+  assert.match(beta, /Wir gestalten Novaire gemeinsam\./);
+  assert.match(beta, /<strong>100 Beta-Plätze<\/strong>/);
+  for (const filename of ['index.html', 'beta.html', 'agb.html']) {
     const source = await readFile(path.join(root, filename), 'utf8');
     assert.match(source, /100 (?:Beta-Plätze|Plätze|Personen|passende Tester)/, filename);
     assert.doesNotMatch(source, /(?:rund|etwa|ca\.?|mit|wählen)\s+50\s+(?:Plätze|Personen|Tester)/i, filename);
@@ -219,7 +219,7 @@ test('expanded beta capacity is consistent across public copy and generated page
     assert.match(meta || '', /100/);
   }
 });
-test('seasonal graphics are local and inert, the body font is native and motion optional', async () => {
+test('graphics are local and inert, the body font is native and motion optional', async () => {
   const svgNames = (await readdir(path.join(root, 'assets'))).filter((file) => file.endsWith('.svg'));
   for (const filename of svgNames) {
     const svg = await readFile(path.join(root, 'assets', filename), 'utf8');
@@ -235,7 +235,7 @@ test('seasonal graphics are local and inert, the body font is native and motion 
     await access(path.join(root, asset.split(/[?#]/)[0]));
   }
   const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
-  assert.match(beta, /class="seasonal-pumpkin[^\"]*"[^>]*alt=""[^>]*aria-hidden="true"/);
+  assert.doesNotMatch(beta, /halloween|pumpkin|seasonal/i);
 });
 test('beta motivation is approachable and the receipt never pretends to award a beta place', async () => {
   const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
@@ -255,69 +255,44 @@ test('beta motivation is approachable and the receipt never pretends to award a 
   const betaScript = await readFile(path.join(root, 'beta.js'), 'utf8');
   assert.match(betaScript, /response\.status !== 202 \|\| result\?\.accepted !== true/);
 });
-test('realistic Halloween decoration is local, inert and distributed across both pages', async () => {
-  for (const filename of ['index.html','beta.html']) {
-    const source = await readFile(path.join(root,filename),'utf8');
-    const ornaments = [...source.matchAll(/<img\b[^>]*\bdata-seasonal-decoration\b[^>]*>/g)];
-    assert.ok(ornaments.length >= 4, `${filename}: seasonal accents are distributed rather than one pumpkin`);
-    for (const match of ornaments) {
-      const tag = match[0];
-      assert.match(tag, /\balt=""/);
-      const priorMarkup = source.slice(0,match.index);
-      assert.ok(/\baria-hidden="true"/.test(tag) || /<[^>]+\baria-hidden="true"[^>]*>\s*$/.test(priorMarkup), `${filename}: decoration or its immediate container is hidden from assistive technology`);
-      assert.doesNotMatch(tag,/\b(?:tabindex|onclick|onmouseover)=/i);
-      assert.match(tag,/\bsrc="assets\/halloween-[^"/]+\.webp"/);
-      const assetName = tag.match(/\bsrc="([^"]+)"/)[1];
-      const image = await readFile(path.join(root,assetName));
-      assert.equal(image.toString('ascii',0,4),'RIFF',`${assetName}: actual WebP container, not a renamed placeholder`);
-      assert.equal(image.toString('ascii',8,12),'WEBP',`${assetName}: actual WebP content`);
-    }
-    assert.match(source,/halloween-[^"/]*vine[^"/]*\.webp/);
-    assert.match(source,/halloween-[^"/]*scarecrow[^"/]*\.webp/);
-    assert.match(source,/halloween-[^"/]*pumpkin[^"/]*\.webp/);
-    assert.doesNotMatch(source,/assets\/(?:autumn-pumpkin|halloween-vine|halloween-scarecrow|halloween-pumpkin-cluster)\.svg/, 'flat placeholder illustrations are no longer displayed');
+test('Halloween is removed from every page and all executable styles and scripts', async () => {
+  for (const name of [...pages, 'styles.css', 'app.js']) {
+    const source = await readFile(path.join(root, name), 'utf8');
+    assert.doesNotMatch(source, /halloween|seasonal|pumpkin|creepster|scarecrow|🎃|👻/i, name);
   }
+  const assets = await readdir(path.join(root, 'assets'));
+  assert.ok(assets.every((name) => !/halloween|autumn-pumpkin/i.test(name)));
 });
-test('subtle star backdrop belongs only to the two seasonal marketing pages', async () => {
-  const app = await readFile(path.join(root,'app.js'),'utf8');
-  assert.match(app,/if\s*\(document\.body\.classList\.contains\('seasonal-site'\)\)\s*\{/);
-  assert.match(app,/stars\.setAttribute\('data-seasonal-stars',\s*''\)/);
-  assert.match(app,/stars\.setAttribute\('aria-hidden',\s*'true'\)/);
-  assert.match(app,/stars\.setAttribute\('inert',\s*''\)/);
-  assert.match(app,/const colors = \[[^\]]*'white'[^\]]*'blue'[^\]]*'yellow'/);
-  assert.doesNotMatch(app,/requestAnimationFrame|setInterval/,'star backdrop adds no permanent JavaScript animation loop');
-  for (const filename of pages) {
-    const source = await readFile(path.join(root,filename),'utf8');
-    if (filename === 'index.html' || filename === 'beta.html') {
-      assert.match(source,/<body\b[^>]*class="[^\"]*\bseasonal-site\b[^\"]*"/);
-    } else {
-      assert.doesNotMatch(source,/\b(?:seasonal-site|data-seasonal-stars|data-halloween-caption)\b/, `${filename}: legal and support pages remain undecorated`);
-    }
-  }
+test('expired beta stays closed without reopening the campaign or changing its deadline', async () => {
+  const core = await readFile(path.join(root, 'beta-core.js'), 'utf8');
+  assert.match(core, /BETA_DEADLINE = Date\.parse\('2026-10-30T23:00:00Z'\)/);
+  const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
+  assert.match(beta, /data-beta-state="closed"/);
+  assert.match(beta, /id="hero-apply-link"[^>]*hidden/);
+  assert.match(beta, /Die Bewerbungsrunde ist abgeschlossen/);
+  assert.match(beta, /id="beta-form-fields" disabled/);
+  const home = await readFile(path.join(root, 'index.html'), 'utf8');
+  assert.match(home, /Die Bewerbungsfrist endete am 30\. Oktober 2026/);
+  assert.doesNotMatch(home, /Für die Beta bewerben|Bewirb dich bis/);
+  const app = await readFile(path.join(root, 'beta.js'), 'utf8');
+  assert.match(app, /document\.body\.dataset\.betaState = closed \? 'closed' : 'open'/);
 });
-test('Halloween caption uses a local licensed display face without moving the application deadline', async () => {
-  for (const filename of ['index.html','beta.html']) {
-    const source = await readFile(path.join(root,filename),'utf8');
-    const captionMarkup = source.match(/<p[^>]+\bdata-halloween-caption\b[^>]*>([\s\S]*?)<\/p>/)?.[1];
-    assert.match(captionMarkup || '', /<span class="halloween-celebrate">feiern<\/span>/);
-    const caption = captionMarkup?.replace(/<[^>]+>/g, '');
-    assert.ok(caption, `${filename}: Halloween caption is present`);
-    assert.match(caption,/Endet vor Halloween/);
-    assert.match(caption,/damit ihr feiern könnt/);
-    assert.doesNotMatch(caption,/endet an halloween/i, '30 October remains before Halloween, not 31 October');
-  }
-  const core = await readFile(path.join(root,'beta-core.js'),'utf8');
-  assert.match(core,/BETA_DEADLINE = Date\.parse\('2026-10-30T23:00:00Z'\)/);
-  const css = await readFile(path.join(root,'styles.css'),'utf8');
-  assert.match(css,/@font-face\s*\{[^}]*font-family:\s*["'](?:Creepster|Novaire Halloween)["'][^}]*creepster-latin\.woff2[^}]*\}/);
-  assert.match(css,/@font-face\s*\{[^}]*font-display:\s*swap/);
-  assert.match(css, /\.halloween-deadline\{[^}]*color:#f4a04e/);
-  assert.match(css, /\.halloween-celebrate\{color:#b5f54a\}/);
-  const fonts = path.join(root,'assets','fonts');
-  const names = await readdir(fonts);
-  assert.ok(names.some((name) => /creepster[^/]*\.(?:woff2?|ttf)$/i.test(name)), 'display face is bundled locally');
-  const licenseName = names.find((name) => /(?:ofl|license)[^/]*\.(?:txt|md)$/i.test(name));
-  assert.ok(licenseName, 'bundled display font includes its redistribution license');
-  const license = await readFile(path.join(fonts,licenseName),'utf8');
-  assert.match(license,/SIL OPEN FONT LICENSE|Apache License/i);
+test('parents receive scoped consent, secure transport facts and an actionable deletion guide', async () => {
+  const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
+  assert.match(privacy, /3\. November 2026/);
+  assert.match(privacy, /Art\. 8/);
+  assert.match(privacy, /unter 16/);
+  assert.match(privacy, /HTTPS.*TLS|TLS.*HTTPS/);
+  assert.match(privacy, /WebRTC/);
+  assert.match(privacy, /Frankfurt/);
+  const box = privacy.match(/<aside class="privacy-delete-box"[^>]*>([\s\S]*?)<\/aside>/)?.[1];
+  assert.ok(box);
+  assert.match(box, /Konto &amp; Sicherheit|Konto & Sicherheit/);
+  assert.match(box, /Konto löschen/);
+  assert.match(box, /support@novaireai\.de/);
+  assert.match(box, /Vertretung|sorgeberechtigt|gesetzlich/);
+  assert.match(box, /Backups|Sicherungen/);
+  assert.doesNotMatch(box, /sofort vollständig|garantiert|ausnahmslos/);
+  const css = await readFile(path.join(root, 'styles.css'), 'utf8');
+  assert.match(css, /\.legal-main \.privacy-delete-box\{[^}]*border:1px solid #4b8dfa[^}]*background:transparent;box-shadow:none/);
 });

@@ -1,10 +1,20 @@
-# Novaire Website – Update vom 27. Oktober 2026
+# Novaire Website – Update vom 3. November 2026
 
 Fertiger Website-Code für das bestehende Repository
 `novaire2006-spec/novaire-website`. Vercel baut den Stand von `main` mit
 `node tools/build.mjs`; ausgeliefert wird ausschließlich `public`.
 
-## Neu: App-Einblicke, Live-Zähler und Englisch
+## Aktueller Stand
+
+- Zeitloses Schwarz-Weiß-Layout, neue Hero-Aufteilung und ruhigere Abstände.
+  Halloween-Dekorationen, Saison-Schrift und zugehörige Assets entfernt.
+- Die Bewerbungsrunde vom 30. Oktober ist geschlossen. Die Website öffnet
+  keine neue Runde; Frist, Einwilligungsversion und Backend-Vertrag bleiben gleich.
+- Datenschutz: abgegrenzte Elternzustimmung unter 16, HTTPS/TLS und Frankfurt
+  als Supabase-Datenbankstandort; keine pauschale EU-only- oder Ende-zu-Ende-Zusage.
+  Eine ausschließlich blau umrandete Box erläutert Kontolöschung und Elternanfragen.
+- Vier bestehende App-Videos mit nativen Bedienelementen bleiben erhalten:
+  kein Autoplay, kein Audio, keine externen Video- oder Trackingdienste.
 
 - Vier echte Flutter-Ansichten mit Beispielinhalten: Nova Live, Karteikarten,
   Podcasts und Coding. Die Screenshots selbst zeigen die deutschsprachige App.
@@ -22,7 +32,8 @@ Fertiger Website-Code für das bestehende Repository
   Bei reduzierten Bewegungen erfolgt der Wechsel ohne Animation.
 - Rechtstexte werden aus `tools/legal-content.mjs` generiert. Neue öffentliche
   Texte auch in `public/translations-en.js` ergänzen; deutsche Seiten bleiben
-  die kanonischen URLs. Bestehendes Halloween-Design und Bewerbungsfrist bleiben.
+  die kanonischen URLs. Rechtstexte ersetzen keine juristische Freigabe und
+  implementieren allein keinen neuen Einwilligungsprozess in der App.
 
 ## Hochladen
 
@@ -50,8 +61,6 @@ ist nicht automatisch bereits indexiert.
   `https://www.novaireai.de`, passend zu Clean URLs.
 - Build erzeugt offene robots.txt und Sitemap der sechs öffentlichen Seiten.
 - 404 bleibt `noindex`; interne Dateien stehen nicht in der Sitemap.
-- Nur „feiern“ ist Halloween-Grün, der übrige Halloween-Schriftzug orange.
-  Wortlaut und Bewerbungsfrist bleiben unverändert.
 - Der bestehende Bewerbungs-POST, Einwilligungsversion und Frist bleiben unverändert.
   Der zusätzliche Supabase-Abruf ist nur der öffentliche Gesamtzähler.
 
@@ -67,12 +76,16 @@ npm test
 npm run preview
 ```
 
-48 Website-Tests bestanden, darunter Indexierung, Canonicals, Sitemap, lokale Links,
-Sicherheitsheader, Formularvalidierung, Frist, Halloween-Farben, Sprache und Counter.
-Zusätzlich 33 Backend-Tests bestanden (Node-Kompatibilitätsrunner im App-Projekt).
-Zusätzlich lokal per HTTP geprüft: sechs öffentliche Seiten 200 ohne
-noindex-Header, robots.txt und Sitemap 200, unbekannte URL 404 mit noindex.
-Keine echte Bewerbung wurde im Rahmen dieses Updates abgeschickt.
+59 Website-Tests, darunter Indexierung, Canonicals, Sitemap, lokale Links,
+Sicherheitsheader, Formularvalidierung, Frist, Sprache, Counter, Video-Streaming
+und die neue Eltern-Löschanleitung. Keine Backend-Änderungen in diesem Release.
+
+Optionales Browser-QA: `tools/browser-check.cjs` mit `PUPPETEER_PATH` (bestehendes
+puppeteer-core), `BROWSER_PATH` (Chromium) und `NOVA_WEBSITE_PREVIEW` starten.
+Es prüft alle sieben Seiten in DE/EN bei 320, 390, 768 und 1440 Pixeln,
+Tastaturbedienung, Animationen, Bildvorschau und die geschlossene Beta.
+Screenshots liegen in `qa/` (nicht veröffentlichen). Externe Bewerbungsanfragen
+werden ausschließlich abgefangen; keine echte Bewerbung wird abgeschickt.
 
 Quellen:
 - https://developers.google.com/search/docs/crawling-indexing/block-indexing
