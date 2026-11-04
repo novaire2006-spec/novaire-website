@@ -11,18 +11,40 @@ document.addEventListener('keydown', (event) => {
 });
 
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
-// The logo is decorative. Keep a manual pause control and suspend GPU work
-// outside the viewport, in background tabs, and when reduced motion is requested.
+// Keep the quiet idle rotation separate from a visitor-requested turn, and
+// suspend motion outside the viewport, in background tabs, or for reduced motion.
 const brandSymbol = document.querySelector('[data-brand-symbol]');
 const brandToggle = document.querySelector('[data-brand-motion-toggle]');
+const brandSpinButton = document.querySelector('[data-brand-spin]');
 if (brandSymbol && brandToggle) {
+  const brandImage = brandSymbol.querySelector('img');
   let manuallyPaused = false;
   let inView = true;
+  let brandSpinAnimation = null;
+  const cancelBrandSpin = () => {
+    brandSpinAnimation?.cancel();
+    brandSpinAnimation = null;
+  };
   const updateBrandMotion = () => {
-    brandSymbol.dataset.motionState = !manuallyPaused && inView && !document.hidden && !motion.matches ? 'running' : 'paused';
+    const canAnimate = inView && !document.hidden && !motion.matches;
+    brandSymbol.dataset.motionState = !manuallyPaused && canAnimate ? 'running' : 'paused';
+    if (!canAnimate) cancelBrandSpin();
     brandToggle.hidden = motion.matches;
     brandToggle.setAttribute('aria-pressed', String(manuallyPaused));
   };
+  // The native button also dispatches click for keyboard activation. Ignore
+  // repeated activations during a turn so rotations never queue or accumulate.
+  brandSpinButton?.addEventListener('click', () => {
+    if (brandSpinAnimation || !inView || document.hidden || motion.matches || typeof brandImage?.animate !== 'function') return;
+    const animation = brandImage.animate(
+      [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
+      { duration: 650, easing: 'cubic-bezier(.22,1,.36,1)', iterations: 1 },
+    );
+    brandSpinAnimation = animation;
+    animation.addEventListener('finish', () => {
+      if (brandSpinAnimation === animation) brandSpinAnimation = null;
+    }, { once: true });
+  });
   brandToggle.addEventListener('click', () => { manuallyPaused = !manuallyPaused; updateBrandMotion(); });
   document.addEventListener('visibilitychange', updateBrandMotion);
   motion.addEventListener('change', updateBrandMotion);

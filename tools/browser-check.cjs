@@ -40,6 +40,19 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
           assert.equal(await page.$$eval('video', els => els.length), 4);
           assert.equal(await page.$$eval('video', els => els.every(el => el.controls && !el.autoplay && el.preload === 'none')), true);
           assert.equal(await page.$eval('[data-count-value]', el => el.textContent), language === 'de' ? '1.234' : '1,234');
+          assert.equal(await page.$eval('.story-count', el => el.textContent), language === 'de' ? '3.712' : '3,712');
+          assert.equal(await page.$$eval('img[src*="learning-report"],a[href*="learning-report"]', els => els.length), 0);
+          assert.equal(await page.$$eval('.social-links a', els => els.length), 3);
+          assert.equal(await page.$$eval('.social-links img', async els => {
+            await Promise.all(els.map(el => el.decode()));
+            return els.every(el => el.naturalWidth > 0);
+          }), true);
+          await page.$eval('[data-brand-spin]', el => el.click());
+          assert.equal(await page.$eval('[data-brand-symbol] img', el => el.getAnimations().length), 0, 'reduced motion prevents the requested spin');
+          await page.$eval('.learning-map-step:nth-of-type(2) summary', el => el.click());
+          assert.equal(await page.$eval('.learning-map-step:nth-of-type(2)', el => el.open), true);
+          assert.equal(await page.$$eval('.learning-map-step[open]', els => els.length), 1);
+          await page.$eval('.learning-map-step:first-of-type summary', el => el.click());
           await page.$$eval('main img', async els => { for (const el of els) { el.loading = 'eager'; await el.decode(); } });
         }
         if (slug === 'beta') {
@@ -89,6 +102,22 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
     await animated.waitForFunction(() => document.querySelector('[data-brand-symbol]').dataset.motionState === 'running');
     assert.equal(await animated.$eval('[data-brand-symbol]', el => getComputedStyle(el).animationDuration), '180s');
     assert.equal(await animated.$eval('.brand-wordmark-crop', el => getComputedStyle(el).transform), 'none');
+    await animated.focus('[data-brand-spin]');
+    await animated.keyboard.press('Enter');
+    assert.equal(await animated.$eval('[data-brand-symbol] img', el => {
+      const animations = el.getAnimations();
+      return animations.length === 1 && animations[0].effect.getTiming().duration === 650 && animations[0].effect.getTiming().iterations === 1;
+    }), true, 'keyboard starts one fast turn');
+    await animated.$eval('[data-brand-spin]', el => { el.click(); el.click(); });
+    assert.equal(await animated.$eval('[data-brand-symbol] img', el => el.getAnimations().length), 1, 'no queued double spin');
+    await animated.waitForFunction(() => document.querySelector('[data-brand-symbol] img').getAnimations().length === 0);
+    await animated.keyboard.press('Space');
+    await animated.waitForFunction(() => document.querySelector('[data-brand-symbol] img').getAnimations().length === 1);
+    await animated.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
+    await animated.waitForFunction(() => document.querySelector('[data-brand-symbol] img').getAnimations().length === 0);
+    await animated.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
+    await animated.waitForFunction(() => document.querySelector('[data-brand-symbol]').dataset.motionState === 'running');
+    checks.push('fast one-turn logo via Enter/Space, repeated activation guard and reduced-motion cancellation');
     await animated.click('[data-brand-motion-toggle]');
     assert.equal(await animated.$eval('[data-brand-symbol]', el => getComputedStyle(el).animationPlayState), 'paused');
     assert.equal(await animated.$eval('[data-brand-motion-toggle]', el => el.getAttribute('aria-pressed')), 'true');

@@ -18,7 +18,7 @@ test('premium updates keep a single real aggregate and distinguish completed, ne
   assert.match(updates, /data-count-value data-no-translate>—<\/strong>/);
   assert.doesNotMatch(updates, /3[.,]?712|\d+\s*%|ausverkauft/i);
   assert.match(updates, /aria-current="step"/);
-  assert.match(updates, /In Vorbereitung · Termin noch offen/);
+  assert.match(updates, /Voraussichtlich Mitte bis Ende November 2026/);
   for (const match of updates.matchAll(/>([^<>]+)</g)) {
     const text = match[1].replace(/\s+/g, ' ').trim();
     if (!text || /^[✓↗—]$|^BETA$/.test(text)) continue;
@@ -32,38 +32,182 @@ test('only the cropped star rotates slowly; wordmark stays fixed with a pause an
   assert.match(html, /data-brand-symbol/);
   assert.match(html, /class="brand-wordmark-crop"/);
   assert.match(html, /data-brand-motion-toggle aria-pressed="false"/);
+  const spinButton = html.match(/<button\b[^>]*\bdata-brand-spin\b[^>]*>[\s\S]*?<\/button>/)?.[0];
+  assert.ok(spinButton, 'logo is a native keyboard-operable button');
+  assert.match(spinButton, /type="button"/);
+  assert.match(spinButton, /aria-label="Novaire-Logo einmal drehen"/);
+  assert.match(spinButton, /data-brand-symbol/);
+  assert.doesNotMatch(spinButton, /<(?:div|a|input|details)\b|role="img"/, 'button contains only noninteractive phrasing content');
   assert.doesNotMatch(html, /class="brand-light"/);
   assert.match(css, /animation:brand-orbit 180s linear infinite;animation-play-state:paused/);
   assert.match(css, /prefers-reduced-motion:reduce\)\{\.brand-symbol\{animation:none!important/);
 });
 
-test('logo respects manual pause, viewport, background tabs and changing motion preferences', async () => {
+async function createLogoHarness({ reducedMotion = false, supportsAnimation = true } = {}) {
   const callbacks = {}, observers = [];
-  const symbol = { dataset: {} };
-  const toggle = { hidden: true, attributes: {}, addEventListener: (event, callback) => { callbacks.click = callback; }, setAttribute(name, value) { this.attributes[name] = value; } };
-  const motion = { matches: false, addEventListener: (event, callback) => { (callbacks.motion ||= []).push(callback); } };
-  const document = { hidden: false, querySelector: selector => selector === '[data-brand-symbol]' ? symbol : selector === '[data-brand-motion-toggle]' ? toggle : null, querySelectorAll: () => [], addEventListener: (event, callback) => { (callbacks[event] ||= []).push(callback); } };
+  const animations = [];
+  const image = supportsAnimation ? { animate(keyframes, options) {
+    const listeners = {};
+    const animation = {
+      keyframes, options, cancelled: false,
+      addEventListener: (event, callback) => { listeners[event] = callback; },
+      cancel() { this.cancelled = true; },
+      finish() { listeners.finish?.(); },
+    };
+    animations.push(animation);
+    return animation;
+  } } : {};
+  const symbol = { dataset: {}, querySelector: selector => selector === 'img' ? image : null };
+  const toggle = { hidden: true, attributes: {}, addEventListener: (event, callback) => { callbacks.toggle = callback; }, setAttribute(name, value) { this.attributes[name] = value; } };
+  const spinButton = { addEventListener: (event, callback) => { callbacks.spin = callback; } };
+  const motion = { matches: reducedMotion, addEventListener: (event, callback) => { (callbacks.motion ||= []).push(callback); } };
+  const elements = { '[data-brand-symbol]': symbol, '[data-brand-motion-toggle]': toggle, '[data-brand-spin]': spinButton };
+  const document = { hidden: false, querySelector: selector => elements[selector] || null, querySelectorAll: () => [], addEventListener: (event, callback) => { (callbacks[event] ||= []).push(callback); } };
   class Observer { constructor(callback) { this.callback = callback; observers.push(this); } observe() {} disconnect() {} }
   const source = await readFile(path.join(root, 'app.js'), 'utf8');
   vm.runInNewContext(source, { document, window: { IntersectionObserver: Observer }, IntersectionObserver: Observer, matchMedia: () => motion });
+  return {
+    symbol, toggle, animations,
+    spin: () => callbacks.spin(),
+    pause: () => callbacks.toggle(),
+    setInView: value => observers[0].callback([{ isIntersecting: value }]),
+    setHidden(value) { document.hidden = value; callbacks.visibilitychange.forEach(callback => callback()); },
+    setReducedMotion(value) { motion.matches = value; callbacks.motion.forEach(callback => callback({ matches: value })); },
+  };
+}
+
+test('logo respects manual pause, viewport, background tabs and changing motion preferences', async () => {
+  const { symbol, toggle, pause, setInView, setHidden, setReducedMotion } = await createLogoHarness();
   assert.equal(symbol.dataset.motionState, 'running');
-  callbacks.click();
+  pause();
   assert.equal(symbol.dataset.motionState, 'paused');
   assert.equal(toggle.attributes['aria-pressed'], 'true');
-  callbacks.click();
-  observers[0].callback([{ isIntersecting: false }]);
+  pause();
+  setInView(false);
   assert.equal(symbol.dataset.motionState, 'paused');
-  observers[0].callback([{ isIntersecting: true }]);
+  setInView(true);
   assert.equal(symbol.dataset.motionState, 'running');
-  document.hidden = true;
-  callbacks.visibilitychange.forEach(callback => callback());
+  setHidden(true);
   assert.equal(symbol.dataset.motionState, 'paused');
-  document.hidden = false;
-  callbacks.visibilitychange.forEach(callback => callback());
-  motion.matches = true;
-  callbacks.motion.forEach(callback => callback({ matches: true }));
+  setHidden(false);
+  assert.equal(symbol.dataset.motionState, 'running');
+  setReducedMotion(true);
   assert.equal(symbol.dataset.motionState, 'paused');
   assert.equal(toggle.hidden, true);
+  setReducedMotion(false);
+  assert.equal(symbol.dataset.motionState, 'running');
+  assert.equal(toggle.hidden, false);
+});
+
+test('logo activation makes one quick complete turn without queuing repeated clicks or changing manual pause', async () => {
+  const { symbol, toggle, animations, spin, pause } = await createLogoHarness();
+  spin();
+  spin();
+  assert.equal(animations.length, 1, 'a second activation during the turn does not add another');
+  assert.deepEqual(Array.from(animations[0].keyframes, frame => frame.transform), ['rotate(0deg)', 'rotate(360deg)']);
+  assert.equal(animations[0].options.iterations, 1);
+  assert.ok(animations[0].options.duration > 0 && animations[0].options.duration <= 1000, 'requested turn is quick');
+  assert.equal(symbol.dataset.motionState, 'running', 'idle rotation is not restarted or paused by activation');
+  animations[0].finish();
+  pause();
+  spin();
+  assert.equal(animations.length, 2, 'a completed turn permits another requested turn');
+  assert.equal(symbol.dataset.motionState, 'paused', 'an explicit turn does not resume manually paused idle motion');
+  assert.equal(toggle.attributes['aria-pressed'], 'true');
+  animations[1].finish();
+  assert.equal(symbol.dataset.motionState, 'paused');
+});
+
+for (const condition of ['Hidden', 'InView', 'ReducedMotion']) {
+  test(`logo cancels its requested turn when ${condition} changes and requires a fresh activation after recovery`, async () => {
+    const harness = await createLogoHarness();
+    const blockedValue = condition !== 'InView';
+    harness.spin();
+    harness[`set${condition}`](blockedValue);
+    assert.equal(harness.animations[0].cancelled, true);
+    assert.equal(harness.symbol.dataset.motionState, 'paused');
+    harness.spin();
+    assert.equal(harness.animations.length, 1, 'blocked motion cannot start a new turn');
+    harness[`set${condition}`](!blockedValue);
+    assert.equal(harness.animations.length, 1, 'visibility or preference recovery does not start a turn automatically');
+    harness.spin();
+    assert.equal(harness.animations.length, 2, 'cancellation clears the active turn for the next activation');
+  });
+}
+
+test('logo does not spin with initial reduced motion or an unavailable animation API', async () => {
+  for (const options of [{ reducedMotion: true }, { supportsAnimation: false }]) {
+    const harness = await createLogoHarness(options);
+    assert.doesNotThrow(() => harness.spin());
+    assert.equal(harness.animations.length, 0);
+  }
+});
+
+test('historical beta result stays separate from the live application counter', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const story = html.match(/<section[^>]+id="geschichte"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(story);
+  assert.match(story, /<strong class="story-count">3\.712<\/strong>/);
+  assert.equal(en['3.712'], '3,712');
+  assert.match(story, /Historischer Abschlussstand · 31\. Oktober 2026/);
+  assert.doesNotMatch(story, /data-application-counter|data-count-value/);
+  assert.equal([...html.matchAll(/3[.,]?712/g)].length, 1, 'historical number appears only once');
+});
+
+test('story timeline records the confirmed progression and labels the iOS launch as a target', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const timeline = html.match(/<ol class="story-timeline">([\s\S]*?)<\/ol>/)?.[1];
+  assert.ok(timeline);
+  assert.deepEqual([...timeline.matchAll(/<time datetime="([^"]+)">/g)].map(match => match[1]), [
+    '2025-11-27', '2025-11-28', '2025-12-09', '2026-04-23', '2026-10-10', '2026-10-15', '2026-10-31',
+  ]);
+  assert.match(timeline, /Unser erster Name: Lenova/);
+  assert.match(timeline, /Die Idee des Live Orbs/);
+  assert.match(timeline, /Mitte bis Ende November 2026/);
+  assert.match(timeline, /der Termin ist noch nicht verbindlich/);
+});
+
+test('learning journey replaces the removed learning-report image with an accessible schematic', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  assert.doesNotMatch(html, /learning-report|lernbericht/i);
+  const learningMap = html.match(/<div class="learning-map reveal"[\s\S]*?<p class="diagram-note">([^<]+)<\/p>/)?.[0];
+  assert.ok(learningMap);
+  assert.equal([...learningMap.matchAll(/<details class="learning-map-step"/g)].length, 4);
+  assert.equal([...learningMap.matchAll(/<summary>/g)].length, 4);
+  assert.match(learningMap, /Schematischer Lernweg — keine Live-Sitzung/);
+});
+
+test('community links expose the intended social accounts and business email with safe external navigation', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const community = html.match(/<section[^>]+id="community"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(community);
+  const links = [...community.matchAll(/<a href="(https:[^"]+)"([^>]+)>/g)];
+  assert.deepEqual(links.map(match => match[1]), [
+    'https://www.instagram.com/novaireapp', 'https://www.tiktok.com/@novaireapp', 'https://discord.gg/novaireai',
+  ]);
+  for (const [, url, attributes] of links) {
+    assert.match(attributes, /target="_blank"/, url);
+    assert.match(attributes, /rel="noopener noreferrer"/, url);
+    assert.match(attributes, /aria-label="[^"]+\(neuer Tab\)"/, url);
+  }
+  assert.match(community, /href="mailto:armin\.brnicanin@novaireai\.de"/);
+  assert.match(community, /Geschäftliche Anfragen &amp; Kooperationen/);
+});
+
+test('DACH availability and Android are clearly planned, while growth is a vision without measured claims', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const closing = html.match(/<section[^>]+id="start"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(closing);
+  assert.match(closing, /Geplant für Deutschland, Österreich und die Schweiz/);
+  assert.match(closing, /aria-label="Geplante Länder"/);
+  for (const country of ['Deutschland', 'Österreich', 'Schweiz']) assert.ok(closing.includes(country));
+  assert.match(closing, /iOS · In Vorbereitung/);
+  assert.match(closing, /Android folgt\.<\/span><p>Geplant · Ein Termin steht noch nicht fest\./);
+  const growth = html.match(/<figure class="growth-figure reveal"[\s\S]*?<\/figure>/)?.[0];
+  assert.ok(growth);
+  assert.match(growth, /role="img" aria-labelledby="growth-svg-title growth-svg-desc"/);
+  assert.match(growth, /<desc id="growth-svg-desc">[^<]*Keine gemessenen Daten oder Prognose\.<\/desc>/);
+  assert.match(growth, /<figcaption id="growth-caption">Schematische Darstellung unserer Vision — keine gemessenen Nutzungszahlen und keine Prognose\.<\/figcaption>/);
 });
 
 
