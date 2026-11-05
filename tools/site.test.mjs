@@ -10,6 +10,56 @@ const root = fileURLToPath(new URL('../public/', import.meta.url));
 const pages = (await readdir(root)).filter((file) => file.endsWith('.html'));
 const backendOrigin = 'https://naafzrrhjsfaqqrnhrcn.supabase.co';
 
+test('landing prices show the three confirmed amounts and a free first presentation without a website checkout', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const pricing = html.match(/<section[^>]+id="plaene"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(pricing);
+  const cards = [...pricing.matchAll(/<article\b[^>]*>([\s\S]*?)<\/article>/g)].map(match => match[1]);
+  assert.equal(cards.length, 3);
+  for (const [index, title, price] of [[0, 'Pro', '9,99 €'], [1, '24-Stunden-Pass', '2,99 €'], [2, 'Präsentationen', '4,99 €']]) {
+    assert.ok(cards[index].includes(`>${title}</h3>`));
+    assert.ok(cards[index].includes(`class="pricing-value">${price}</p>`));
+  }
+  assert.match(cards[0], /pro Monat/);
+  assert.match(cards[1], /für 24 Stunden/);
+  assert.match(cards[2], /pro Präsentation/);
+  assert.match(cards[2], /Erste Präsentation kostenlos/);
+  assert.match(pricing, /Starte mit Free\./);
+  assert.match(pricing, /Geplante Preise zum App-Start/);
+  assert.match(pricing, /Auf dieser Website ist kein Kauf möglich/);
+  assert.doesNotMatch(pricing, /<(?:form|button|input)\b|unbegrenzt|unlimited|automatisch|jederzeit kündbar/i);
+  assert.match(html, /href="#plaene">Preise /);
+});
+
+test('every pricing text node has an English equivalent and all amounts remain in euros', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const pricing = html.match(/<section[^>]+id="plaene"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(pricing);
+  for (const match of pricing.matchAll(/>([^<>]+)</g)) {
+    const text = match[1].replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+    if (!text || /^\d+$/.test(text)) continue;
+    assert.ok(en[text], `Missing pricing translation: ${text}`);
+  }
+  assert.equal(en['9,99 €'], '€9.99');
+  assert.equal(en['2,99 €'], '€2.99');
+  assert.equal(en['4,99 €'], '€4.99');
+  assert.equal(en['pro Monat'], 'per month');
+  assert.equal(en['Erste Präsentation kostenlos'], 'First presentation free');
+});
+
+test('socials appear directly after the hero once, with the original destinations and local logos', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  assert.match(html, /class="hero-index"[\s\S]*?<\/section>\s*<section class="section community-section"/);
+  assert.equal((html.match(/id="community"/g) ?? []).length, 1);
+  assert.ok(html.indexOf('id="community"') < html.indexOf('id="updates"'));
+  const community = html.match(/<section[^>]+id="community"[\s\S]*?<\/section>/)?.[0];
+  for (const [name, url] of [['instagram', 'https://www.instagram.com/novaireapp'], ['tiktok', 'https://www.tiktok.com/@novaireapp'], ['discord', 'https://discord.gg/novaireai']]) {
+    assert.equal(html.split(`href="${url}"`).length - 1, 1);
+    assert.ok(community.includes(`href="${url}" target="_blank" rel="noopener noreferrer"`));
+    assert.ok(community.includes(`src="assets/social-${name}.svg"`));
+  }
+});
+
 test('premium updates keep a single real aggregate and distinguish completed, next and future milestones', async () => {
   const html = await readFile(path.join(root, 'index.html'), 'utf8');
   const updates = html.match(/<section[^>]+id="updates"[\s\S]*?<\/section>/)?.[0];
@@ -294,7 +344,10 @@ for (const file of pages) {
 }
 test('public copy has no editorial drafts, unconfirmed operator or invented promises', async () => {
   const all = await Promise.all(pages.map((p)=>readFile(path.join(root,p),'utf8')));
-  assert.doesNotMatch(all.join(''), /draft-notice|pending-detail|Arbeitsentwurf|Rechtstexte noch in Prüfung|Vor Veröffentlichung zu klären|\d+[,.]\d{2}\s*€/);
+  assert.doesNotMatch(all.join(''), /draft-notice|pending-detail|Arbeitsentwurf|Rechtstexte noch in Prüfung|Vor Veröffentlichung zu klären/);
+  // Prices are now explicitly confirmed by the founder; do not admit additional invented amounts.
+  const prices = all.join('').match(/\d+[,.]\d{2}\s*€/g) ?? [];
+  assert.deepEqual(prices, ['9,99 €', '2,99 €', '4,99 €']);
   const imprint = await readFile(path.join(root, 'impressum.html'), 'utf8');
   assert.match(imprint, /Armin Brnicanin/);
   assert.match(imprint, /Hopfenstraße 60/);
