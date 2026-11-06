@@ -10,6 +10,21 @@ const root = fileURLToPath(new URL('../public/', import.meta.url));
 const pages = (await readdir(root)).filter((file) => file.endsWith('.html'));
 const backendOrigin = 'https://naafzrrhjsfaqqrnhrcn.supabase.co';
 
+test('landing includes school, vocational training and university in visible copy and translated metadata', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+  const hero = html.match(/<p class="hero-description">([^<]+)<\/p>/)?.[1];
+  assert.ok(hero);
+  assert.match(hero, /Für Schule, Ausbildung und Studium\./);
+  assert.match(html, /Für Klasse 5–13\.<br>Auch für Ausbildung und Studium\./);
+  for (const text of [hero, 'Auch für Ausbildung und Studium.',
+    html.match(/<meta name="description" content="([^"]+)"/)?.[1],
+    html.match(/<meta property="og:description" content="([^"]+)"/)?.[1]]) {
+    assert.ok(text);
+    assert.match(text, /Ausbildung und Studium/);
+    assert.match(en[text] ?? '', /vocational training and university/);
+  }
+});
+
 test('landing prices show the three confirmed amounts and a free first presentation without a website checkout', async () => {
   const html = await readFile(path.join(root, 'index.html'), 'utf8');
   const pricing = html.match(/<section[^>]+id="plaene"[\s\S]*?<\/section>/)?.[0];
