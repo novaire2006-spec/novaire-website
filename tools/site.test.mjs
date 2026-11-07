@@ -91,6 +91,24 @@ test('premium updates keep a single real aggregate and distinguish completed, ne
   }
 });
 
+test('beta launch news is dated and distinguishes selected testers from public access', async () => {
+  const home = await readFile(path.join(root, 'index.html'), 'utf8');
+  const news = home.match(/<article class="launch-update[^>]*>[\s\S]*?<\/article>/)?.[0];
+  assert.ok(news);
+  assert.match(news, /BETA LIVE/);
+  assert.match(news, /datetime="2026-11-07"/);
+  assert.match(news, /Die Beta ist gestartet\./);
+  assert.match(news, /geschlossene Beta/);
+  assert.match(news, /ausgewählten Tester.*TestFlight/);
+  for (const filename of ['index.html', 'beta.html', 'support.html']) {
+    const source = await readFile(path.join(root, filename), 'utf8');
+    assert.doesNotMatch(source, /Die Beta steht bevor|Wir bereiten die erste Testrunde|Wir wählen 100 passende Tester|Den Beta-Zugang erklären wir nach der Auswahl/);
+    assert.match(source, /Bewerbungsrunde (?:bleibt|ist) geschlossen/);
+  }
+  const support = await readFile(path.join(root, 'support.html'), 'utf8');
+  assert.match(support, /noch nicht öffentlich im App Store verfügbar/);
+});
+
 test('only the cropped star rotates slowly; wordmark stays fixed with a pause and reduced-motion alternative', async () => {
   const html = await readFile(path.join(root, 'index.html'), 'utf8');
   const css = await readFile(path.join(root, 'styles.css'), 'utf8');
@@ -224,7 +242,7 @@ test('story timeline records the confirmed progression and labels the iOS launch
   const timeline = html.match(/<ol class="story-timeline">([\s\S]*?)<\/ol>/)?.[1];
   assert.ok(timeline);
   assert.deepEqual([...timeline.matchAll(/<time datetime="([^"]+)">/g)].map(match => match[1]), [
-    '2025-11-27', '2025-11-28', '2025-12-09', '2026-04-23', '2026-10-10', '2026-10-15', '2026-10-31',
+    '2025-11-27', '2025-11-28', '2025-12-09', '2026-04-23', '2026-10-10', '2026-10-15', '2026-10-31', '2026-11-07',
   ]);
   assert.match(timeline, /Unser erster Name: Lenova/);
   assert.match(timeline, /Die Idee des Live Orbs/);
@@ -442,7 +460,7 @@ test('updated legal and support copy has the current publication date', async ()
   for (const filename of ['datenschutz.html', 'impressum.html', 'agb.html', 'support.html']) {
     const source = await readFile(path.join(root, filename), 'utf8');
     const date = source.match(/<p class="updated">Novaire · Stand ([^<]+)<\/p>/)?.[1];
-    assert.equal(date, '3. November 2026', filename);
+    assert.equal(date, filename === 'support.html' ? '7. November 2026' : '3. November 2026', filename);
   }
 });
 test('only the two exact beta endpoints are reachable; no keys or trackers', async () => {
@@ -468,7 +486,7 @@ test('only the two exact beta endpoints are reachable; no keys or trackers', asy
 test('beta application has transparent limits, guardian flow and non-JavaScript fallback', async () => {
   const beta = await readFile(path.join(root, 'beta.html'), 'utf8');
   assert.match(beta, /NOVAIRE BETA · 100 PLÄTZE/);
-  assert.match(beta, /Wir wählen 100 passende Tester/);
+  assert.match(beta, /Die Einladungen an die ausgewählten Tester wurden per E-Mail verschickt/);
   assert.match(beta, /30\.\s*Oktober/);
   assert.match(beta, /2026/);
   assert.match(beta, /Überraschung/);

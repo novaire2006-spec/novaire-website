@@ -46,11 +46,11 @@ export const pages = {
   },
   support: {
     title: 'Wir helfen dir weiter.',
-    updated: '3. November 2026',
+    updated: '7. November 2026',
     body: `<p>Eine Frage zu Novaire, ein technisches Problem oder Feedback? Schreib uns an <a href="mailto:support@novaireai.de">support@novaireai.de</a>.</p><p>Ansprechpartner: Armin Brnicanin, Gründer von Novaire.</p>
     <h2>Damit wir dir helfen können</h2><p>Beschreibe kurz, was du machen wolltest und was stattdessen passiert ist. Bei technischen Problemen helfen Gerätemodell, iOS-Version und App-Version. Verdecke in Screenshots persönliche Daten anderer Personen. Schicke keine Passwörter, API-Schlüssel, vollständigen Zahlungsdaten oder Ausweiskopien.</p>
-    <h2>Häufige Fragen</h2><details><summary>Wie kann ich die Beta testen?</summary><p>Die erste Bewerbungsrunde ist seit dem 30. Oktober 2026 geschlossen. Ausgewählte Bewerber erhalten die nächsten Schritte per E-Mail. Aktuelle Informationen findest du auf unserer <a href="beta.html">Beta-Seite</a>.</p></details>
-    <details><summary>Wo kann ich Novaire herunterladen?</summary><p>Novaire ist noch nicht öffentlich im App Store verfügbar. Den Beta-Zugang erklären wir nach der Auswahl per E-Mail. Sobald die App veröffentlicht ist, findest du hier den offiziellen Download-Link.</p></details>
+    <h2>Häufige Fragen</h2><details><summary>Wie kann ich die Beta testen?</summary><p>Die geschlossene Beta läuft seit dem 7. November 2026. Die Einladungen an die ausgewählten Tester wurden per E-Mail verschickt. Die Bewerbungsrunde bleibt geschlossen. Aktuelle Informationen findest du auf unserer <a href="beta.html">Beta-Seite</a>.</p></details>
+    <details><summary>Wo kann ich Novaire herunterladen?</summary><p>Ausgewählte Beta-Tester können Novaire über ihre TestFlight-Einladung installieren. Prüfe dafür dein E-Mail-Postfach und den Spam-Ordner. Novaire ist noch nicht öffentlich im App Store verfügbar. Sobald die App veröffentlicht ist, findest du hier den offiziellen Download-Link.</p></details>
     <details><summary>Für wen ist Novaire gedacht?</summary><p>Für Schülerinnen und Schüler der Klassen 5–13 in Deutschland ab 10 Jahren. Unter 16 erfolgt die Beta-Bewerbung durch ein sorgeberechtigtes Elternteil mit dessen Kontakt-E-Mail.</p></details>
     <details><summary>Kann ich kostenlos starten?</summary><p>Ja, Novaire hat einen Einstieg mit Free. Zusätzliche Angebote und Leistungen werden vor einem Kauf in der App beschrieben. Eine Beta-Bewerbung ist kein Kauf.</p></details>
     <details><summary>Kann Nova Fehler machen?</summary><p>Ja. Frage nach einer Erklärung und vergleiche wichtige Aussagen mit Unterrichtsmaterial oder einer Lehrkraft.</p></details>
