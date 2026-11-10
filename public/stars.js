@@ -34,7 +34,7 @@
     let color = 0;
     while (color < palette.length - 1 && pick > palette[color].share) pick -= palette[color++].share;
     const depth = random();
-    const radius = (color === 0 ? 0.45 : 0.8) + depth ** 2.4 * 1.25;
+    const radius = (color === 0 ? 0.4 : 0.68) + depth ** 2.4 * 1.05;
     return {
       x: random(),
       y: random(),
@@ -42,7 +42,7 @@
       radius,
       alpha: (color === 0 ? 0.34 : 0.62) + depth * 0.38,
       drift: 0.025 + depth * 0.095,
-      halo: radius > 1.3 ? radius * 5.5 : 0,
+      halo: radius > 1.12 ? radius * 4.6 : 0,
       twinkle: random() < 0.45,
       speed: 0.35 + random() * 1.1,
       phase: random() * Math.PI * 2,
@@ -69,6 +69,7 @@
   let width = 0;
   let height = 0;
   let count = 0;
+  let unit = 1;
   let frame = 0;
   let lastDraw = 0;
   let lastScroll = -1;
@@ -97,13 +98,14 @@
       }
       if (animated && star.twinkle) alpha *= 0.6 + 0.4 * Math.sin(time * star.speed + star.phase);
       if (star.halo) {
+        const halo = star.halo * unit;
         context.globalAlpha = alpha * 0.6;
-        context.drawImage(halos[star.color], x - star.halo, y - star.halo, star.halo * 2, star.halo * 2);
+        context.drawImage(halos[star.color], x - halo, y - halo, halo * 2, halo * 2);
       }
       context.globalAlpha = alpha;
       context.fillStyle = fills[star.color];
       context.beginPath();
-      context.arc(x, y, star.radius, 0, Math.PI * 2);
+      context.arc(x, y, star.radius * unit, 0, Math.PI * 2);
       context.fill();
     }
     context.globalAlpha = 1;
@@ -116,7 +118,11 @@
     if (!nextWidth || !nextHeight || (nextWidth === width && nextHeight === height)) return;
     width = nextWidth;
     height = nextHeight;
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    // Dots are drawn at two device pixels per point or more, so they stay fine and smooth on every
+    // screen, within a budget of about nine million pixels. On narrow screens they are smaller.
+    const wanted = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
+    const ratio = Math.max(1, Math.min(wanted, Math.sqrt(9e6 / (width * height))));
+    unit = Math.min(1, Math.max(0.6, width / 760));
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -143,6 +149,8 @@
   };
 
   window.addEventListener('resize', resize);
+  // The canvas can change size without a window resize, for example when a phone turns.
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
   document.addEventListener('visibilitychange', update);
   motion.addEventListener('change', update);
   resize();
