@@ -15,8 +15,53 @@
   const figure = document.querySelector('.growth-figure');
   const curve = figure ? figure.querySelector('.growth-curve') : null;
   const drifters = all('.marketing-page .product-visual');
+  const learning = document.querySelector('.learning-map');
+  const learningSteps = learning ? [...learning.querySelectorAll('.learning-map-step')] : [];
   let threadLengths = [];
   let queued = false;
+
+  // One line runs from the second section to the end of the page. It is drawn down to the
+  // reading line, takes the colour of each section it passes and carries a small light at its tip.
+  const main = document.querySelector('.marketing-page:not(.beta-page) main');
+  const railSections = main ? [...main.querySelectorAll(':scope > section')].slice(1) : [];
+  const rail = railSections.length > 3 ? document.createElement('div') : null;
+  const railFill = rail ? document.createElement('span') : null;
+  let railStart = 0;
+  let railLength = 0;
+  let railStops = [];
+  if (rail) {
+    rail.className = 'journey-rail';
+    rail.setAttribute('aria-hidden', 'true');
+    const track = document.createElement('span');
+    const tip = document.createElement('span');
+    track.className = 'journey-track';
+    railFill.className = 'journey-fill';
+    tip.className = 'journey-tip';
+    rail.append(track, railFill, tip);
+    main.append(rail);
+  }
+  const layoutRail = () => {
+    if (!rail) return;
+    const origin = main.getBoundingClientRect().top;
+    const first = railSections[0].getBoundingClientRect().top - origin + 48;
+    const last = railSections[railSections.length - 1].getBoundingClientRect().bottom - origin - 72;
+    railStart = first + origin + window.scrollY;
+    railLength = Math.max(0, last - first);
+    rail.style.top = `${Math.round(first)}px`;
+    rail.style.height = `${Math.round(railLength)}px`;
+    railStops = railSections.map((section, index) => ({
+      start: index ? section.getBoundingClientRect().top - origin - first : 0,
+      color: getComputedStyle(section).getPropertyValue('--dot').trim() || '#fff',
+    }));
+    const blend = 110;
+    const parts = [];
+    railStops.forEach((stop, index) => {
+      const next = railStops[index + 1];
+      parts.push(`${stop.color} ${Math.round(stop.start + (index ? blend : 0))}px`);
+      parts.push(`${stop.color} ${Math.round(next ? next.start - blend : railLength)}px`);
+    });
+    railFill.style.background = `linear-gradient(${parts.join(', ')})`;
+  };
 
   // The thread above a heading is a pseudo-element; its length sets how far the page scrolls while it draws.
   const measure = () => {
@@ -38,6 +83,7 @@
     const stepTops = steps.map((step) => step.getBoundingClientRect().top);
     const figureBox = figure ? figure.getBoundingClientRect() : null;
     const driftBoxes = drifters.map((element) => element.getBoundingClientRect());
+    const learningBox = learning ? learning.getBoundingClientRect() : null;
 
     root.classList.toggle('at-top', scroll < 12);
     if (hero) hero.style.setProperty('--exit', still ? '0' : clamp(scroll / Math.max(1, heroHeight * 0.85)).toFixed(3));
@@ -68,6 +114,21 @@
       figure.classList.toggle('is-drawn', progress >= 0.985);
     }
 
+    if (learning) {
+      const progress = still ? 1 : clamp((height * 0.8 - learningBox.top) / (learningBox.height * 0.8));
+      learningSteps.forEach((step, index) => step.classList.toggle('is-reached', progress >= 0.2 + index * 0.2));
+    }
+
+    if (rail) {
+      const reach = still ? railLength : Math.min(railLength, Math.max(0, scroll + mark - railStart));
+      let color = '#fff';
+      for (const stop of railStops) if (stop.start <= reach + 1) color = stop.color;
+      rail.style.setProperty('--y', `${reach.toFixed(1)}px`);
+      rail.style.setProperty('--tip', color);
+      rail.classList.toggle('is-active', reach > 2);
+      rail.classList.toggle('is-still', still);
+    }
+
     drifters.forEach((element, index) => {
       const box = driftBoxes[index];
       const through = still ? 0 : clamp((height - box.top) / (height + box.height));
@@ -82,8 +143,11 @@
 
   root.classList.add('motion-ready');
   window.addEventListener('scroll', request, { passive: true });
-  window.addEventListener('resize', () => { measure(); request(); });
+  window.addEventListener('resize', () => { measure(); layoutRail(); request(); });
   motion.addEventListener('change', request);
+  // Images and fonts can still change the page height after the first layout.
+  if (rail && 'ResizeObserver' in window) new ResizeObserver(() => { layoutRail(); request(); }).observe(main);
   measure();
+  layoutRail();
   update();
 })();

@@ -90,7 +90,7 @@
 .growth-axis-title { font-size: 11px; color: #bbc6db; margin: 32px 0 12px; }
 .growth-graph { display: block; width: 100%; height: auto; overflow: visible; }
 .graph-grid path { stroke: #cbdcff0b; fill: none; stroke-width: 1; }
-.growth-curve { stroke: #6098ff; stroke-width: 3; fill: none; stroke-linecap: round; }
+.growth-curve { stroke-width: 3; fill: none; stroke-linecap: round; }
 .graph-origin { fill: #7aa9ff; }
 .graph-destination { fill: #a3c5ff; }
 .graph-destination-halo { fill: #6497f314; }
