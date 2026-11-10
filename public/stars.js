@@ -18,6 +18,8 @@
   const maxStars = 340;
   const edge = 24;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  // Another script may set travel to let the stars flow past, as on a flight forwards.
+  const sky = window.novaireSky = window.novaireSky || { travel: 0 };
 
   // A fixed seed keeps the same sky on every page and every visit.
   let seed = 20261110;
@@ -44,6 +46,8 @@
       twinkle: random() < 0.45,
       speed: 0.35 + random() * 1.1,
       phase: random() * Math.PI * 2,
+      lane: random(),
+      pace: 0.6 + depth * 0.8,
     };
   });
 
@@ -72,14 +76,25 @@
   const draw = (time, scroll) => {
     const field = height + edge * 2;
     const animated = !motion.matches;
+    const travel = animated ? sky.travel || 0 : 0;
+    const blend = Math.min(1, travel * 6);
     context.clearRect(0, 0, width, height);
     for (let index = 0; index < count; index += 1) {
       const star = stars[index];
       let y = (star.y * field - (animated ? scroll * star.drift : 0)) % field;
       if (y < 0) y += field;
       y -= edge;
-      const x = star.x * width;
+      let x = star.x * width;
       let alpha = star.alpha;
+      if (travel) {
+        // Each star moves outwards from the middle and starts again further in, so the sky stays full.
+        const cycle = star.lane + travel * star.pace;
+        const turn = cycle - Math.floor(cycle);
+        const zoom = 1 + (turn - star.lane) * 0.8;
+        x = width / 2 + (x - width / 2) * zoom;
+        y = height / 2 + (y - height / 2) * zoom;
+        alpha *= 1 - blend * (1 - Math.min(1, turn / 0.12, (1 - turn) / 0.12));
+      }
       if (animated && star.twinkle) alpha *= 0.6 + 0.4 * Math.sin(time * star.speed + star.phase);
       if (star.halo) {
         context.globalAlpha = alpha * 0.6;
@@ -113,11 +128,11 @@
   // Follow the scroll every frame, but let the idle twinkle run at a calm pace.
   const tick = (now) => {
     frame = requestAnimationFrame(tick);
-    const scroll = window.scrollY;
+    const scroll = window.scrollY + (sky.travel || 0) * 1e6;
     if (scroll === lastScroll && now - lastDraw < 50) return;
     lastDraw = now;
     lastScroll = scroll;
-    draw(now / 1000, scroll);
+    draw(now / 1000, window.scrollY);
   };
   const update = () => {
     cancelAnimationFrame(frame);

@@ -21,6 +21,7 @@
   <script src="stars.js" defer></script>
   <script src="motion.js" defer></script>
   <script src="app.js" defer></script>
+  <script type="module" src="rewards.js"></script>
   <script type="module" src="i18n.js"></script>
   <script type="module" src="application-count.js"></script>
 </head>
@@ -33,6 +34,7 @@
         <a href="#updates">Updates &amp; Meilensteine <span aria-hidden="true">↗</span></a>
         <a href="#entdecken">Die App <span aria-hidden="true">↗</span></a>
         <a href="#app-in-aktion">App in Aktion <span aria-hidden="true">↗</span></a>
+        <a href="#belohnungen">Belohnungen <span aria-hidden="true">↗</span></a>
         <a href="#geschichte">Unsere Geschichte <span aria-hidden="true">↗</span></a>
         <a href="#community">Community <span aria-hidden="true">↗</span></a>
         <a href="#intelligenz">Die KI dahinter <span aria-hidden="true">↗</span></a>
@@ -224,6 +226,22 @@
         <details class="learning-map-step" name="learning-path"><summary><span class="step-index" aria-hidden="true">03</span><span>Selbst ausprobieren</span><span class="step-plus" aria-hidden="true">+</span></summary><div><p>Jetzt bist du dran. Kleine Aufgaben zeigen dir, was du schon verstanden hast.</p><span class="step-example">Vom Mitdenken zum Selbermachen.</span></div></details>
         <details class="learning-map-step" name="learning-path"><summary><span class="step-index" aria-hidden="true">04</span><span>Wissen festigen</span><span class="step-plus" aria-hidden="true">+</span></summary><div><p>Teste dein Wissen und wiederhole gezielt. So erkennst du, was sitzt und wo du noch üben möchtest.</p><span class="step-example">Dein Tempo. Dein nächster Schritt.</span></div></details>
         <p class="diagram-note">Schematischer Lernweg — keine Live-Sitzung.</p>
+      </div>
+    </section>
+
+    <section class="section rewards-section" id="belohnungen" aria-labelledby="rewards-title">
+      <div class="rewards-track">
+        <div class="rewards-stage">
+          <div class="rewards-sky" aria-hidden="true">
+            <canvas class="rewards-body" data-body="galaxy" width="64" height="64"></canvas>
+            <canvas class="rewards-body" data-body="friend" width="64" height="64"></canvas>
+            <canvas class="rewards-body" data-body="blackhole" width="64" height="64"></canvas>
+            <span class="rewards-label">Du</span><span class="rewards-label">Dein Freund</span>
+          </div>
+          <div class="rewards-caption"><p class="eyebrow">BELOHNUNGEN FÜRS LERNEN</p><h2 id="rewards-title">Erhalte Belohnungen<br><span class="muted">fürs Lernen.</span></h2><p>Wenn du lernst, entdeckst du Sterne, Planeten und ganze Galaxien. Sammle sie in deinem eigenen Universum.</p></div>
+          <div class="rewards-caption"><h3>Am seltensten:<br><span class="muted">das Schwarze Loch.</span></h3><p>Sterne findest du oft, Galaxien selten. Ein Schwarzes Loch ist der seltenste Fund von allen.</p><ol class="rarity-scale" aria-label="Von häufig bis am seltensten"><li>Sterne</li><li>Planeten</li><li>Exoplaneten</li><li>Galaxien</li><li>Schwarze Löcher</li></ol></div>
+          <div class="rewards-caption"><h3>Vergleicht eure<br><span class="muted">Universen.</span></h3><p>Schau dir an, was deine Freunde entdeckt haben, und zeig ihnen deine Galaxie.</p></div>
+        </div>
       </div>
     </section>
 

@@ -17,6 +17,14 @@ Fertiger Website-Code für das bestehende Repository
   (vier Sternpunkte leuchten nacheinander auf), eine Linie, die in jeden
   zentrierten Abschnitt führt, und Einblendungen, die der Scroll-Position
   folgen (`animation-timeline: view()`, sonst kurze einmalige Einblendung).
+- Abschnitt „Belohnungen“ (`rewards.js`, `universe-shaders.js`): Beim Scrollen
+  kommt eine Galaxie aus dem Sternenhimmel nach vorn, danach das Schwarze Loch
+  als seltenster Fund und zwei Galaxien zum Vergleich mit Freunden. Gezeichnet
+  wird mit den echten App-Shadern `universe_galaxy.frag` und
+  `universe_blackhole.frag` über WebGL 2. `universe-shaders.js` ist daraus
+  erzeugt: erst die App-Shader ändern, dann neu erzeugen. Ohne WebGL, ohne
+  JavaScript oder bei reduzierter Bewegung stehen die drei Texte einfach
+  untereinander.
   Das Logo liegt zusätzlich als `novaire-logo-alpha.png` mit transparentem
   Hintergrund vor. Ohne JavaScript, bei reduzierter Bewegung und bei erhöhtem
   Kontrast bleibt die Seite ruhig und vollständig lesbar.

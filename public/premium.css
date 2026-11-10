@@ -520,6 +520,70 @@ h2 { font-weight: 600; letter-spacing: -.042em; }
 .pricing-card[aria-labelledby="price-presentation-title"] h3 { color: #ffe09a; }
 .pricing-card[aria-labelledby="price-presentation-title"] .pricing-value { text-shadow: 0 0 26px #ffd46a4d; }
 
+/* Rewards: the screen is empty, then a galaxy comes out of the star field while you scroll.
+   Without the live scene (no script, no WebGL, reduced motion) the three texts simply follow each other. */
+.marketing-page main > section.rewards-section { --dot: #c9a6ff; max-width: none; }
+.rewards-stage { display: grid; gap: clamp(64px, 9vw, 120px); justify-items: center; text-align: center; }
+.rewards-sky { display: none; }
+.rewards-caption { max-width: 660px; }
+.rewards-caption .eyebrow {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 24px; padding: 8px 15px 8px 13px;
+  border: 1px solid var(--card-line); border-radius: 999px; background: #ffffff09;
+  font-size: 10.5px; line-height: 1.3; letter-spacing: .16em; color: #c3c9d9;
+}
+.rewards-caption .eyebrow::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 10px var(--dot); }
+.rewards-caption :is(h2, h3) { margin: 0; font-size: clamp(34px, 4.6vw, 60px); font-weight: 600; line-height: 1.07; letter-spacing: -.042em; text-wrap: balance; }
+.rewards-caption > p:not(.eyebrow) { max-width: 540px; margin: 22px auto 0; font-size: 17px; line-height: 1.65; color: var(--muted); }
+.rarity-scale { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 26px 0 0; padding: 0; list-style: none; }
+.rarity-scale li {
+  --c: var(--star-yellow); display: inline-flex; align-items: center; gap: 9px; padding: 8px 14px 8px 12px;
+  border: 1px solid var(--card-line); border-radius: 999px; background: #ffffff08; font-size: 13px; color: #8f95a6;
+  transition: color .3s var(--out), border-color .3s var(--out), box-shadow .3s var(--out);
+}
+.rarity-scale li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--c); opacity: .35; transition: opacity .3s var(--out), box-shadow .3s var(--out); }
+.rarity-scale li:nth-child(2) { --c: var(--star-blue); }
+.rarity-scale li:nth-child(2)::before { width: 7px; height: 7px; }
+.rarity-scale li:nth-child(3) { --c: #7fe3d2; }
+.rarity-scale li:nth-child(3)::before { width: 6px; height: 6px; }
+.rarity-scale li:nth-child(4) { --c: #c9a6ff; }
+.rarity-scale li:nth-child(4)::before { width: 5px; height: 5px; }
+.rarity-scale li:nth-child(5) { --c: #ff9d5c; }
+.rarity-scale li:nth-child(5)::before { width: 4px; height: 4px; }
+.rarity-scale li.is-lit, .rewards-section:not(.rewards-live) .rarity-scale li { color: var(--text); }
+.rarity-scale li.is-lit::before, .rewards-section:not(.rewards-live) .rarity-scale li::before { opacity: 1; box-shadow: 0 0 10px var(--c); }
+.rarity-scale li:nth-child(5).is-lit, .rewards-section:not(.rewards-live) .rarity-scale li:nth-child(5) {
+  border-color: #ff9d5c8c; color: #ffd9bd; box-shadow: 0 0 30px -6px #ff9d5c99;
+}
+
+.marketing-page main > section.rewards-live { padding-block: 0; }
+.rewards-live .rewards-track { height: calc(100svh + 3200px); }
+.rewards-live .rewards-stage {
+  --body: min(56svh, 88vw, 640px); position: sticky; top: 0; display: block; height: 100svh; overflow: clip;
+}
+.rewards-live .rewards-sky { display: block; position: absolute; inset: 0; pointer-events: none; }
+.rewards-body {
+  position: absolute; top: 40%; left: 50%; width: var(--body); height: var(--body);
+  margin: calc(var(--body) / -2) 0 0 calc(var(--body) / -2); opacity: 0; will-change: transform, opacity;
+}
+.rewards-label {
+  position: absolute; top: 40%; left: 50%; padding: 7px 14px; border: 1px solid var(--card-line); border-radius: 999px;
+  background: #0b0c11d9; font-size: 13px; color: #d7dbe6; opacity: 0; white-space: nowrap;
+}
+.rewards-live .rewards-caption {
+  position: absolute; left: 50%; bottom: clamp(26px, 7svh, 76px); width: min(660px, calc(100% - var(--gutter) * 2));
+  opacity: 0; transform: translate3d(-50%, 28px, 0); pointer-events: none; will-change: transform, opacity;
+}
+.rewards-live .rewards-caption.is-shown { pointer-events: auto; }
+@media (max-width: 700px), (max-height: 720px) {
+  .rewards-live .rewards-stage { --body: min(44svh, 88vw, 520px); }
+  .rewards-body, .rewards-label { top: 33%; }
+  .rewards-caption :is(h2, h3) { font-size: clamp(30px, 8vw, 40px); }
+  .rewards-caption > p:not(.eyebrow) { margin-top: 16px; font-size: 15.5px; line-height: 1.55; }
+  .rewards-caption .eyebrow { margin-bottom: 18px; }
+  .rarity-scale { gap: 6px; margin-top: 18px; }
+  .rarity-scale li { padding: 6px 11px 6px 10px; font-size: 12px; }
+}
+
 @keyframes rise { from { opacity: 0; transform: translate3d(0, 18px, 0); } }
 @keyframes grow { from { scale: .84; } }
 @keyframes draw-line { from { transform: scale(0); } }
