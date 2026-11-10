@@ -6,6 +6,15 @@ Fertiger Website-Code für das bestehende Repository
 
 ## Aktueller Stand
 
+- Premium-Überarbeitung vom 10. November 2026 (`premium.css`, `stars.js`,
+  `motion.js`): Sternenhimmel als lokale Canvas mit weißen, blauen, gelben und
+  roten Punkten, feste Kopfzeile mit Glas-Effekt, kurze Scroll-Einblendungen
+  ohne Nachfedern, einheitliche Karten, größere Schrift. Zeitstrahl mit Datum
+  links und einer Linie, die beim Lesen mitläuft; Meilensteine und
+  Wachstumskurve reduziert. Inhalte, Reihenfolge und Texte sind unverändert.
+  Das Logo liegt zusätzlich als `novaire-logo-alpha.png` mit transparentem
+  Hintergrund vor. Ohne JavaScript, bei reduzierter Bewegung und bei erhöhtem
+  Kontrast bleibt die Seite ruhig und vollständig lesbar.
 - Zeitloses Schwarz-Weiß-Layout, neue Hero-Aufteilung und ruhigere Abstände.
   Halloween-Dekorationen, Saison-Schrift und zugehörige Assets entfernt.
 - Silberner Stern mit einer ruhigen 180-Sekunden-Drehung; Schriftzug bleibt fest.

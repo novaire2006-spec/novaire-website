@@ -56,14 +56,18 @@ if (brandSymbol && brandToggle) {
 }
 
 if ('IntersectionObserver' in window && !motion.matches) {
+  // Blocks that enter the screen together follow each other in quick succession.
   const observer = new IntersectionObserver((entries) => {
+    let order = 0;
     for (const entry of entries) {
       if (!entry.isIntersecting) continue;
+      entry.target.style.setProperty('--reveal-delay', `${Math.min(order, 4) * 70}ms`);
+      order += 1;
       entry.target.classList.remove('pending');
       entry.target.classList.add('visible');
       observer.unobserve(entry.target);
     }
-  }, { threshold: 0.08 });
+  }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
   for (const element of document.querySelectorAll('.reveal')) {
     element.classList.add('pending');
     observer.observe(element);
