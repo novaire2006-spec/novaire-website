@@ -140,17 +140,28 @@ h2 { font-weight: 600; letter-spacing: -.042em; }
 .marketing-page .hero-index { transition: color var(--quick) var(--out), filter 160ms ease, opacity 160ms ease; }
 .marketing-page .hero-index:hover { color: #d5d9e5; }
 
-/* Scroll reveals: short, without overshoot. Groups let their parts follow one another. */
-.reveal.pending { opacity: 0; transform: none; }
-.reveal.visible { transition: none; animation: rise var(--rise) var(--out) backwards; animation-delay: var(--reveal-delay, 0ms); }
-.reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .beta-invitation, .closing, .social-links, .pricing-grid, .launch-roadmap) { animation: none; }
-.reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .beta-invitation, .closing, .social-links, .pricing-grid, .launch-roadmap) > * {
-  animation: rise var(--rise) var(--out) backwards; animation-delay: var(--reveal-delay, 0ms);
+/* Scroll reveals. Where the browser supports it, each part follows the scroll position itself;
+   otherwise it fades in once, briefly and without overshoot. Groups let their parts follow one another. */
+@supports not (animation-timeline: view()) {
+  .reveal.pending { opacity: 0; transform: none; }
+  .reveal.visible { transition: none; animation: rise var(--rise) var(--out) backwards; animation-delay: var(--reveal-delay, 0ms); }
+  .reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap) { animation: none; }
+  .reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap) > * { animation: rise var(--rise) var(--out) backwards; animation-delay: var(--reveal-delay, 0ms); }
+  .reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(2) { animation-delay: calc(var(--reveal-delay, 0ms) + 70ms); }
+  .reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(3) { animation-delay: calc(var(--reveal-delay, 0ms) + 140ms); }
+  .reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(4) { animation-delay: calc(var(--reveal-delay, 0ms) + 210ms); }
+  .reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(n+5) { animation-delay: calc(var(--reveal-delay, 0ms) + 280ms); }
 }
-.reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .beta-invitation, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(2) { animation-delay: calc(var(--reveal-delay, 0ms) + 70ms); }
-.reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .beta-invitation, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(3) { animation-delay: calc(var(--reveal-delay, 0ms) + 140ms); }
-.reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .beta-invitation, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(4) { animation-delay: calc(var(--reveal-delay, 0ms) + 210ms); }
-.reveal.visible:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .beta-invitation, .closing, .social-links, .pricing-grid, .launch-roadmap) > :nth-child(n+5) { animation-delay: calc(var(--reveal-delay, 0ms) + 280ms); }
+@supports (animation-timeline: view()) {
+  .reveal.pending, .reveal.visible { opacity: 1; transform: none; transition: none; }
+  .reveal:not(:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap)), .reveal:is(.section-heading, .launch-heading, .community-heading, .learning-copy, .story-intro, .growth-copy, .closing, .social-links, .pricing-grid, .launch-roadmap) > * {
+    animation: scroll-in linear backwards; animation-timeline: view(); animation-range: entry 0px entry 300px;
+  }
+  .reveal:is(.section-heading, .launch-heading, .community-heading, .closing) h2 { animation-name: scroll-in-soft; }
+  .reveal:is(.social-links, .pricing-grid, .launch-roadmap) > :nth-child(2),
+  .product-grid > .reveal:nth-child(even), .launch-grid > .reveal:nth-child(2) { animation-range: entry 70px entry 370px; }
+  .reveal:is(.social-links, .pricing-grid, .launch-roadmap) > :nth-child(3) { animation-range: entry 140px entry 440px; }
+}
 
 /* One surface for every card. */
 .launch-update, .marketing-page .milestone-counter, .learning-map, .growth-figure,
@@ -293,9 +304,8 @@ h2 { font-weight: 600; letter-spacing: -.042em; }
 .graph-origin, .graph-destination { fill: var(--star-blue); }
 .growth-axis-bottom { margin-top: 14px; font-size: 12px; color: #8b92a5; }
 .growth-figure figcaption { margin-top: 22px; padding-top: 18px; font-size: 11.5px; color: var(--faint); }
-.growth-figure.pending .growth-curve { stroke-dashoffset: 1; }
-.growth-figure.visible .growth-curve { animation: draw .9s .15s var(--out) backwards; }
-.growth-figure.visible .graph-destination { animation: fade-in .3s .9s ease backwards; }
+.motion-ready .graph-destination { opacity: 0; transition: opacity .3s ease; }
+.motion-ready .is-drawn .graph-destination { opacity: 1; }
 
 /* Prices as three cards. */
 .pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; border: 0; }
@@ -336,7 +346,79 @@ h2 { font-weight: 600; letter-spacing: -.042em; }
 }
 .beta-form-surface input:not([type="radio"]):not([type="checkbox"]):hover, .beta-form-surface select:hover, .beta-form-surface textarea:hover { border-color: #51535f; }
 
+/* Room to breathe: every section gets its own stage. */
+.marketing-page:where(:not(.beta-page)) main > .section:where(:not(.beta-invitation)) { padding-block: clamp(88px, 12.5vw, 184px); }
+.marketing-page .section-heading { margin-bottom: clamp(44px, 6vw, 84px); }
+.marketing-page .section-heading > p:last-child:not(.eyebrow) { margin-top: 28px; }
+.social-links { margin-top: clamp(40px, 5vw, 68px); }
+.business-contact { padding-top: 40px; }
+.launch-heading { margin-bottom: clamp(36px, 5vw, 68px); }
+.launch-grid { gap: 24px; }
+.launch-update, .marketing-page .milestone-counter { padding: clamp(28px, 3.4vw, 46px); }
+.milestone-heading { margin: clamp(64px, 8vw, 112px) 0 40px; }
+.marketing-page .product-grid { gap: clamp(56px, 7vw, 100px) 36px; }
+.product-caption { margin-top: 34px; }
+.learning-section { gap: clamp(48px, 7vw, 110px); }
+.learning-feature { margin-top: 52px; }
+.learning-map { padding: clamp(26px, 3.2vw, 44px); }
+.story-section { gap: clamp(48px, 8vw, 130px); }
+.story-timeline > li, .story-timeline .story-live, .story-timeline .story-milestone { padding-bottom: 62px; }
+.story-timeline .story-next { padding-bottom: 0; }
+.growth-section { gap: clamp(40px, 7vw, 100px); }
+.growth-figure { padding: clamp(24px, 3.2vw, 42px); }
+.pricing-grid { gap: 22px; }
+.pricing-card { padding: clamp(26px, 3vw, 42px); }
+.marketing-page .beta-invitation { margin-block: clamp(40px, 6vw, 96px); padding: clamp(30px, 6vw, 84px); }
+
+/* The hero steps back as the page moves on. */
+@media (min-width: 701px) {
+  .marketing-page .hero { min-height: max(760px, 100svh); }
+  .motion-ready .marketing-page .hero > :is(.brand-art, .hero-copy) {
+    translate: 0 calc(var(--exit, 0) * 80px); opacity: calc(1 - max(0, var(--exit, 0) - .1) * 1.5);
+  }
+}
+
+/* Intro: centred, with a ring of ticks that fills as you scroll. Four stars light up on the way. */
+.marketing-page .intro { text-align: center; }
+.marketing-page main > .section.intro { padding-bottom: 40px; }
+.marketing-page .intro .intro-bottom { flex-direction: column; align-items: center; gap: 26px; margin-top: 40px; }
+.marketing-page .intro .intro-bottom > p:first-child { max-width: 660px; }
+.marketing-page .intro .side-note { min-width: 0; }
+.orbit { --p: 1; position: relative; isolation: isolate; width: min(280px, 66vw); aspect-ratio: 1; margin: clamp(60px, 8vw, 108px) auto 0; }
+.orbit::before {
+  content: ""; position: absolute; inset: -34%; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, #4d7dff38, #4d7dff0f 55%, transparent); opacity: var(--p);
+}
+.orbit-ring { display: block; width: 100%; height: 100%; overflow: visible; transform: rotate(-90deg); }
+.orbit-ticks { stroke: #ffffff26; }
+.orbit-logo { position: absolute; inset: 27%; overflow: hidden; opacity: calc(.28 + var(--p) * .72); scale: calc(.86 + var(--p) * .14); }
+.orbit-logo img { position: absolute; top: -34.0625%; left: -47.96875%; width: 195.9375%; max-width: none; height: auto; }
+.orbit-star {
+  --c: var(--star-white); position: absolute; top: 50%; left: 50%; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--c); opacity: .26; translate: -50% -50%; scale: .7;
+  transition: opacity .3s var(--out), scale .3s var(--out), box-shadow .3s var(--out);
+}
+.orbit-star.is-lit { opacity: 1; scale: 1; box-shadow: 0 0 16px var(--c); }
+.orbit-star:nth-of-type(1) { top: 1.5%; }
+.orbit-star:nth-of-type(2) { --c: var(--star-blue); left: 98.5%; }
+.orbit-star:nth-of-type(3) { --c: var(--star-yellow); top: 98.5%; }
+.orbit-star:nth-of-type(4) { --c: var(--star-red); left: 1.5%; }
+
+/* A thread leads into each centred section and draws itself on the way down. */
+.marketing-page .section-heading::before, .marketing-page .closing::before {
+  content: ""; display: block; width: 1px; height: 96px; margin: 0 auto 30px;
+  background: linear-gradient(transparent, var(--dot));
+  transform-origin: top; transform: scaleY(var(--thread, 1));
+}
+.marketing-page main > .section.ai-section { padding-top: 0; }
+.marketing-page .ai-section .section-heading::before { height: clamp(120px, 16vw, 210px); }
+
+/* App views drift a little inside their frames. */
+.motion-ready .marketing-page .product-visual > img { translate: 0 calc(var(--drift, 0) * -30px); }
+
 @keyframes rise { from { opacity: 0; transform: translate3d(0, 18px, 0); } }
+@keyframes scroll-in { from { opacity: 0; transform: translate3d(0, 46px, 0) scale(.965); } }
+@keyframes scroll-in-soft { from { opacity: 0; filter: blur(10px); transform: translate3d(0, 46px, 0) scale(.965); } }
 @keyframes brand-in { from { opacity: 0; transform: scale(.96); } }
 @keyframes fade-down { from { opacity: 0; transform: translate3d(0, -10px, 0); } }
 @keyframes fade-in { from { opacity: 0; } }

@@ -12,6 +12,11 @@ Fertiger Website-Code für das bestehende Repository
   ohne Nachfedern, einheitliche Karten, größere Schrift. Zeitstrahl mit Datum
   links und einer Linie, die beim Lesen mitläuft; Meilensteine und
   Wachstumskurve reduziert. Inhalte, Reihenfolge und Texte sind unverändert.
+  Zweite Runde am selben Tag: mehr Abstand zwischen den Abschnitten, ein Ring
+  aus Strichen im Einstieg „Ein kleiner Impuls“, der sich beim Scrollen füllt
+  (vier Sternpunkte leuchten nacheinander auf), eine Linie, die in jeden
+  zentrierten Abschnitt führt, und Einblendungen, die der Scroll-Position
+  folgen (`animation-timeline: view()`, sonst kurze einmalige Einblendung).
   Das Logo liegt zusätzlich als `novaire-logo-alpha.png` mit transparentem
   Hintergrund vor. Ohne JavaScript, bei reduzierter Bewegung und bei erhöhtem
   Kontrast bleibt die Seite ruhig und vollständig lesbar.
