@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="evolution.css">
   <link rel="stylesheet" href="locale.css">
   <link rel="stylesheet" href="premium.css">
+  <link rel="stylesheet" href="launch-countdown.css">
+  <script type="module" src="launch-countdown.js"></script>
   <script src="stars.js" defer></script>
   <script src="motion.js" defer></script>
   <script src="app.js" defer></script>
@@ -25,8 +27,27 @@
   <script type="module" src="i18n.js"></script>
   <script type="module" src="application-count.js"></script>
 </head>
-<body class="marketing-page">
+<body class="marketing-page has-launch-countdown">
   <a class="skip-link" href="#inhalt">Zum Inhalt</a>
+  <aside class="launch-countdown" aria-labelledby="launch-countdown-title" data-launch-countdown>
+    <div class="launch-countdown-inner">
+      <div class="launch-countdown-copy">
+        <p class="launch-countdown-eyebrow"><span aria-hidden="true"></span><span data-launch-status>DER COUNTDOWN LÄUFT</span></p>
+        <h2 id="launch-countdown-title">Dein Lernuniversum startet.</h2>
+        <p class="launch-countdown-date">Erhältlich ab <time datetime="2026-11-27T18:00:00+01:00">27. November · 18:00 Uhr MEZ</time></p>
+      </div>
+      <div class="launch-countdown-clock" role="timer" aria-live="off" aria-label="Zeit bis zum Start von Novaire" hidden>
+        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="days" data-no-translate>—</span><span class="launch-countdown-label">Tage</span></div>
+        <span class="launch-countdown-separator" aria-hidden="true">:</span>
+        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="hours" data-no-translate>—</span><span class="launch-countdown-label">Stunden</span></div>
+        <span class="launch-countdown-separator" aria-hidden="true">:</span>
+        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="minutes" data-no-translate>—</span><span class="launch-countdown-label">Minuten</span></div>
+        <span class="launch-countdown-separator" aria-hidden="true">:</span>
+        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="seconds" data-no-translate>—</span><span class="launch-countdown-label">Sekunden</span></div>
+      </div>
+      <p class="launch-countdown-arrived" data-launch-arrived hidden>Der Launch-Tag ist da.</p>
+    </div>
+  </aside>
   <header class="site-header">
     <details class="menu">
       <summary aria-label="Menü öffnen"><span class="menu-lines" aria-hidden="true"></span><span>Menü</span></summary>
@@ -108,7 +129,7 @@
       <ol class="launch-roadmap reveal" aria-label="Meilensteine auf dem Weg zum Start">
         <li class="milestone-complete"><div class="milestone-track" aria-hidden="true"><span class="milestone-dot">✓</span></div><p class="milestone-state">ABGESCHLOSSEN</p><h4>Bewerbungsrunde</h4><p>Danke für jede einzelne Bewerbung.</p><time datetime="2026-10-30">30. Oktober 2026</time></li>
         <li class="milestone-current" aria-current="step"><div class="milestone-track" aria-hidden="true"><span class="milestone-dot"></span></div><p class="milestone-state">JETZT LIVE</p><h4>Die erste Beta</h4><p>Gemeinsam testen. Ehrlich verbessern.</p><time datetime="2026-11-07">7. November 2026</time></li>
-        <li><div class="milestone-track" aria-hidden="true"><span class="milestone-dot"></span></div><p class="milestone-state">UNSER ZIEL</p><h4>Novaire für iOS</h4><p>Dein Lernuniversum im App Store.</p><span class="milestone-detail">Voraussichtlich Mitte bis Ende November 2026</span></li>
+        <li><div class="milestone-track" aria-hidden="true"><span class="milestone-dot"></span></div><p class="milestone-state">APP-START</p><h4>Novaire für iOS</h4><p>Dein Lernuniversum im App Store.</p><time class="milestone-detail" datetime="2026-11-27T18:00:00+01:00">27. November 2026 · 18:00 Uhr MEZ</time></li>
       </ol>
     </section>
 

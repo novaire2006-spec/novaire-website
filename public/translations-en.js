@@ -1,6 +1,15 @@
 // English equivalents of individual German DOM text nodes and accessible labels.
 // Keep legal translations faithful to the source; this file adds no new terms.
 export const en = {
+  'DER COUNTDOWN LÄUFT': 'THE COUNTDOWN IS ON',
+  'Dein Lernuniversum startet.': 'Your learning universe is launching.',
+  'Erhältlich ab': 'Available from',
+  '27. November · 18:00 Uhr MEZ': '27 November · 6:00 pm CET',
+  '27. November 2026 · 18:00 Uhr MEZ': '27 November 2026 · 6:00 pm CET',
+  '27. NOVEMBER 2026': '27 NOVEMBER 2026',
+  'APP-START': 'APP LAUNCH',
+  'Zeit bis zum Start von Novaire': 'Time until Novaire launches',
+  'Der Launch-Tag ist da.': 'Launch day is here.',
   'Belohnungen': 'Rewards',
   'BELOHNUNGEN FÜRS LERNEN': 'REWARDS FOR LEARNING',
   'Erhalte Belohnungen': 'Earn rewards',

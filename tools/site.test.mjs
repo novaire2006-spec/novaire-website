@@ -83,7 +83,7 @@ test('premium updates keep a single real aggregate and distinguish completed, ne
   assert.match(updates, /data-count-value data-no-translate>—<\/strong>/);
   assert.doesNotMatch(updates, /3[.,]?712|\d+\s*%|ausverkauft/i);
   assert.match(updates, /aria-current="step"/);
-  assert.match(updates, /Voraussichtlich Mitte bis Ende November 2026/);
+  assert.match(updates, /27\. November 2026 · 18:00 Uhr MEZ/);
   for (const match of updates.matchAll(/>([^<>]+)</g)) {
     const text = match[1].replace(/\s+/g, ' ').trim();
     if (!text || /^[✓↗—]$|^BETA$/.test(text)) continue;
