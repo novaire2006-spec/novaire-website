@@ -1,104 +1,116 @@
-/* A quiet launch announcement above the navigation, not an overlay on the hero. */
+/* The launch belongs to the hero, alongside the product — not above the navigation. */
 .launch-countdown {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  color: #f3f4f8;
-  background: #090c12;
-  border-bottom: 1px solid #a9c5f42b;
+  width: 100%;
+  max-width: 520px;
+  margin: 28px 0;
+  padding: 22px 0 20px;
+  color: #f4f6fa;
+  border-top: 1px solid #ffffff26;
+  border-bottom: 1px solid #ffffff18;
 }
 .launch-countdown::before {
   content: "";
   position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: radial-gradient(ellipse at 75% 0%, #7eacff12, transparent 65%);
+  top: 0;
+  left: 0;
+  width: 76px;
+  height: 1px;
+  background: #adc9ec;
   pointer-events: none;
 }
 .launch-countdown::after {
   content: "";
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: -30%;
   width: 30%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #a9cbff, transparent);
-  animation: launch-light-pass 2.4s .2s ease-in-out 2;
+  background: linear-gradient(90deg, transparent, #d7e8ff, transparent);
+  animation: launch-light-pass 2.8s .6s ease-in-out 1;
   pointer-events: none;
 }
 .launch-countdown-inner {
-  width: min(100%, calc(var(--width) + var(--gutter) * 2));
-  margin: 0 auto;
-  padding: 26px var(--gutter) 27px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
 }
 .launch-countdown-eyebrow {
+  margin: 0;
+  color: #b7cbe5;
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: .16em;
+}
+.launch-countdown-clock {
+  display: grid;
+  /* Four columns normally; wrap naturally when readers enlarge their text. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 4rem), 1fr));
+  row-gap: 18px;
+  width: 100%;
+}
+.launch-countdown-unit {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 9px;
-  margin: 0 0 9px;
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: .17em;
-  color: #b7c6dc;
+  min-width: 0;
+  border-left: 1px solid #ffffff1a;
 }
-.launch-countdown-eyebrow > span:first-child {
-  flex: none;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #bbd4fa;
-  box-shadow: 0 0 12px #a9cbff55;
-}
-.marketing-page .launch-countdown h2 {
-  font-size: clamp(21px, 2.2vw, 29px);
-  font-weight: 500;
-  letter-spacing: -.035em;
-  line-height: 1.2;
-  margin: 0;
-}
-.launch-countdown-date {
-  margin: 8px 0 0;
-  color: #acb4c5;
-  font-size: 12px;
-  line-height: 1.5;
-}
-.launch-countdown-date time { white-space: nowrap; color: #d2d9e5; }
-.launch-countdown-clock { display: flex; align-items: flex-start; flex: none; gap: 13px; }
-.launch-countdown-unit { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 58px; }
+.launch-countdown-unit:first-child { border-left: 0; }
 .launch-countdown-value {
   display: block;
   min-width: 2ch;
-  font-size: 44px;
+  color: #f4f6fa;
+  font-size: clamp(2.375rem, 5.1vw, 4.5rem);
   font-weight: 400;
   line-height: 1;
-  letter-spacing: -.045em;
+  letter-spacing: -.055em;
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
-.launch-countdown-label { color: #a3adc0; font-size: 10px; line-height: 1.4; }
-.launch-countdown-separator { color: #596779; font-size: 28px; line-height: 44px; font-weight: 300; }
-.launch-countdown-arrived { color: #d2e4ff; font-size: 23px; letter-spacing: -.02em; margin: 0; }
-/* Keeping both in the flow makes long translations / text zoom safe. */
-.marketing-page.has-launch-countdown .site-header { position: sticky; top: 0; }
-.marketing-page.has-launch-countdown .hero { padding-top: 35px; overflow-x: clip; }
-.has-launch-countdown .menu nav { max-height: calc(100dvh - 100px); overflow-y: auto; }
+.launch-countdown-label { color: #aeb8c8; font-size: .875rem; line-height: 1.5; }
+.launch-countdown-date { margin: 0; color: #d3dae5; font-size: .9375rem; line-height: 1.6; }
+.launch-countdown-date time { text-wrap: balance; }
+.launch-countdown-arrived { color: #e0ebfa; font-size: 1.75rem; letter-spacing: -.025em; margin: 0; }
+/* Don't let the grid override the hidden attribute at expiry or without JS. */
+.launch-countdown [hidden] { display: none !important; }
+.marketing-page.has-launch-countdown .hero {
+  min-height: min(900px, 100svh);
+  padding-top: clamp(112px, 12vh, 156px);
+  padding-bottom: 96px;
+  overflow-x: clip;
+}
+.has-launch-countdown .menu nav { max-height: calc(100dvh - 110px); overflow-y: auto; }
 @keyframes launch-light-pass { to { transform: translateX(435%); } }
-@media (max-width: 760px) {
-  .launch-countdown-inner { flex-direction: column; gap: 23px; padding: 23px 20px 24px; text-align: center; }
-  .launch-countdown-eyebrow { justify-content: center; font-size: 8px; }
-  .launch-countdown-clock { gap: 13px; }
-  .launch-countdown-value { font-size: 36px; }
-  .launch-countdown-separator { font-size: 24px; line-height: 36px; }
-  .launch-countdown-unit { min-width: 48px; gap: 6px; }
-  .launch-countdown-date { font-size: 11px; }
+@media (max-width: 1000px) and (min-width: 701px) {
+  .marketing-page.has-launch-countdown .hero { gap: 28px; }
+  .launch-countdown-value { font-size: clamp(2.375rem, 5.2vw, 3.25rem); }
+}
+@media (max-width: 700px) {
+  .marketing-page.has-launch-countdown .hero { min-height: 0; padding: 102px var(--gutter) 78px; }
+  .marketing-page.has-launch-countdown .brand-signature { width: 128px; margin: 0 0 28px; }
+  .has-launch-countdown .brand-wordmark-crop { margin-top: 10px; }
+  .has-launch-countdown .brand-interaction-hint { display: none; }
+  .marketing-page.has-launch-countdown .hero-copy .eyebrow { margin-bottom: 14px; }
+  .marketing-page.has-launch-countdown .hero-tagline { font-size: clamp(2rem, 8vw, 3rem); }
+  .has-launch-countdown .hero-description { margin: 18px auto 0; font-size: 1rem; }
+  .launch-countdown { margin: 26px auto; padding: 20px 0; }
+  .launch-countdown-inner { align-items: center; gap: 17px; }
+  .launch-countdown-value { font-size: clamp(2.75rem, 12vw, 3.75rem); }
+  .launch-countdown-unit { gap: 8px; }
+  .launch-countdown-date { font-size: .875rem; }
 }
 @media (prefers-reduced-motion: reduce) { .launch-countdown::after { animation: none; } }
 @media (prefers-contrast: more) {
-  .launch-countdown { border-bottom-color: #fff; }
-  .launch-countdown-label, .launch-countdown-date, .launch-countdown-eyebrow { color: #e4e9f3; }
+  .launch-countdown, .launch-countdown-unit { border-color: #aeb8c8; }
+  .launch-countdown-label, .launch-countdown-date, .launch-countdown-eyebrow { color: #f4f6fa; }
+}
+@media (forced-colors: active) {
+  .launch-countdown, .launch-countdown-unit { border-color: CanvasText; }
+  .launch-countdown::before, .launch-countdown::after { display: none; }
 }

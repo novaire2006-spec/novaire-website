@@ -20,9 +20,15 @@ test('never shows negative time and does not declare launch early', () => {
   }
 });
 
-test('landing keeps an accessible static date without JavaScript and a quiet timer before navigation', async () => {
+test('landing integrates the accessible countdown into the hero, below the product introduction', async () => {
   const html = await readFile(new URL('../public/index.html', import.meta.url), 'utf8');
-  assert.ok(html.indexOf('data-launch-countdown') < html.indexOf('<header'));
+  const hero = html.match(/<section class="hero"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(hero);
+  assert.match(hero, /class="hero-copy"[\s\S]*?data-launch-countdown/);
+  assert.ok(html.indexOf('data-launch-countdown') > html.indexOf('<header'));
+  assert.ok(hero.indexOf('data-launch-countdown') > hero.indexOf('hero-description'));
+  assert.ok(hero.indexOf('data-launch-countdown') < hero.indexOf('hero-explore-links'));
+  assert.equal((html.match(/data-launch-countdown/g) || []).length, 1);
   assert.match(html, /datetime="2026-11-27T18:00:00\+01:00"/);
   assert.match(html, /role="timer" aria-live="off"/);
   assert.equal((html.match(/data-launch-unit=/g) || []).length, 4);

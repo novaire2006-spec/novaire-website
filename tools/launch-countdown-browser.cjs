@@ -9,8 +9,8 @@ const path = require('node:path');
   await mkdir(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH || undefined });
   try {
-    for (const width of [320, 390, 768, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 1000 }, timezoneId: 'America/Los_Angeles' });
+    for (const [width, height] of [[320, 740], [390, 844], [768, 1024], [1440, 900]]) {
+      const context = await browser.newContext({ viewport: { width, height }, timezoneId: 'America/Los_Angeles' });
       const page = await context.newPage();
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
@@ -22,20 +22,28 @@ const path = require('node:path');
         const banner = document.querySelector('[data-launch-countdown]').getBoundingClientRect();
         const header = document.querySelector('.site-header').getBoundingClientRect();
         const clock = document.querySelector('[role="timer"]').getBoundingClientRect();
-        return { width: innerWidth, scrollWidth: document.documentElement.scrollWidth, top: banner.top, bottom: banner.bottom, headerTop: header.top, clockLeft: clock.left, clockRight: clock.right };
+        return { width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth, top: banner.top, bottom: banner.bottom, headerBottom: header.bottom, clockLeft: clock.left, clockRight: clock.right, inHero: !!document.querySelector('.hero-copy [data-launch-countdown]') };
       });
-      assert.equal(geometry.top, 0);
+      assert.ok(geometry.inHero);
       assert.ok(geometry.scrollWidth <= width + 1, JSON.stringify(geometry));
-      assert.ok(geometry.headerTop >= geometry.bottom - 1, JSON.stringify(geometry));
+      assert.ok(geometry.top > geometry.headerBottom, JSON.stringify(geometry));
+      assert.ok(geometry.bottom <= height, `Countdown must be visible without scrolling: ${JSON.stringify(geometry)}`);
       assert.ok(geometry.clockLeft >= 0 && geometry.clockRight <= width, JSON.stringify(geometry));
       if (width === 390 || width === 1440) await page.screenshot({ path: path.join(output, `countdown-${width}.png`) });
       await page.locator('[data-language-toggle]').click();
-      await page.getByText('Your learning universe is launching.', { exact: true }).waitFor();
+      await page.getByText('COMING TO THE APP STORE', { exact: true }).waitFor();
       assert.ok((await page.locator('.launch-countdown-date').textContent()).includes('6:00 pm CET'));
       assert.equal(await page.locator('.launch-countdown-label').first().textContent(), 'Days');
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       await page.locator('[data-language-toggle]').click();
-      await page.getByText('Dein Lernuniversum startet.', { exact: true }).waitFor();
+      await page.getByText('BALD IM APP STORE', { exact: true }).waitFor();
+      await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
+      const enlarged = await page.evaluate(() => {
+        const timer = document.querySelector('[data-launch-countdown]');
+        return { clipped: timer.scrollWidth > timer.clientWidth + 1, overlapping: [...timer.querySelectorAll('.launch-countdown-unit')].some(unit => [...unit.children].some(child => child.getBoundingClientRect().width > unit.clientWidth + 1)) };
+      });
+      assert.deepEqual(enlarged, { clipped: false, overlapping: false }, 'Enlarged text must not clip or overlap');
+      await page.evaluate(() => { document.documentElement.style.fontSize = ''; scrollTo({ top: 0, behavior: 'instant' }); });
       await page.locator('.menu summary').click();
       await page.locator('.menu nav a').first().waitFor({ state: 'visible' });
       await page.keyboard.press('Escape');
@@ -51,7 +59,7 @@ const path = require('node:path');
       await page.locator('[data-launch-arrived]').waitFor({ state: 'visible' });
       assert.equal(await page.locator('[role="timer"]').isVisible(), false);
       assert.equal(errors.length, 0, errors.join('\n'));
-      console.log(`PASS ${width}px: layout, Berlin time, DE/EN, menu, sticky header, expiry, no JS errors`);
+      console.log(`PASS ${width}px: visible hero countdown, 200% text, Berlin time, DE/EN, menu, fixed header, expiry, no JS errors`);
       await context.close();
     }
     for (const options of [{ reducedMotion: 'reduce' }, { javaScriptEnabled: false }]) {

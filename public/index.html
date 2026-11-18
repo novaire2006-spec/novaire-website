@@ -29,25 +29,6 @@
 </head>
 <body class="marketing-page has-launch-countdown">
   <a class="skip-link" href="#inhalt">Zum Inhalt</a>
-  <aside class="launch-countdown" aria-labelledby="launch-countdown-title" data-launch-countdown>
-    <div class="launch-countdown-inner">
-      <div class="launch-countdown-copy">
-        <p class="launch-countdown-eyebrow"><span aria-hidden="true"></span><span data-launch-status>DER COUNTDOWN LÄUFT</span></p>
-        <h2 id="launch-countdown-title">Dein Lernuniversum startet.</h2>
-        <p class="launch-countdown-date">Erhältlich ab <time datetime="2026-11-27T18:00:00+01:00">27. November · 18:00 Uhr MEZ</time></p>
-      </div>
-      <div class="launch-countdown-clock" role="timer" aria-live="off" aria-label="Zeit bis zum Start von Novaire" hidden>
-        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="days" data-no-translate>—</span><span class="launch-countdown-label">Tage</span></div>
-        <span class="launch-countdown-separator" aria-hidden="true">:</span>
-        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="hours" data-no-translate>—</span><span class="launch-countdown-label">Stunden</span></div>
-        <span class="launch-countdown-separator" aria-hidden="true">:</span>
-        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="minutes" data-no-translate>—</span><span class="launch-countdown-label">Minuten</span></div>
-        <span class="launch-countdown-separator" aria-hidden="true">:</span>
-        <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="seconds" data-no-translate>—</span><span class="launch-countdown-label">Sekunden</span></div>
-      </div>
-      <p class="launch-countdown-arrived" data-launch-arrived hidden>Der Launch-Tag ist da.</p>
-    </div>
-  </aside>
   <header class="site-header">
     <details class="menu">
       <summary aria-label="Menü öffnen"><span class="menu-lines" aria-hidden="true"></span><span>Menü</span></summary>
@@ -89,8 +70,21 @@
         <p class="eyebrow">DEIN UNIVERSUM MIT WISSEN</p>
         <p class="hero-tagline">Nicht einfach Antworten.<br><span>Deine Aha-Momente.</span></p>
         <p class="hero-description">Deine Fragen. Dein Tempo. Für Schule, Ausbildung und Studium.</p>
+        <aside class="launch-countdown" aria-labelledby="launch-countdown-title" data-launch-countdown>
+          <div class="launch-countdown-inner">
+            <p class="launch-countdown-eyebrow" data-launch-status>BALD IM APP STORE</p>
+            <h2 id="launch-countdown-title" class="sr-only">Dein Lernuniversum startet.</h2>
+            <div class="launch-countdown-clock" role="timer" aria-live="off" aria-label="Zeit bis zum Start von Novaire" hidden>
+              <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="days" data-no-translate>—</span><span class="launch-countdown-label">Tage</span></div>
+              <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="hours" data-no-translate>—</span><span class="launch-countdown-label">Stunden</span></div>
+              <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="minutes" data-no-translate>—</span><span class="launch-countdown-label">Minuten</span></div>
+              <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="seconds" data-no-translate>—</span><span class="launch-countdown-label">Sekunden</span></div>
+            </div>
+            <p class="launch-countdown-arrived" data-launch-arrived hidden>Der Launch-Tag ist da.</p>
+            <p class="launch-countdown-date"><time datetime="2026-11-27T18:00:00+01:00">27. November · 18:00 Uhr MEZ</time></p>
+          </div>
+        </aside>
         <div class="hero-explore-links"><a class="beta-button" href="#app-in-aktion">App in Aktion <span aria-hidden="true">↗</span></a><a class="text-link" href="#entdecken">Entdecke Novaire <span aria-hidden="true">↓</span></a></div>
-        <a class="hero-status-link" href="#updates"><span class="status-spark" aria-hidden="true"></span>Die Beta ist gestartet.<span aria-hidden="true">↘</span></a>
       </div>
       <button class="brand-motion-toggle" type="button" data-brand-motion-toggle aria-pressed="false" aria-label="Logo-Animation pausieren" hidden><span class="motion-control-icon" aria-hidden="true"></span></button>
       <span class="hero-note">FÜR DEINEN EIGENEN WEG.</span>

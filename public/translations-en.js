@@ -1,6 +1,7 @@
 // English equivalents of individual German DOM text nodes and accessible labels.
 // Keep legal translations faithful to the source; this file adds no new terms.
 export const en = {
+  'BALD IM APP STORE': 'COMING TO THE APP STORE',
   'DER COUNTDOWN LÄUFT': 'THE COUNTDOWN IS ON',
   'Dein Lernuniversum startet.': 'Your learning universe is launching.',
   'Erhältlich ab': 'Available from',
