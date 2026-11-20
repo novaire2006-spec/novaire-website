@@ -36,7 +36,7 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
         assert.equal(await page.$$eval('[data-seasonal-stars],[data-halloween-caption],.seasonal-scene', els => els.length), 0);
         if (!slug) {
           assert.equal(await page.$eval('[data-brand-symbol]', el => getComputedStyle(el).animationName), 'none');
-          assert.equal(await page.$eval('[data-brand-motion-toggle]', el => el.hidden), true);
+          assert.equal(await page.$('[data-brand-motion-toggle],.showcase-pause,.journey-pathway'), null);
           assert.equal(await page.$$eval('video', els => els.length), 4);
           assert.equal(await page.$$eval('video', els => els.every(el => el.controls && !el.autoplay && el.preload === 'none')), true);
           assert.equal(await page.$eval('[data-count-value]', el => el.textContent), language === 'de' ? '1.234' : '1,234');
@@ -63,9 +63,9 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
         if (slug === 'datenschutz') {
           const box = await page.$eval('.privacy-delete-box', el => {
             const css = getComputedStyle(el);
-            return { border: css.borderTopColor, background: css.backgroundColor, shadow: css.boxShadow, text: el.textContent };
+            return { border: css.borderWidth, background: css.backgroundColor, shadow: css.boxShadow, text: el.textContent };
           });
-          assert.equal(box.border, 'rgb(75, 141, 250)');
+          assert.equal(box.border, '0px');
           assert.equal(box.background, 'rgba(0, 0, 0, 0)');
           assert.equal(box.shadow, 'none');
           assert.match(box.text, language === 'de' ? /Konto & Sicherheit/ : /Account & Security/);
@@ -118,17 +118,13 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
     await animated.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
     await animated.waitForFunction(() => document.querySelector('[data-brand-symbol]').dataset.motionState === 'running');
     checks.push('fast one-turn logo via Enter/Space, repeated activation guard and reduced-motion cancellation');
-    await animated.click('[data-brand-motion-toggle]');
-    assert.equal(await animated.$eval('[data-brand-symbol]', el => getComputedStyle(el).animationPlayState), 'paused');
-    assert.equal(await animated.$eval('[data-brand-motion-toggle]', el => el.getAttribute('aria-pressed')), 'true');
-    await animated.click('[data-brand-motion-toggle]');
     await animated.evaluate(() => document.querySelector('#updates').scrollIntoView({ behavior: 'instant' }));
     await animated.waitForFunction(() => document.querySelector('[data-brand-symbol]').dataset.motionState === 'paused');
     await animated.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     await animated.waitForFunction(() => document.querySelector('[data-brand-symbol]').dataset.motionState === 'running');
     await animated.$eval('[data-brand-symbol]', el => { el.getAnimations()[0].currentTime = 22500; });
     await (await animated.$('.brand-signature')).screenshot({ path: path.join(output, 'rotating-logo-45deg.png') });
-    checks.push('180-second rotation, fixed wordmark, manual pause and offscreen suspension');
+    checks.push('180-second rotation, fixed wordmark and offscreen suspension');
     await animated.$eval('[data-language-toggle]', el => el.click());
     assert.equal(await animated.$eval('html', el => el.classList.contains('language-changing')), true);
     await animated.waitForFunction(() => document.documentElement.lang === 'en' && !document.documentElement.classList.contains('language-changing'));

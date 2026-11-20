@@ -6,32 +6,12 @@ Fertiger Website-Code für das bestehende Repository
 
 ## Aktueller Stand
 
-- Premium-Überarbeitung vom 10. November 2026 (`premium.css`, `stars.js`,
-  `motion.js`): Sternenhimmel als lokale Canvas mit weißen, blauen, gelben und
-  roten Punkten, feste Kopfzeile mit Glas-Effekt, kurze Scroll-Einblendungen
-  ohne Nachfedern, einheitliche Karten, größere Schrift. Zeitstrahl mit Datum
-  links und einer Linie, die beim Lesen mitläuft; Meilensteine und
-  Wachstumskurve reduziert. Inhalte, Reihenfolge und Texte sind unverändert.
-  Zweite Runde am selben Tag: mehr Abstand zwischen den Abschnitten, ein Ring
-  aus Strichen im Einstieg „Ein kleiner Impuls“, der sich beim Scrollen füllt
-  (vier Sternpunkte leuchten nacheinander auf), eine Linie, die in jeden
-  zentrierten Abschnitt führt, und Einblendungen, die der Scroll-Position
-  folgen (`animation-timeline: view()`, sonst kurze einmalige Einblendung).
-- Abschnitt „Belohnungen“ (`rewards.js`, `universe-shaders.js`): Beim Scrollen
-  kommt eine Galaxie aus dem Sternenhimmel nach vorn, danach das Schwarze Loch
-  als seltenster Fund und zwei Galaxien zum Vergleich mit Freunden. Gezeichnet
-  wird mit den echten App-Shadern `universe_galaxy.frag` und
-  `universe_blackhole.frag` über WebGL 2. `universe-shaders.js` ist daraus
-  erzeugt: erst die App-Shader ändern, dann neu erzeugen. Ohne WebGL, ohne
-  JavaScript oder bei reduzierter Bewegung stehen die drei Texte einfach
-  untereinander.
-  Das Logo liegt zusätzlich als `novaire-logo-alpha.png` mit transparentem
-  Hintergrund vor. Ohne JavaScript, bei reduzierter Bewegung und bei erhöhtem
-  Kontrast bleibt die Seite ruhig und vollständig lesbar.
+- Die Startseite zeigt Inhalte beim Scrollen mit einer kurzen Einblendung. Die Geschichte führt in neun Stationen durch die Entwicklung der App.
+- Unter „Belohnungen“ zeichnen räumlich verteilte Sterne drehende Galaxien. Maus und Touch verdrängen die Sterne, eine gedämpfte Feder führt sie zurück. Das schwarze Loch verwendet den WebGL-Shader der Akkretionsscheibe und verformt das Sternenfeld der Website. Ohne WebGL zeigt die Website ein lokal gerendertes Bild der Scheibe. Bei reduzierter Bewegung stehen die drei Motive mit ihren Texten untereinander.
 - Zeitloses Schwarz-Weiß-Layout, neue Hero-Aufteilung und ruhigere Abstände.
   Halloween-Dekorationen, Saison-Schrift und zugehörige Assets entfernt.
 - Silberner Stern mit einer ruhigen 180-Sekunden-Drehung; Schriftzug bleibt fest.
-  Pause-Taste, reduzierte Bewegung und Pause außerhalb des Sichtbereichs.
+  Die Animation berücksichtigt die Bewegungseinstellung des Geräts und ruht außerhalb des Sichtbereichs.
 - Updates direkt unter dem Einstieg: bevorstehende Beta, echter Bewerbungszähler
   und drei klar als abgeschlossen/nächster Schritt/Ziel markierte Meilensteine.
   Keine erfundenen Anmeldezahlen, Fortschrittsprozente oder Starttermine.

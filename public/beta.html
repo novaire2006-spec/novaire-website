@@ -17,8 +17,10 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="locale.css">
   <link rel="stylesheet" href="premium.css">
+  <link rel="stylesheet" href="navigation.css">
+  <script type="module" src="navigation.js"></script>
   <script src="stars.js" defer></script>
-  <script src="motion.js" defer></script>
+  <script type="module" src="motion.js"></script>
   <script src="app.js" defer></script>
   <script src="i18n.js" type="module"></script>
   <script src="beta.js" type="module"></script>
@@ -26,15 +28,34 @@
 <body class="marketing-page beta-page" data-beta-state="closed">
   <a class="skip-link" href="#inhalt">Zum Inhalt</a>
   <header class="site-header">
-    <details class="menu">
-      <summary aria-label="Menü öffnen"><span class="menu-lines" aria-hidden="true"></span><span>Menü</span></summary>
+    <details class="menu glass-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span><span>Menü</span></summary>
       <nav aria-label="Hauptnavigation">
-        <a href="index.html#entdecken">Die App <span aria-hidden="true">↗</span></a>
-        <a href="index.html#intelligenz">Die KI dahinter <span aria-hidden="true">↗</span></a>
-        <a href="index.html#plaene">Dein Zugang <span aria-hidden="true">↗</span></a>
-        <a href="beta.html" aria-current="page">Beta testen <span aria-hidden="true">↗</span></a>
-        <hr>
-        <a href="support.html">Support</a><a href="datenschutz.html">Datenschutz</a><a href="impressum.html">Impressum</a><a href="agb.html">AGB</a>
+        <div class="glass-head"><span class="glass-badge"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#panel"/></svg></span><strong>Novaire</strong><button type="button" class="glass-close" aria-label="Menü schließen" hidden><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#collapse"/></svg></button></div>
+        <label class="glass-search" hidden><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#search"/></svg><input type="search" aria-label="Seite suchen" placeholder="Seite suchen" autocomplete="off"></label>
+        <div class="glass-links">
+          <div class="glass-group"><p>Die App entdecken</p>
+            <a href="index.html#inhalt"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#home"/></svg><span>Startseite</span></a>
+            <a href="index.html#entdecken"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#app"/></svg><span>Die App</span></a>
+            <a href="index.html#app-in-aktion"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#play"/></svg><span>App in Aktion</span></a>
+            <a href="index.html#intelligenz"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#nova"/></svg><span>Die KI dahinter</span></a>
+            <a href="index.html#belohnungen"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#rewards"/></svg><span>Belohnungen</span></a>
+            <a href="index.html#plaene"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#price"/></svg><span>Preise</span></a>
+          </div>
+          <div class="glass-group"><p>Mehr entdecken</p>
+            <a href="index.html#updates"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#news"/></svg><span>Updates &amp; Meilensteine</span></a>
+            <a href="index.html#geschichte"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#time"/></svg><span>Unsere Geschichte</span></a>
+            <a href="index.html#community"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#people"/></svg><span>Community</span></a>
+            <a href="beta.html" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#beta"/></svg><span>Beta testen</span></a>
+          </div>
+          <div class="glass-group"><p>Hilfe &amp; Rechtliches</p>
+            <a href="support.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#help"/></svg><span>Support</span></a>
+            <a href="datenschutz.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#shield"/></svg><span>Datenschutz</span></a>
+            <a href="impressum.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#info"/></svg><span>Impressum</span></a>
+            <a href="agb.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#file"/></svg><span>AGB</span></a>
+          </div>
+          <p class="glass-empty" role="status" hidden>Keine Seite gefunden.</p>
+        </div>
       </nav>
     </details>
     <a class="header-wordmark" href="index.html" aria-label="Novaire Startseite">NOVAIRE</a>

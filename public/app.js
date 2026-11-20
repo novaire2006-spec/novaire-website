@@ -14,11 +14,9 @@ const motion = matchMedia('(prefers-reduced-motion: reduce)');
 // Keep the quiet idle rotation separate from a visitor-requested turn, and
 // suspend motion outside the viewport, in background tabs, or for reduced motion.
 const brandSymbol = document.querySelector('[data-brand-symbol]');
-const brandToggle = document.querySelector('[data-brand-motion-toggle]');
 const brandSpinButton = document.querySelector('[data-brand-spin]');
-if (brandSymbol && brandToggle) {
+if (brandSymbol) {
   const brandImage = brandSymbol.querySelector('img');
-  let manuallyPaused = false;
   let inView = true;
   let brandSpinAnimation = null;
   const cancelBrandSpin = () => {
@@ -27,10 +25,8 @@ if (brandSymbol && brandToggle) {
   };
   const updateBrandMotion = () => {
     const canAnimate = inView && !document.hidden && !motion.matches;
-    brandSymbol.dataset.motionState = !manuallyPaused && canAnimate ? 'running' : 'paused';
+    brandSymbol.dataset.motionState = canAnimate ? 'running' : 'paused';
     if (!canAnimate) cancelBrandSpin();
-    brandToggle.hidden = motion.matches;
-    brandToggle.setAttribute('aria-pressed', String(manuallyPaused));
   };
   // The native button also dispatches click for keyboard activation. Ignore
   // repeated activations during a turn so rotations never queue or accumulate.
@@ -45,7 +41,6 @@ if (brandSymbol && brandToggle) {
       if (brandSpinAnimation === animation) brandSpinAnimation = null;
     }, { once: true });
   });
-  brandToggle.addEventListener('click', () => { manuallyPaused = !manuallyPaused; updateBrandMotion(); });
   document.addEventListener('visibilitychange', updateBrandMotion);
   motion.addEventListener('change', updateBrandMotion);
   if ('IntersectionObserver' in window) {
@@ -56,18 +51,13 @@ if (brandSymbol && brandToggle) {
 }
 
 if ('IntersectionObserver' in window && !motion.matches) {
-  // Blocks that enter the screen together follow each other in quick succession.
-  const observer = new IntersectionObserver((entries) => {
-    let order = 0;
+  const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
       if (!entry.isIntersecting) continue;
-      entry.target.style.setProperty('--reveal-delay', `${Math.min(order, 4) * 70}ms`);
-      order += 1;
-      entry.target.classList.remove('pending');
-      entry.target.classList.add('visible');
+      entry.target.classList.replace('pending', 'visible');
       observer.unobserve(entry.target);
     }
-  }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+  }, { threshold: 0, rootMargin: '0px 0px 12px 0px' });
   for (const element of document.querySelectorAll('.reveal')) {
     element.classList.add('pending');
     observer.observe(element);

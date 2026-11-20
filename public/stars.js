@@ -15,7 +15,7 @@
     { rgb: '255,212,106', share: 0.20 },
     { rgb: '255,118,104', share: 0.16 },
   ];
-  const maxStars = 340;
+  const maxStars = 550;
   const edge = 24;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   // Another script may set travel to let the stars flow past, as on a flight forwards.
@@ -34,13 +34,14 @@
     let color = 0;
     while (color < palette.length - 1 && pick > palette[color].share) pick -= palette[color++].share;
     const depth = random();
-    const radius = (color === 0 ? 0.4 : 0.68) + depth ** 2.4 * 1.05;
+    const dust = random() < .46;
+    const radius = dust ? .35 + depth * .36 : (color === 0 ? .4 : .68) + depth ** 2.4 * 1.05;
     return {
       x: random(),
       y: random(),
       color,
       radius,
-      alpha: (color === 0 ? 0.34 : 0.62) + depth * 0.38,
+      alpha: dust ? .31 + depth * .27 : (color === 0 ? .34 : .62) + depth * .38,
       drift: 0.025 + depth * 0.095,
       halo: radius > 1.12 ? radius * 4.6 : 0,
       twinkle: random() < 0.45,
@@ -79,14 +80,16 @@
     const animated = !motion.matches;
     const travel = animated ? sky.travel || 0 : 0;
     const blend = Math.min(1, travel * 6);
+    const lens = animated ? sky.lens : null;
     context.clearRect(0, 0, width, height);
-    for (let index = 0; index < count; index += 1) {
+    const visibleStars = count + Math.round((maxStars - count) * .72 * blend);
+    for (let index = 0; index < visibleStars; index += 1) {
       const star = stars[index];
       let y = (star.y * field - (animated ? scroll * star.drift : 0)) % field;
       if (y < 0) y += field;
       y -= edge;
       let x = star.x * width;
-      let alpha = star.alpha;
+      let alpha = star.alpha * (index < count ? 1 : .82 * blend);
       if (travel) {
         // Each star moves outwards from the middle and starts again further in, so the sky stays full.
         const cycle = star.lane + travel * star.pace;
@@ -97,6 +100,34 @@
         alpha *= 1 - blend * (1 - Math.min(1, turn / 0.12, (1 - turn) / 0.12));
       }
       if (animated && star.twinkle) alpha *= 0.6 + 0.4 * Math.sin(time * star.speed + star.phase);
+      // Point-lens imaging in viewport coordinates. Nearby stars have a brighter
+      // primary image and a smaller, reversed image across the shadow.
+      if (lens && lens.radius > 1) {
+        const dx = x - lens.x, dy = y - lens.y;
+        const distance = Math.max(.01, Math.hypot(dx, dy));
+        const separation = distance / lens.radius;
+        if (separation < 3.4) {
+          const fade = Math.min(1, (3.4 - separation) / .8) * lens.strength;
+          const secondary = 2 / (Math.sqrt(separation * separation + 4) + separation);
+          const shift = lens.radius * secondary * fade / distance;
+          x += dx * shift; y += dy * shift;
+          const arc = Math.min(.18, 1.9 * star.radius * unit / distance);
+          const angle = Math.atan2(dy, dx);
+          if (secondary > .49 && fade > .02) {
+            context.beginPath();
+            context.strokeStyle = fills[star.color];
+            context.lineWidth = Math.max(.5, star.radius * unit * .85);
+            context.globalAlpha = Math.min(.92, alpha * fade * secondary);
+            context.arc(lens.x, lens.y, secondary * lens.radius, angle + Math.PI - arc, angle + Math.PI + arc);
+            context.stroke();
+            context.beginPath();
+            context.globalAlpha *= .75;
+            context.arc(lens.x, lens.y, distance * (1 + shift), angle - arc, angle + arc);
+            context.stroke();
+          }
+          alpha = Math.min(1, alpha * (1 + .5 * secondary * fade));
+        }
+      }
       if (star.halo) {
         const halo = star.halo * unit;
         context.globalAlpha = alpha * 0.6;
@@ -126,7 +157,7 @@
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    count = Math.max(90, Math.min(maxStars, Math.round((width * height) / 5200)));
+    count = Math.max(155, Math.min(maxStars, Math.round((width * height) / 2900)));
     lastScroll = -1;
     draw(performance.now() / 1000, window.scrollY);
   };
