@@ -1,11 +1,27 @@
 {
   "applinks": {
-    "details": [{
-      "appIDs": ["CW5XJWC456.com.armindaniel.premiumapp"],
-      "components": [
-        { "/": "/freunde", "comment": "Novaire friend invitation only" },
-        { "/": "/freunde/", "comment": "Trailing slash variant" }
-      ]
-    }]
+    "details": [
+      {
+        "appIDs": [
+          "CW5XJWC456.com.armindaniel.premiumapp"
+        ],
+        "components": [
+          {
+            "/": "/freunde",
+            "comment": "Novaire friend invitation only"
+          },
+          {
+            "/": "/freunde/",
+            "comment": "Trailing slash variant"
+          },
+          {
+            "/": "/podcast"
+          },
+          {
+            "/": "/podcast/"
+          }
+        ]
+      }
+    ]
   }
 }
