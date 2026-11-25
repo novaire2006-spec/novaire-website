@@ -18,11 +18,14 @@ const path = require('node:path');
       await page.goto(origin, { waitUntil: 'networkidle' });
       await page.locator('[data-launch-unit="days"]').getByText('11', { exact: true }).waitFor();
       assert.equal(await page.locator('[data-launch-unit="hours"]').textContent(), '00');
+      // The countdown takes the stage in act 2 of the hero scene: scroll into the scene first.
+      await page.evaluate(() => { const track = document.querySelector('.hero-track'); scrollTo({ top: (track.offsetHeight - innerHeight) * .8, behavior: 'instant' }); });
+      await page.waitForTimeout(200);
       const geometry = await page.evaluate(() => {
         const banner = document.querySelector('[data-launch-countdown]').getBoundingClientRect();
         const header = document.querySelector('.site-header').getBoundingClientRect();
         const clock = document.querySelector('[role="timer"]').getBoundingClientRect();
-        return { width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth, top: banner.top, bottom: banner.bottom, headerBottom: header.bottom, clockLeft: clock.left, clockRight: clock.right, inHero: !!document.querySelector('.hero-copy [data-launch-countdown]') };
+        return { width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth, top: banner.top, bottom: banner.bottom, headerBottom: header.bottom, clockLeft: clock.left, clockRight: clock.right, inHero: !!document.querySelector('.hero-countdown [data-launch-countdown]') };
       });
       assert.ok(geometry.inHero);
       assert.ok(geometry.scrollWidth <= width + 1, JSON.stringify(geometry));
@@ -31,12 +34,12 @@ const path = require('node:path');
       assert.ok(geometry.clockLeft >= 0 && geometry.clockRight <= width, JSON.stringify(geometry));
       if (width === 390 || width === 1440) await page.screenshot({ path: path.join(output, `countdown-${width}.png`) });
       await page.locator('[data-language-toggle]').click();
-      await page.getByText('COMING TO THE APP STORE', { exact: true }).waitFor();
+      await page.getByText('Until launch', { exact: true }).waitFor();
       assert.ok((await page.locator('.launch-countdown-date').textContent()).includes('6:00 pm CET'));
       assert.equal(await page.locator('.launch-countdown-label').first().textContent(), 'Days');
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       await page.locator('[data-language-toggle]').click();
-      await page.getByText('BALD IM APP STORE', { exact: true }).waitFor();
+      await page.getByText('Bis zum Start', { exact: true }).waitFor();
       await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
       const enlarged = await page.evaluate(() => {
         const timer = document.querySelector('[data-launch-countdown]');

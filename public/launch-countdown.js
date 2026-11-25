@@ -51,10 +51,15 @@ if (banner) {
     if (progressBar.getAttribute('aria-valuenow') !== percent) progressBar.setAttribute('aria-valuenow', percent);
   }
 
+  // The hero scene marks the countdown inert while it is still invisible (hero.js): no particles then.
+  // Every burst measures the digit and canvas boxes afresh, so a moved, resized or translated stage
+  // still dissolves the digits exactly where they stand.
+  const veiled = () => Boolean(banner.closest?.('[inert]'));
+
   function render() {
     const now = Date.now();
     const remaining = launchTimeRemaining(now);
-    const animate = initialized && !remaining.ended && !motion.matches && !document.hidden && inView;
+    const animate = initialized && !remaining.ended && !motion.matches && !document.hidden && inView && !veiled();
     const canvasBox = animate && particles ? canvas.getBoundingClientRect() : null;
     for (const element of values) {
       const previous = element.textContent;
@@ -77,7 +82,7 @@ if (banner) {
     clock.hidden = ended;
     if (ended) {
       particles?.stop();
-      banner.querySelector('[data-launch-status]').textContent = '27. NOVEMBER 2026';
+      banner.querySelector('[data-launch-status]').textContent = '27. November 2026';
       banner.querySelector('[data-launch-arrived]').hidden = false;
       // Reaching the date does not verify App Store approval. No invented download link.
       banner.dataset.state = 'arrived';

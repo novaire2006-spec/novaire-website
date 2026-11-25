@@ -101,7 +101,6 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
     await animated.goto(origin, { waitUntil: 'networkidle0' });
     await animated.waitForFunction(() => document.querySelector('[data-brand-symbol]').dataset.motionState === 'running');
     assert.equal(await animated.$eval('[data-brand-symbol]', el => getComputedStyle(el).animationDuration), '180s');
-    assert.equal(await animated.$eval('.brand-wordmark-crop', el => getComputedStyle(el).transform), 'none');
     await animated.focus('[data-brand-spin]');
     await animated.keyboard.press('Enter');
     assert.equal(await animated.$eval('[data-brand-symbol] img', el => {

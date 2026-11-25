@@ -1,0 +1,367 @@
+/* Hero: the opening scene (hero.js).
+   Default, also without JavaScript, under reduced motion and on very short screens: a static hero in
+   normal flow — star, headline, sub line, then the countdown block and the two links.
+   With [data-hero-live] (set by hero.js) the section becomes a tall track with a sticky 100svh stage:
+   act 1 plays by itself (data-hero-intro="play"), acts 2 and 3 follow the scroll (hero.js writes
+   transform, opacity and filter on .hero-intro, .hero-mark, .hero-countdown, .hero-explore-links, .hero-cue).
+   Light (bloom, streak) lives in unclipped layers around the star, never inside an overflow-hidden box. */
+
+/* ---------- tuning ---------- */
+.marketing-page .hero {
+  /* Scene length: track height; the stage is 100svh, so the scroll distance is track − 100svh. */
+  --hero-track: 260svh;
+  --hero-side: clamp(16px, 4vw, 64px);
+  /* Star */
+  --hero-mark-size: clamp(104px, 17svh, 168px);
+  --hero-anchor-gap: 24px; /* below the top bar, where the star rests as an anchor in acts 2 and 3 */
+  --hero-anchor-scale: .6; /* hero.js reads this for the star; TUNING.anchorScale is only its fallback */
+  --hero-bloom-size: 2.8; /* × star size */
+  --hero-bloom-rest: .42; /* the bloom's opacity after it settles */
+  --hero-streak-width: min(86vw, 1040px);
+  /* Type */
+  --hero-title-size: clamp(44px, 7.6vw, 116px);
+  --hero-sub-size: 21px;
+  --hero-ink: #f5f6fa;
+  --hero-quiet: #a9adba;
+  /* Act 1 layout: room above (below the top bar) and below (for the scroll cue) */
+  --hero-open-top: 24px;
+  --hero-open-bottom: clamp(80px, 11svh, 104px);
+  /* Act 2 layout: the countdown sits between the star anchor and this bottom room */
+  --hero-count-gap: clamp(20px, 3svh, 32px);
+  --hero-count-bottom: clamp(24px, 8svh, 96px);
+  --hero-count-width: 860px;
+  --hero-digit-size: clamp(56px, 10vw, 148px);
+  --hero-bar-width: 720px;
+  /* Act 1 timing (about 2.4 s in total) */
+  --hero-mark-at: .1s;   --hero-mark-dur: 1.1s;
+  --hero-bloom-at: .15s; --hero-bloom-dur: 1.6s;
+  --hero-streak-at: .4s; --hero-streak-dur: 1.1s;
+  --hero-words-at: .7s;  --hero-word-step: 90ms; --hero-word-dur: .8s;
+  --hero-sub-at: 1.3s;   --hero-sub-dur: .8s;
+  --hero-cue-at: 1.85s;  --hero-cue-dur: .6s;
+}
+@media (max-width: 700px) {
+  .marketing-page .hero {
+    --hero-track: 230svh;
+    --hero-mark-size: clamp(92px, 15svh, 140px);
+    --hero-anchor-gap: 14px;
+    --hero-sub-size: 18px;
+    --hero-open-top: 16px;
+    --hero-open-bottom: clamp(72px, 10svh, 92px);
+    --hero-count-gap: 18px;
+  }
+}
+
+/* ---------- static hero (default) ---------- */
+.marketing-page.has-launch-countdown .hero {
+  display: block;
+  min-height: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  text-align: center;
+  background: transparent;
+  overflow: visible;
+  overflow-x: clip; /* clip, not hidden: no scroll container, the stage can stick */
+}
+.hero-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--topbar-h, 52px) + clamp(48px, 9vh, 96px)) var(--hero-side) calc(var(--flow-gap, 160px) / 2);
+}
+.hero-anchor { display: none; }
+.hero-opening { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.hero-intro { width: 100%; }
+
+/* Star with its light. */
+.hero-mark {
+  position: relative;
+  isolation: isolate;
+  width: var(--hero-mark-size);
+  aspect-ratio: 1;
+  margin-bottom: clamp(24px, 3.6svh, 36px);
+  transform-origin: 50% 0;
+}
+.marketing-page .hero .brand-signature {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 1;
+  margin: 0;
+}
+.marketing-page .hero .brand-signature::before { display: none; }
+.hero .brand-symbol { width: 100%; }
+.hero-bloom {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--hero-mark-size) * var(--hero-bloom-size));
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #d6e1ff8c, #8fa9ff33 42%, #6f8cff0f 64%, transparent);
+  opacity: var(--hero-bloom-rest);
+  pointer-events: none;
+}
+.hero-streak {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: var(--hero-streak-width);
+  height: 2px;
+  translate: -50% -50%;
+  border-radius: 1px;
+  background: linear-gradient(90deg, transparent, #c9d8ff00 6%, #e6eeffe6 50%, #c9d8ff00 94%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+.hero-streak::after {
+  content: "";
+  position: absolute;
+  inset: -7px 18%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #9db6ff66, transparent);
+  filter: blur(6px);
+}
+
+/* Headline: the page's h1. */
+.hero-title {
+  margin: 0;
+  color: var(--hero-ink);
+  font-family: var(--font-apple);
+  font-size: var(--hero-title-size);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+.hero-line { display: block; }
+.hero-line-soft,
+.hero-title.is-split .hero-line-soft .hero-word {
+  background: linear-gradient(180deg, #ffffff 22%, #b3b9c8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+/* Split into words (hero.js): the translated line stays as real text for assistive technology,
+   the visible words are an aria-hidden copy, rebuilt on every language change. */
+.hero-title.is-split .hero-line-soft { background: none; color: var(--hero-ink); }
+.hero-title.is-split .hero-line-text {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.hero-word { display: inline-block; padding-block: .05em; margin-block: -.05em; }
+
+.hero-sub {
+  margin: clamp(18px, 2.4vw, 28px) 0 0;
+  color: var(--hero-quiet);
+  font-size: var(--hero-sub-size);
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -.012em;
+}
+
+/* Countdown block. */
+.hero-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: clamp(56px, 8vw, 104px);
+}
+.hero .launch-countdown {
+  width: 100%;
+  max-width: var(--hero-count-width);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.hero .launch-countdown::before,
+.hero .launch-countdown::after { display: none; }
+.hero .launch-countdown-inner { align-items: center; gap: clamp(16px, 2.2svh, 24px); }
+.hero .launch-countdown-eyebrow {
+  color: var(--hero-quiet);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -.01em;
+  text-transform: none;
+}
+.hero .launch-countdown-unit { gap: 12px; border-left-color: #ffffff14; }
+.hero .launch-countdown-value {
+  color: var(--hero-ink);
+  font-size: var(--hero-digit-size);
+  font-weight: 600;
+  letter-spacing: -.045em;
+}
+.hero .launch-countdown-label { color: var(--hero-quiet); font-size: 15px; }
+.hero .launch-countdown-date { color: #c9cdd8; font-size: 17px; }
+.hero .launch-progress-block { max-width: var(--hero-bar-width); margin-top: 4px; }
+.hero .launch-progress-labels { font-size: 13px; color: var(--hero-quiet); }
+/* After the launch instant: the arrival line takes the clock's place, large and centred. */
+.hero .launch-countdown-arrived {
+  color: var(--hero-ink);
+  font-size: clamp(36px, 5.6vw, 80px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.04em;
+  text-align: center;
+  text-wrap: balance;
+}
+.hero .launch-countdown[data-state="arrived"] .launch-countdown-date { display: none; }
+
+.marketing-page .hero .hero-explore-links {
+  justify-content: center;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: clamp(28px, 4svh, 40px);
+}
+.hero-cue { display: none; }
+
+@media (max-width: 700px) {
+  .hero-sub > span { display: block; }
+  .hero .launch-countdown-eyebrow { font-size: 15px; }
+  .hero .launch-countdown-unit { gap: 8px; }
+  .hero .launch-countdown-label { font-size: 13px; }
+  .hero .launch-countdown-date { font-size: 15px; }
+  .hero .launch-progress-labels { font-size: 12px; }
+  .marketing-page .hero .hero-explore-links { gap: 10px; }
+  .marketing-page .hero .hero-explore-links > a { min-height: 48px; padding-inline: 20px; font-size: 14px; }
+}
+
+/* ---------- live scene ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Until hero.js decides, keep the stage dark so the static layout never flashes before act 1.
+     If the script does not arrive, the hero fades in by itself after 1.5 s. */
+  @media (scripting: enabled) and (min-height: 520px) {
+    .hero:not([data-hero-live], [data-hero-static]) .hero-stage { animation: hero-boot-wait .4s 1.5s both; }
+  }
+
+  .hero[data-hero-live] .hero-track { height: 260vh; height: var(--hero-track); }
+  .hero[data-hero-live] .hero-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: grid;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    padding: 0;
+  }
+  .hero[data-hero-live] .hero-anchor {
+    display: block;
+    position: absolute;
+    top: calc(var(--topbar-h, 52px) + var(--hero-anchor-gap));
+    left: 0;
+    width: 1px;
+    height: 0;
+  }
+  .hero[data-hero-live] :is(.hero-opening, .hero-countdown) {
+    grid-area: 1 / 1;
+    justify-content: center;
+    min-height: 0;
+    margin: 0;
+  }
+  .hero[data-hero-live] .hero-opening {
+    padding: calc(var(--topbar-h, 52px) + var(--hero-open-top)) var(--hero-side) var(--hero-open-bottom);
+  }
+  /* Act 2: centred between the star's anchor and the bottom room. */
+  .hero[data-hero-live] .hero-countdown {
+    padding: calc(var(--topbar-h, 52px) + var(--hero-anchor-gap) + var(--hero-mark-size) * var(--hero-anchor-scale) + var(--hero-count-gap)) var(--hero-side) var(--hero-count-bottom);
+    pointer-events: none;
+  }
+  .hero[data-hero-live] .hero-explore-links:not([inert]) a { pointer-events: auto; }
+  .hero[data-hero-live] :is(.hero-intro, .hero-mark, .hero-countdown) { will-change: transform, opacity, filter; }
+  .hero[data-hero-live] .hero-intro { transform-origin: 50% 50%; }
+
+  /* Scroll cue at the bottom edge. */
+  .hero[data-hero-live] .hero-cue {
+    display: block;
+    position: absolute;
+    left: 50%;
+    bottom: calc(clamp(16px, 3.2svh, 32px) + env(safe-area-inset-bottom, 0px));
+    margin: 0;
+    translate: -50% 0;
+    pointer-events: none;
+  }
+  .hero[data-hero-live] .hero-cue[data-hero-cue-gone] { visibility: hidden; }
+  .hero-cue-inner { display: flex; align-items: center; gap: 12px; }
+  .hero-cue-line { position: relative; width: 1px; height: 40px; background: linear-gradient(#ffffff00, #ffffff3d 30%, #ffffff3d 70%, #ffffff00); }
+  .hero-cue-line::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #e9eefb;
+    animation: hero-cue-dot 2.2s var(--ease-out) infinite;
+  }
+  .hero[data-hero-live] .hero-cue[data-hero-cue-gone] .hero-cue-line::after { animation-play-state: paused; }
+  .hero-cue-word { color: var(--hero-quiet); font-size: 13px; font-weight: 500; line-height: 1; letter-spacing: 0; }
+
+  /* Act 1: the opening plays once, by itself. */
+  .hero[data-hero-live][data-hero-intro="play"] .brand-signature {
+    animation: hero-mark-in var(--hero-mark-dur) var(--hero-mark-at) var(--ease-out) both;
+  }
+  .hero[data-hero-live][data-hero-intro="play"] .hero-bloom {
+    animation: hero-bloom-in var(--hero-bloom-dur) var(--hero-bloom-at) var(--ease-out) both;
+  }
+  .hero[data-hero-live][data-hero-intro="play"] .hero-streak {
+    animation: hero-streak-in var(--hero-streak-dur) var(--hero-streak-at) var(--ease-out) both;
+  }
+  .hero[data-hero-live][data-hero-intro="play"] .hero-word {
+    animation: hero-word-in var(--hero-word-dur) var(--ease-out) both;
+    animation-delay: calc(var(--hero-words-at) + var(--i, 0) * var(--hero-word-step));
+  }
+  .hero[data-hero-live][data-hero-intro="play"] .hero-sub {
+    animation: hero-word-in var(--hero-sub-dur) var(--hero-sub-at) var(--ease-out) both;
+  }
+  .hero[data-hero-live][data-hero-intro="play"] .hero-cue-inner {
+    animation: hero-fade-in var(--hero-cue-dur) var(--hero-cue-at) var(--ease-out) both;
+  }
+}
+
+@keyframes hero-boot-wait { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hero-mark-in {
+  from { opacity: 0; filter: blur(14px); transform: scale(.94); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+/* The light swells once and settles at --hero-bloom-rest (.42, the static value). */
+@keyframes hero-bloom-in {
+  0% { opacity: 0; transform: scale(.5); }
+  45% { opacity: .95; transform: scale(1.12); }
+  100% { opacity: .42; transform: scale(1); }
+}
+@keyframes hero-streak-in {
+  0% { opacity: 0; transform: scaleX(.04); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+@keyframes hero-word-in {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(10px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes hero-fade-in { from { opacity: 0; transform: translate3d(0, 8px, 0); } }
+@keyframes hero-cue-dot {
+  0% { opacity: 0; transform: translate3d(0, 0, 0); }
+  20%, 75% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(0, 37px, 0); }
+}
+
+@media (prefers-contrast: more) {
+  .hero-sub, .hero .launch-countdown-eyebrow, .hero .launch-countdown-label { color: var(--hero-ink); }
+  .hero-line-soft, .hero-title.is-split .hero-line-soft .hero-word { background: none; color: var(--hero-ink); }
+}
+@media (forced-colors: active) {
+  .hero-bloom, .hero-streak { display: none; }
+  .hero-line-soft, .hero-title.is-split .hero-line-soft .hero-word { background: none; color: CanvasText; }
+}

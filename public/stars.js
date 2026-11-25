@@ -76,12 +76,22 @@
   let lastScroll = -1;
 
   const draw = (time, scroll) => {
-    const field = height + edge * 2;
     const animated = !motion.matches;
     const travel = animated ? sky.travel || 0 : 0;
-    const blend = Math.min(1, travel * 6);
+    // Optional sky.flow (0…1) cross-fades the travelling sky with the resting one, so a scene
+    // can let the flight fade out without the stars rushing back. Unset means fully travelling.
+    const flow = travel && Number.isFinite(sky.flow) ? Math.min(1, Math.max(0, sky.flow)) : 1;
     const lens = animated ? sky.lens : null;
     context.clearRect(0, 0, width, height);
+    if (flow < 1) drawField(time, scroll, 0, 1 - flow, lens);
+    if (flow > 0) drawField(time, scroll, travel, flow, lens);
+    context.globalAlpha = 1;
+  };
+
+  const drawField = (time, scroll, travel, weight, lens) => {
+    const field = height + edge * 2;
+    const animated = !motion.matches;
+    const blend = Math.min(1, travel * 6);
     const visibleStars = count + Math.round((maxStars - count) * .72 * blend);
     for (let index = 0; index < visibleStars; index += 1) {
       const star = stars[index];
@@ -89,7 +99,7 @@
       if (y < 0) y += field;
       y -= edge;
       let x = star.x * width;
-      let alpha = star.alpha * (index < count ? 1 : .82 * blend);
+      let alpha = star.alpha * (index < count ? 1 : .82 * blend) * weight;
       if (travel) {
         // Each star moves outwards from the middle and starts again further in, so the sky stays full.
         const cycle = star.lane + travel * star.pace;
@@ -139,7 +149,6 @@
       context.arc(x, y, star.radius * unit, 0, Math.PI * 2);
       context.fill();
     }
-    context.globalAlpha = 1;
   };
 
   const resize = () => {

@@ -12,11 +12,9 @@ const backendOrigin = 'https://naafzrrhjsfaqqrnhrcn.supabase.co';
 
 test('landing includes school, vocational training and university in visible copy and translated metadata', async () => {
   const html = await readFile(path.join(root, 'index.html'), 'utf8');
-  const hero = html.match(/<p class="hero-description">([^<]+)<\/p>/)?.[1];
-  assert.ok(hero);
-  assert.match(hero, /Für Schule, Ausbildung und Studium\./);
+  // The hero now carries only the name and the promise; school, training and university follow in the intro.
   assert.match(html, /Für Klasse 5–13\.<br>Auch für Ausbildung und Studium\./);
-  for (const text of [hero, 'Auch für Ausbildung und Studium.',
+  for (const text of ['Auch für Ausbildung und Studium.',
     html.match(/<meta name="description" content="([^"]+)"/)?.[1],
     html.match(/<meta property="og:description" content="([^"]+)"/)?.[1]]) {
     assert.ok(text);
@@ -109,11 +107,12 @@ test('beta launch news is dated and distinguishes selected testers from public a
   assert.match(support, /noch nicht öffentlich im App Store verfügbar/);
 });
 
-test('only the cropped star rotates slowly; wordmark stays fixed and respects reduced motion', async () => {
+test('only the cropped star rotates slowly, the headline carries the name, and reduced motion is respected', async () => {
   const html = await readFile(path.join(root, 'index.html'), 'utf8');
   const css = await readFile(path.join(root, 'styles.css'), 'utf8');
   assert.match(html, /data-brand-symbol/);
-  assert.match(html, /class="brand-wordmark-crop"/);
+  assert.doesNotMatch(html, /class="brand-wordmark-crop"/, 'no cropped wordmark under the star');
+  assert.match(html, /<h1 id="brand-title" class="hero-title">[\s\S]*?Novaire\.[\s\S]*?<\/h1>/);
   assert.doesNotMatch(html, /data-brand-motion-toggle|showcase-pause|journey-pathway/);
   const spinButton = html.match(/<button\b[^>]*\bdata-brand-spin\b[^>]*>[\s\S]*?<\/button>/)?.[0];
   assert.ok(spinButton, 'logo is a native keyboard-operable button');

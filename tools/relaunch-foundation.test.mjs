@@ -42,7 +42,8 @@ test('sections inside <main> follow the relaunch order', () => {
 });
 
 test('the hero points down to the first section', () => {
-  assert.match(html, /<a class="hero-index" href="#entdecken">ENTDECKE NOVAIRE\. <span aria-hidden="true">↓<\/span><\/a>/);
+  const hero = html.match(/<section class="hero"[\s\S]*?<\/section>/)?.[0] ?? '';
+  assert.match(hero, /<a class="text-link" href="#entdecken">Entdecke Novaire <span aria-hidden="true">↓<\/span><\/a>/);
 });
 
 test('relaunch.css is linked as the top layer after story.css', () => {
