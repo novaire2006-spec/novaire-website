@@ -1,84 +1,102 @@
-.marketing-page main > .story-section {
-  --chapter-accent: #ff995d;
-  display: block;
-  padding-block: clamp(72px, 10vw, 144px);
+/* Timeline "Von Lenova zu Novaire", relaunch 25.11.2026.
+   One centred column: a line on the left, each chapter a row of date, title and text.
+   Nothing is pinned. Without JavaScript or with reduced motion the line is full and every chapter bright;
+   with motion, storyline.js sets [data-story-live], fills the line (--story-progress) and marks chapters .is-reached.
+   Selectors carry .marketing-page .story-section so they outrank the older rules in evolution.css and premium.css. */
+
+.marketing-page main > .story-section { display: block; --story-indent: 44px; }
+.marketing-page .story-section .story-column { max-width: 720px; margin-inline: auto; }
+.marketing-page .story-section .story-column > h2 {
+  margin: 0 0 clamp(48px, 6vw, 80px);
+  color: var(--text);
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  text-wrap: balance;
 }
-.story-frame {
-  display: grid;
-  grid-template-columns: minmax(0, .95fr) minmax(0, 1.08fr);
-  gap: clamp(32px, 6vw, 96px);
-  align-items: start;
-  max-width: 1000px;
-  margin-inline: auto;
+
+/* The line: a faint track, and a fill from white to green on top of it. */
+.marketing-page .story-section .story-timeline {
+  position: relative; display: block;
+  margin: 0; padding: 0 0 0 var(--story-indent);
+  border: 0; list-style: none;
 }
-.chapter-art {
-  position: relative;
-  aspect-ratio: 4 / 4.5;
-  isolation: isolate;
-  overflow: hidden;
-  border-radius: clamp(15px, 2vw, 26px);
+.marketing-page .story-section .story-timeline::before,
+.marketing-page .story-section .story-timeline::after {
+  content: ""; display: block;
+  position: absolute; top: 8px; bottom: 8px; left: 3px; width: 2px;
+  border-radius: 1px; pointer-events: none;
 }
-.chapter-plate {
-  --light: #7974bf;
-  position: absolute; inset: 0;
-  display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center;
-  opacity: 0;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--light) 18%, transparent), transparent);
-  transition: opacity .4s ease;
+.marketing-page .story-section .story-timeline::before { background: #ffffff1a; transform: none; }
+.marketing-page .story-section .story-timeline::after {
+  background: linear-gradient(to bottom, #ffffff, var(--neon));
+  transform-origin: top;
+  transform: scaleY(var(--story-progress, 1));
 }
-.chapter-plate img { width: 77%; height: 77%; object-fit: contain; }
-.plate-first, .plate-launch { background: transparent; }
-.plate-first img { transform: rotate(-12deg); }
-.plate-name { --light: #609299; }
-.plate-name img { width: 62%; height: 62%; mix-blend-mode: screen; }
-.plate-orb { --light: #5868b6; }
-.plate-orb img { width: 76%; height: 76%; mix-blend-mode: screen; }
-.plate-community { background: transparent; }
-.plate-community img { width: 112%; height: 112%; object-fit: cover; }
-.plate-launch img { transform: rotate(8deg) scale(1.12); }
-:is(.plate-build,.plate-public,.plate-apply,.plate-beta) img {
-  position: absolute; top: 15%; left: 26%; width: 49%; height: auto;
-  border: 0; border-radius: 10px;
-  transform: rotate(-5deg);
+
+/* Chapters. */
+.marketing-page .story-section .story-timeline > li.chapter {
+  position: relative; display: block;
+  padding: 0 0 clamp(48px, 6vw, 72px);
+  opacity: 1; visibility: visible;
 }
-.plate-public { --light: #6992b8; }
-.plate-apply { --light: #a27aac; }
-.plate-beta { --light: #87a383; }
-.story-run:not([data-scroll-story]) .chapter-plate:first-child,
-.chapter-plate.is-active { opacity: 1; }
-.story-text { min-width: 0; }
-.story-text > h2 { margin: 0 0 24px; color: #bebac9; font-size: 16px; line-height: 1.4; font-weight: 500; letter-spacing: -.02em; }
-.story-guide { display: none; }
-.story-run .story-timeline .story-count { font-size: clamp(32px, 3.8vw, 52px); }
-.story-run[data-scroll-story]::after { content: ''; display: block; height: var(--story-distance); }
-[data-scroll-story] .story-frame { position: sticky; top: var(--story-top); align-items: center; }
-[data-scroll-story] .story-guide { display: block; position: relative; height: 2px; width: min(180px, 55%); background: #ff995d50; margin: 0 0 28px 3px; }
-.story-guide span { position: absolute; inset: 0; background: var(--chapter-accent); transform-origin: left; transform: scaleX(var(--chapter-progress, 0)); }
-.story-guide::before,.story-guide i { content: ''; position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--chapter-accent); top: 50%; transform: translate(-50%,-50%); }
-.story-guide i { left: calc(100% * var(--chapter-progress, 0)); }
-[data-scroll-story] .story-timeline { display: grid; grid-template-columns: minmax(0,1fr); border: 0; padding: 0; margin: 0; }
-[data-scroll-story] .story-timeline::before, [data-scroll-story] .story-timeline::after,
-[data-scroll-story] .story-timeline > .chapter::before { display: none; }
-[data-scroll-story] .story-timeline > .chapter {
-  grid-area: 1 / 1; display: block; padding: 0; opacity: 0; visibility: hidden;
-  transition: opacity .32s ease, visibility 0s linear .32s;
+.marketing-page .story-section .story-timeline > li.chapter:last-child { padding-bottom: 0; }
+.marketing-page .story-section .story-timeline > li.chapter::before {
+  content: ""; position: absolute; z-index: 1;
+  top: 6px; left: calc(4px - var(--story-indent) - 4.5px);
+  width: 9px; height: 9px; box-sizing: border-box;
+  border: 1px solid #ffffff; border-radius: 50%;
+  background: #ffffff; box-shadow: none;
+  transition: background-color .4s var(--ease-out), border-color .4s var(--ease-out);
 }
-[data-scroll-story] .story-timeline > .is-active { opacity: 1; visibility: visible; transition-delay: 0s; }
-[data-scroll-story] .chapter time { display: block; padding: 0; margin: 0 0 12px; color: #c8c4cc; text-align: left; font-size: 13px; letter-spacing: .06em; }
-[data-scroll-story] .chapter h3 { margin: 0 0 14px; font-weight: 500; font-size: clamp(30px, 3.5vw, 54px); letter-spacing: -.048em; line-height: 1.08; text-wrap: balance; }
-[data-scroll-story] .chapter p { color: #c0c1ca; font-size: clamp(15px, 1.35vw, 18px); line-height: 1.5; }
-.chapter-controls:not([hidden]) { display: flex; align-items: center; gap: 7px; margin-top: 22px; }
-.chapter-count { font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .09em; margin-right: 14px; color: #c1bec8; }
-.chapter-controls button { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 0; color: #eee; background: #16161b; cursor: pointer; }
-.chapter-controls button[aria-disabled=true] { opacity: .38; cursor: default; }
-.chapter-controls button:not([aria-disabled=true]):hover { border-color: #bcb5b2; background: #28272c; }
-@media (max-width: 650px) {
-  .story-frame { grid-template-columns: minmax(0,1fr); gap: 24px; }
-  .chapter-art { height: clamp(142px, 24svh, 220px); aspect-ratio: auto; }
-  .story-text > h2 { margin-bottom: 14px; }
-  [data-scroll-story] .story-guide { margin-bottom: 18px; width: 120px; }
-  [data-scroll-story] .chapter h3 { font-size: clamp(27px, 7.5vw, 37px); }
-  .chapter-controls:not([hidden]) { margin-top: 15px; }
-  :is(.plate-build,.plate-public,.plate-apply,.plate-beta) img { width: 40%; left: 31%; top: 9%; }
+.marketing-page .story-section .story-timeline > li.story-next::before { border-color: var(--neon); background: var(--neon); }
+.marketing-page .story-section .story-timeline > li.chapter > div {
+  margin: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none;
 }
-@media (forced-colors: active) { .story-guide i,.story-guide::before,.story-guide span { background: Highlight; } }
+.marketing-page .story-section .story-timeline time {
+  display: block; margin: 0 0 10px; padding: 0;
+  color: #9a9fae; text-align: left;
+  font-size: 13px; line-height: 1.4; letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+}
+.marketing-page .story-section .story-timeline h3 {
+  max-width: none; margin: 0 0 10px;
+  color: var(--text);
+  font-size: clamp(24px, 2.6vw, 32px); line-height: 1.15;
+  text-wrap: balance;
+}
+.marketing-page .story-section .story-timeline p {
+  max-width: 560px; margin: 0;
+  color: #a9adba; font-size: 17px; line-height: 1.47;
+}
+.marketing-page .story-section .story-timeline .story-count {
+  display: block; margin: 18px 0 8px;
+  color: var(--text); background: none;
+  -webkit-background-clip: border-box; background-clip: border-box;
+  font-size: clamp(56px, 8vw, 96px); font-weight: 600; line-height: 1; letter-spacing: -.05em;
+  font-variant-numeric: tabular-nums;
+}
+.marketing-page .story-section .story-timeline .story-detail {
+  display: block; margin-top: 12px;
+  color: #858a9b; font-size: 13px; line-height: 1.5;
+}
+
+/* With motion: chapters ahead stay dimmed until their top passes 60 % of the viewport, then stay bright. */
+.marketing-page .story-section[data-story-live] .story-timeline > li.chapter {
+  opacity: .45;
+  transition: opacity .5s var(--ease-out);
+}
+.marketing-page .story-section[data-story-live] .story-timeline > li.chapter.is-reached { opacity: 1; }
+.marketing-page .story-section[data-story-live] .story-timeline > li.chapter:not(.is-reached)::before {
+  border-color: #ffffff59; background: #07080c;
+}
+
+@media (max-width: 600px) {
+  .marketing-page main > .story-section { --story-indent: 30px; }
+  .marketing-page .story-section .story-timeline > li.chapter { padding-bottom: 44px; }
+  .marketing-page .story-section .story-timeline p { font-size: 16px; }
+}
+@media (forced-colors: active) {
+  .marketing-page .story-section .story-timeline::before { background: GrayText; }
+  .marketing-page .story-section .story-timeline::after,
+  .marketing-page .story-section .story-timeline > li.chapter::before { background: Highlight; border-color: Highlight; }
+}

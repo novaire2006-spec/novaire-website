@@ -1,3 +1,176 @@
+/* ==========================================================================
+   Top bar (index.html, header[data-topbar]). Like the global nav on apple.com:
+   a slim translucent bar; a panel with every entry drops from its lower edge.
+   This file loads before story.css and relaunch.css, so the selectors below are
+   scoped with [data-topbar] (and .motion-ready where premium.css uses it) to stay
+   ahead of the older header rules in styles.css, premium.css and relaunch.css.
+   The glass dropdown further down stays for beta.html, which keeps its own header.
+   ========================================================================== */
+:root { --topbar-h: 52px; --topbar-glass: #08090dc7; --topbar-sheet: #0a0b10f0; }
+@media (max-width: 700px) { :root { --topbar-h: 48px; } }
+/* Anchor jumps and the skip link land below the bar. */
+:root:has(.site-header[data-topbar]) { scroll-padding-top: var(--topbar-h); }
+
+/* The header itself paints nothing; bar and panel each carry their own glass,
+   because a backdrop-filter on the header would keep the panel's blur from seeing the page. */
+.marketing-page .site-header[data-topbar],
+.motion-ready.at-top .marketing-page .site-header[data-topbar] {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10; /* below the skip link (20) */
+  display: block; width: 100%; height: auto; padding: 0;
+  border: 0; background: none; box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  transition: none;
+}
+
+.site-header[data-topbar] .topbar {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: 16px;
+  height: var(--topbar-h);
+  padding-inline: max(var(--gutter), calc((100% - var(--width)) / 2));
+  background: var(--topbar-glass);
+  backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-bottom: 1px solid transparent;
+  transition: border-color .32s var(--ease-out), background-color .32s var(--ease-out);
+}
+/* Hairline only once the page has moved (motion.js sets .at-top on <html>). */
+.motion-ready:not(.at-top) .site-header[data-topbar] .topbar { border-bottom-color: #ffffff14; }
+:root .site-header[data-topbar][data-open] .topbar { border-bottom-color: transparent; background: var(--topbar-sheet); }
+
+.marketing-page .site-header[data-topbar] .header-wordmark {
+  grid-column: 1; justify-self: start;
+  position: static; transform: none;
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 13px; font-weight: 600; letter-spacing: .34em; white-space: nowrap; color: #f5f5f7;
+}
+
+.site-header[data-topbar] .topbar-links { grid-column: 2; justify-self: center; display: flex; align-items: center; }
+.site-header[data-topbar] .topbar-links a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px;
+  font-size: 12.5px; font-weight: 400; letter-spacing: -.01em; white-space: nowrap;
+  color: #e8e8edc7; border-radius: 8px;
+  transition: color .2s var(--ease-out);
+}
+.site-header[data-topbar] .topbar-links a:is(:hover, :focus-visible) { color: #fff; }
+@media (max-width: 1099.98px) { .site-header[data-topbar] .topbar-links a { padding: 0 10px; } }
+
+.site-header[data-topbar] .header-actions { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 12px; }
+.site-header[data-topbar] .header-beta-link { position: relative; }
+/* The pill stays slim; its touch area reaches 44 px. */
+.site-header[data-topbar] .header-beta-link::after { content: ''; position: absolute; inset: -4px 0; }
+.site-header[data-topbar] :is(.topbar-links a, .site-panel a):focus-visible { outline-offset: 2px; }
+
+/* Menu toggle: on narrow screens and on devices that cannot hover. */
+.site-header[data-topbar] .topbar-toggle {
+  display: none; place-items: center; width: 44px; height: 44px; margin-right: -10px; padding: 0;
+  border: 0; border-radius: 12px; background: transparent; color: #f5f5f7; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.site-header[data-topbar] .topbar-toggle-lines { position: relative; display: block; width: 18px; height: 8px; }
+.site-header[data-topbar] .topbar-toggle-lines::before,
+.site-header[data-topbar] .topbar-toggle-lines::after {
+  content: ''; position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 1px; background: currentColor;
+  transition: transform .32s var(--ease-out);
+}
+.site-header[data-topbar] .topbar-toggle-lines::before { top: 0; }
+.site-header[data-topbar] .topbar-toggle-lines::after { bottom: 0; }
+.site-header[data-topbar][data-open] .topbar-toggle-lines::before { transform: translateY(3.25px) rotate(45deg); }
+.site-header[data-topbar][data-open] .topbar-toggle-lines::after { transform: translateY(-3.25px) rotate(-45deg); }
+@media (max-width: 899.98px), (hover: none), (pointer: coarse) {
+  .site-header[data-topbar] .topbar-toggle { display: grid; }
+}
+@media (max-width: 899.98px) {
+  .site-header[data-topbar] .topbar { grid-template-columns: minmax(0, 1fr) auto; }
+  .site-header[data-topbar] .topbar-links { display: none; }
+  .site-header[data-topbar] .header-actions { grid-column: 2; }
+}
+
+/* Panel: full width, drops from the top edge, content follows 80 ms later. */
+.site-header[data-topbar] .site-panel {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 1;
+  max-height: calc(100vh - var(--topbar-h)); max-height: calc(100dvh - var(--topbar-h));
+  overflow-y: auto; overscroll-behavior: contain;
+  background: var(--topbar-sheet);
+  backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-bottom: 1px solid #ffffff14;
+  clip-path: inset(0 0 100% 0); visibility: hidden;
+  transition: clip-path .32s var(--ease-out), visibility 0s linear .32s;
+}
+.site-header[data-topbar][data-open] .site-panel {
+  clip-path: inset(0 0 0 0); visibility: visible;
+  transition: clip-path .32s var(--ease-out), visibility 0s;
+}
+.site-header[data-topbar] .site-panel-inner {
+  display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px;
+  padding: 36px max(var(--gutter), calc((100% - var(--width)) / 2)) 52px;
+  opacity: 0; transform: translateY(-6px);
+  transition: opacity .2s var(--ease-out), transform .32s var(--ease-out);
+}
+.site-header[data-topbar][data-open] .site-panel-inner { opacity: 1; transform: none; transition-delay: 80ms; }
+.site-header[data-topbar] .site-panel-group { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.site-header[data-topbar] .site-panel-group > p { margin: 0 0 10px; font-size: 12px; font-weight: 400; letter-spacing: 0; color: #8f8f98; }
+.site-header[data-topbar] .site-panel-group a {
+  display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 5px 0;
+  font-size: 13px; font-weight: 400; line-height: 1.35; letter-spacing: -.01em; color: #dcdce2;
+  border-radius: 6px; transition: color .2s var(--ease-out);
+}
+.site-header[data-topbar] .site-panel-primary a { padding: 4px 0; font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: -.022em; color: #f5f5f7; }
+.site-header[data-topbar] .site-panel-group a:is(:hover, :focus-visible) { color: #fff; }
+.site-header[data-topbar] .site-panel-group a[aria-current]::after {
+  content: ''; flex: none; width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+}
+
+/* The page behind dims while the panel is open; a tap on it closes the panel (navigation.js). */
+.site-header[data-topbar]::after {
+  content: ''; position: fixed; inset: 0; z-index: -1; background: #000000a6;
+  opacity: 0; visibility: hidden;
+  transition: opacity .32s var(--ease-out), visibility 0s linear .32s;
+}
+.site-header[data-topbar][data-open]::after { opacity: 1; visibility: visible; transition: opacity .32s var(--ease-out), visibility 0s; }
+
+@media (pointer: coarse) { .site-header[data-topbar] .site-panel-group a { min-height: 44px; } }
+@media (max-width: 700px) {
+  .marketing-page .site-header[data-topbar] .header-wordmark { display: inline-flex; font-size: 12px; letter-spacing: .26em; }
+  .site-header[data-topbar] .header-actions { gap: 6px; }
+  .site-header[data-topbar] .site-panel-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 16px; padding: 20px var(--gutter) 32px; }
+  .site-header[data-topbar] .site-panel-primary { grid-column: 1 / -1; }
+  .site-header[data-topbar] .site-panel-group a { min-height: 44px; padding: 0; font-size: 14px; }
+  .site-header[data-topbar] .site-panel-primary a { font-size: 22px; }
+}
+@media (max-width: 340px) { .marketing-page .site-header[data-topbar] .header-wordmark { display: none; } }
+
+/* Before navigation.js has run, or if it fails: focus inside the header still shows the panel. */
+.site-header[data-topbar]:not([data-menu-ready]):focus-within .site-panel { clip-path: none; visibility: visible; }
+.site-header[data-topbar]:not([data-menu-ready]):focus-within .site-panel-inner { opacity: 1; transform: none; }
+
+/* Without JavaScript: the bar scrolls with the page and the panel is a normal block under it. */
+@media (scripting: none) {
+  .marketing-page .site-header[data-topbar] { position: relative; }
+  .site-header[data-topbar] .site-panel { position: static; max-height: none; overflow: visible; clip-path: none; visibility: visible; }
+  .site-header[data-topbar] .site-panel-inner { opacity: 1; transform: none; }
+  .site-header[data-topbar] .topbar-toggle { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header[data-topbar] :is(.topbar, .site-panel, .site-panel-inner),
+  .site-header[data-topbar] .topbar-toggle-lines::before,
+  .site-header[data-topbar] .topbar-toggle-lines::after,
+  .site-header[data-topbar]::after { transition: none; }
+  .site-header[data-topbar][data-open] :is(.site-panel, .site-panel-inner),
+  .site-header[data-topbar][data-open]::after { transition: none; }
+  .site-header[data-topbar] .site-panel-inner { transform: none; }
+}
+@media (prefers-contrast: more), (forced-colors: active) {
+  .site-header[data-topbar] :is(.topbar, .site-panel),
+  :root .site-header[data-topbar][data-open] .topbar {
+    background: Canvas; color: CanvasText; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 1px solid CanvasText;
+  }
+  .site-header[data-topbar] :is(.topbar-links a, .site-panel-group a, .site-panel-group > p) { color: CanvasText; }
+  .site-header[data-topbar] .site-panel-group a[aria-current] { outline: 1px solid currentColor; outline-offset: 2px; }
+}
+
+/* ==========================================================================
+   Glass dropdown (beta.html only).
+   ========================================================================== */
 .glass-menu svg, .chapter-controls svg { width: 20px; height: 20px; flex: none; }
 .glass-menu > summary { min-height: 44px; padding-inline: 10px; border-radius: 12px; }
 .glass-menu[open] > summary { background: #ffffff10; }

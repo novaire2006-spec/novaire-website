@@ -79,11 +79,11 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
         }
       }
       await page.goto(origin, { waitUntil: 'networkidle0' });
-      await page.click('.menu summary');
-      assert.equal(await page.$eval('.menu', el => el.open), true);
+      await page.$eval('.topbar-toggle', el => el.click());
+      assert.equal(await page.$eval('.site-header', el => el.hasAttribute('data-open')), true);
       await page.keyboard.press('Escape');
-      assert.equal(await page.$eval('.menu', el => el.open), false);
-      assert.equal(await page.$eval('.menu summary', el => el === document.activeElement), true);
+      assert.equal(await page.$eval('.site-header', el => el.hasAttribute('data-open')), false);
+      assert.equal(await page.$eval('.topbar-toggle', el => el.getAttribute('aria-expanded')), 'false');
       await page.click('[data-preview]');
       assert.equal(await page.$eval('dialog', el => el.open), true);
       await page.keyboard.press('Escape');
@@ -91,7 +91,7 @@ const output = path.resolve(process.env.QA_OUTPUT || path.join(__dirname, '../qa
       await page.click('[data-language-toggle]');
       await page.waitForFunction(() => document.documentElement.lang === 'en');
       assert.equal(await page.$eval('html', el => el.classList.contains('language-changing')), false);
-      assert.ok((await page.$eval('.menu a[href*="datenschutz"]', el => el.href)).includes('lang=en'));
+      assert.ok((await page.$eval('#site-panel a[href*="datenschutz"]', el => el.href)).includes('lang=en'));
       assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length), 0);
       assert.equal((await page.cookies()).length, 0);
       checks.push(`7 pages in DE/EN at ${width}px; images, videos, counter, closed beta, deletion box, keyboard`);

@@ -1,0 +1,198 @@
+/* Feature wheel (relaunch Task 4).
+   Default, also without JavaScript and under reduced motion: every feature as a plain, readable grid.
+   With [data-wheel-live] (set by feature-wheel.js when motion is allowed) the section becomes a tall track
+   with a sticky stage: the page scroll turns the option wheel on the left, the matching detail shows on the right.
+   Per frame the script only writes transform, opacity, filter and colour on the wheel rows. */
+
+.feature-wheel-section {
+  /* Blur per row of distance in px, read by feature-wheel.js (the component's default is 2). */
+  --wheel-blur: 2;
+  hyphens: manual;
+}
+.feature-wheel-section .wheel-heading { margin-bottom: clamp(40px, 6vw, 72px); }
+
+/* Static grid. */
+.wheel-list { display: none; }
+.wheel-count { display: none; }
+.wheel-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: clamp(32px, 4vw, 48px) clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+.wheel-detail { min-width: 0; margin: 0; }
+.wheel-detail h3 { margin: 0; font-size: 21px; color: #fff; }
+.wheel-detail p { margin: 8px 0 0; max-width: 34ch; font-size: 16px; line-height: 1.5; color: var(--muted); }
+.wheel-shot {
+  position: relative; display: inline-block; margin-top: 20px; vertical-align: top;
+  color: #e9ebf1; text-decoration: none; cursor: zoom-in;
+}
+/* Pictures keep their own proportions: both sides auto, only capped. */
+.wheel-shot img {
+  display: block; width: auto; height: auto; max-width: 100%; max-height: 420px;
+  object-fit: contain; border-radius: 16px;
+}
+.wheel-expand {
+  position: absolute; bottom: 0; left: calc(100% + 6px); display: grid; place-items: center;
+  width: 44px; height: 44px; font-size: 21px; color: #d9dbe4;
+}
+.wheel-option:focus-visible,
+.wheel-shot:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
+/* The heading and the fine print rise in like every other section; the tall track itself stays still. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .marketing-page main > .feature-wheel-section > :not(.wheel-track) {
+      animation: flow-in var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+/* Live wheel. */
+@media (prefers-reduced-motion: no-preference) {
+  .feature-wheel-section[data-wheel-live] .wheel-track {
+    position: relative;
+    /* Edge to edge of the section, so rows bending left are not cut at the text column. */
+    margin-inline: calc(var(--gutter) * -1);
+    height: calc(100vh + 24 * 22vh);
+    height: calc(100svh + 24 * 22svh);
+    /* clip, not hidden: no scroll container, so the sticky stage still sticks to the viewport. */
+    overflow: clip;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    /* Room for the fixed top bar. */
+    padding: 64px var(--gutter) 40px 0;
+  }
+
+  .feature-wheel-section[data-wheel-live] .wheel-list {
+    display: block;
+    position: relative;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: clamp(1.5rem, 3.4vw, 3rem);
+    line-height: 1.4;
+    /* Rows fade out at the top and bottom edge of the wheel, and nothing paints outside it. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-item {
+    position: absolute;
+    top: 50%;
+    left: var(--gutter);
+    transform-origin: left;
+    white-space: nowrap;
+    color: #a6a6a6;
+    will-change: transform, opacity, filter;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-option {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-weight: 200;
+    letter-spacing: -0.025em;
+    cursor: pointer;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-item.is-active .wheel-option { font-weight: 600; }
+
+  .feature-wheel-section[data-wheel-live] .wheel-details {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: 0;
+    padding-left: clamp(16px, 3vw, 48px);
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-detail {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    visibility: hidden;
+    transition: opacity .26s var(--ease-out), transform .26s var(--ease-out), visibility 0s linear .26s;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-detail.is-active {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-detail h3 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-detail p {
+    margin-top: 14px;
+    max-width: 18ch;
+    font-size: clamp(24px, 2.6vw, 38px);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+    color: #fff;
+    text-wrap: balance;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-shot { margin-top: 28px; }
+  .feature-wheel-section[data-wheel-live] .wheel-shot img { max-height: min(52vh, 520px); max-height: min(52svh, 520px); }
+
+  .feature-wheel-section[data-wheel-live] .wheel-count {
+    display: block;
+    position: absolute;
+    right: var(--gutter);
+    bottom: 24px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Phones: wheel in the upper 55 % of the stage, the active detail in the lower 45 %. */
+@media (max-width: 759px) {
+  /* Smaller type, proportionally softer blur; also fewer pixels to filter on phones. */
+  .feature-wheel-section { --wheel-blur: 1.2; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 759px) {
+  .feature-wheel-section[data-wheel-live] .wheel-stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 55fr) minmax(0, 45fr);
+    padding: 56px 0 20px;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-list { font-size: 1.6rem; }
+  .feature-wheel-section[data-wheel-live] .wheel-item { left: 24px; }
+  .feature-wheel-section[data-wheel-live] .wheel-details {
+    align-items: start;
+    padding: 8px 24px 0;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-detail p { margin-top: 10px; max-width: 26ch; font-size: 20px; line-height: 1.25; }
+  .feature-wheel-section[data-wheel-live] .wheel-shot { margin-top: 16px; }
+  .feature-wheel-section[data-wheel-live] .wheel-shot img {
+    max-height: min(30vh, calc(45vh - 140px));
+    max-height: min(30svh, calc(45svh - 140px));
+    border-radius: 12px;
+  }
+  .feature-wheel-section[data-wheel-live] .wheel-count { right: 24px; bottom: 16px; }
+}
+
+@media (forced-colors: active) {
+  .feature-wheel-section[data-wheel-live] .wheel-item.is-active .wheel-option { color: Highlight; }
+}

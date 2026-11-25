@@ -11,3 +11,13 @@ export function launchTimeRemaining(now = Date.now()) {
     ended: total === 0,
   };
 }
+
+// The beta started on 7 November; the green bar fills from here to the launch instant.
+export const LAUNCH_START = Date.parse('2026-11-07T00:00:00+01:00');
+
+export function launchProgress(now = Date.now(), start = LAUNCH_START, end = LAUNCH_AT) {
+  if (!(end > start)) return 1;
+  const value = (now - start) / (end - start);
+  if (Number.isNaN(value)) return 0;
+  return Math.min(1, Math.max(0, value));
+}

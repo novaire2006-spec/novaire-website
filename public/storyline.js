@@ -1,59 +1,78 @@
-// The document owns the scroll. The sticky frame simply presents the chapter at this position.
-export function setupStory() {
-  const run = document.querySelector('.story-run');
-  if (!run) return;
-  const frame = run.querySelector('.story-frame');
-  const chapters = [...run.querySelectorAll('[data-chapter]')];
-  const plates = [...run.querySelectorAll('.chapter-plate')];
-  const controls = run.querySelector('.chapter-controls');
-  const [previous, next] = controls.querySelectorAll('button');
-  const count = controls.querySelector('.chapter-count');
-  const status = controls.querySelector('[data-chapter-status]');
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const last = chapters.length - 1;
-  let current = -1, pinTop = 0, stride = 0, enabled = false;
-  if (last < 1 || plates.length !== chapters.length) return;
+// Timeline "Von Lenova zu Novaire". The page scrolls normally; nothing is pinned.
+// The line fills toward a mark at 60 % of the viewport height, and every chapter whose top
+// passes that mark is reached and stays bright. At the closed application round the number
+// counts up once. Without JavaScript or with reduced motion everything is simply shown.
+import { countUpValue, formatCount } from './count-up.js';
 
-  function display(index) {
-    if (index === current) return;
-    current = index;
-    chapters.forEach((chapter, i) => {
-      chapter.classList.toggle('is-active', i === index);
-      plates[i].classList.toggle('is-active', i === index);
-    });
-    count.textContent = [index + 1, last + 1].map(n => String(n).padStart(2, '0')).join(' / ');
-    previous.setAttribute('aria-disabled', String(index === 0));
-    next.setAttribute('aria-disabled', String(index === last));
+const MARK = 0.6;
+const COUNT_MS = 900;
+const clamp = (value) => Math.min(1, Math.max(0, value));
+
+// Pure: positions in, progress and reached flags out (viewport coordinates, in px).
+export function storyState({ listTop, listHeight, chapterTops, viewportHeight }) {
+  const mark = viewportHeight * MARK;
+  const progress = listHeight > 0 ? clamp((mark - listTop) / listHeight) : 1;
+  return { progress, reached: chapterTops.map(top => top <= mark) };
+}
+
+// motion.js calls measure() on load, resize, language and motion changes, update() on scroll.
+export function setupStory() {
+  const section = document.querySelector('.story-section');
+  const list = section?.querySelector('.story-timeline');
+  if (!list) return;
+  const chapters = [...list.querySelectorAll('.chapter')];
+  const count = list.querySelector('.story-count[data-count-to]');
+  const countChapter = count?.closest('.chapter');
+  const target = Number(count?.dataset.countTo) || 0;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const language = () => (document.documentElement.lang === 'en' ? 'en' : 'de');
+  let live = false, counted = false, frame = 0;
+
+  function showFinal() {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    if (count) count.textContent = formatCount(target, language());
+  }
+  function runCount() {
+    counted = true;
+    const start = performance.now();
+    const step = (now) => {
+      const elapsed = now - start;
+      count.textContent = formatCount(countUpValue(elapsed, target, COUNT_MS), language());
+      frame = elapsed < COUNT_MS ? requestAnimationFrame(step) : 0;
+    };
+    frame = requestAnimationFrame(step);
   }
   function update() {
-    if (!enabled) return;
-    const position = Math.max(0, Math.min(last, (pinTop - run.getBoundingClientRect().top) / stride));
-    run.style.setProperty('--chapter-progress', ((position + 1) / chapters.length).toFixed(4));
-    display(Math.round(position));
+    if (!live) return;
+    const box = list.getBoundingClientRect();
+    const { progress, reached } = storyState({
+      listTop: box.top, listHeight: box.height, viewportHeight: innerHeight,
+      chapterTops: chapters.map(chapter => chapter.getBoundingClientRect().top),
+    });
+    list.style.setProperty('--story-progress', progress.toFixed(4));
+    reached.forEach((isReached, i) => {
+      if (!isReached || chapters[i].classList.contains('is-reached')) return;
+      chapters[i].classList.add('is-reached');
+      if (chapters[i] === countChapter && count && !counted) runCount();
+    });
   }
   function measure() {
-    pinTop = Math.max(76, Math.round(innerHeight * .14));
-    stride = Math.min(390, Math.max(190, Math.round(innerHeight * .42)));
-    run.style.setProperty('--story-top', pinTop + 'px');
-    run.style.setProperty('--story-distance', (stride * last) + 'px');
-    enabled = !reduced.matches && innerHeight >= 510;
-    run.toggleAttribute('data-scroll-story', enabled);
-    controls.hidden = !enabled;
-    if (enabled && frame.offsetHeight + pinTop + 16 > innerHeight) {
-      enabled = false;
-      run.removeAttribute('data-scroll-story');
-      controls.hidden = true;
+    const next = !reduced.matches;
+    if (next !== live) {
+      live = next;
+      section.toggleAttribute('data-story-live', live);
+      if (!live) {
+        chapters.forEach(chapter => chapter.classList.remove('is-reached'));
+        list.style.removeProperty('--story-progress');
+        counted = true;
+      } else if (count && !counted) {
+        count.textContent = formatCount(0, language());
+      }
     }
-    if (enabled) update();
-    else display(0);
-  }
-  function jump(index) {
-    if (!enabled || index < 0 || index > last) return;
-    window.scrollTo({ top: scrollY + run.getBoundingClientRect().top - pinTop + index * stride, behavior: 'instant' });
+    // A finished or skipped count follows the language; a running one picks it up on its next frame.
+    if (count && !frame && (counted || !live)) showFinal();
     update();
-    status.textContent = chapters[index].querySelector('h3').textContent;
   }
-  previous.addEventListener('click', () => jump(current - 1));
-  next.addEventListener('click', () => jump(current + 1));
   return { measure, update };
 }

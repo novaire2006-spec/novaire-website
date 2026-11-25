@@ -26,49 +26,59 @@
   <script type="module" src="navigation.js"></script>
   <script src="stars.js" defer></script>
   <link rel="stylesheet" href="story.css">
+  <link rel="stylesheet" href="relaunch.css">
+  <link rel="stylesheet" href="feature-wheel.css">
+  <script type="module" src="feature-wheel.js"></script>
   <script type="module" src="motion.js"></script>
   <script src="app.js" defer></script>
   <script type="module" src="rewards.js"></script>
   <script type="module" src="i18n.js"></script>
   <script type="module" src="application-count.js"></script>
+  <link rel="stylesheet" href="relaunch-sections.css">
 </head>
 <body class="marketing-page has-launch-countdown">
   <a class="skip-link" href="#inhalt">Zum Inhalt</a>
-  <header class="site-header">
-    <details class="menu glass-menu">
-      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span><span>Menü</span></summary>
-      <nav aria-label="Hauptnavigation">
-        <div class="glass-head"><span class="glass-badge"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#panel"/></svg></span><strong>Novaire</strong><button type="button" class="glass-close" aria-label="Menü schließen" hidden><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#collapse"/></svg></button></div>
-        <label class="glass-search" hidden><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#search"/></svg><input type="search" aria-label="Seite suchen" placeholder="Seite suchen" autocomplete="off"></label>
-        <div class="glass-links">
-          <div class="glass-group"><p>Die App entdecken</p>
-            <a href="#inhalt"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#home"/></svg><span>Startseite</span></a>
-            <a href="#entdecken"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#app"/></svg><span>Die App</span></a>
-            <a href="#app-in-aktion"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#play"/></svg><span>App in Aktion</span></a>
-            <a href="#intelligenz"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#nova"/></svg><span>Die KI dahinter</span></a>
-            <a href="#belohnungen"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#rewards"/></svg><span>Belohnungen</span></a>
-            <a href="#plaene"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#price"/></svg><span>Preise</span></a>
-          </div>
-          <div class="glass-group"><p>Mehr entdecken</p>
-            <a href="#updates"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#news"/></svg><span>Updates &amp; Meilensteine</span></a>
-            <a href="#geschichte"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#time"/></svg><span>Unsere Geschichte</span></a>
-            <a href="#community"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#people"/></svg><span>Community</span></a>
-            <a href="beta.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#beta"/></svg><span>Beta testen</span></a>
-          </div>
-          <div class="glass-group"><p>Hilfe &amp; Rechtliches</p>
-            <a href="support.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#help"/></svg><span>Support</span></a>
-            <a href="datenschutz.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#shield"/></svg><span>Datenschutz</span></a>
-            <a href="impressum.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#info"/></svg><span>Impressum</span></a>
-            <a href="agb.html"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#file"/></svg><span>AGB</span></a>
-          </div>
-          <p class="glass-empty" role="status" hidden>Keine Seite gefunden.</p>
+  <header class="site-header" data-topbar>
+    <div class="topbar">
+      <a class="header-wordmark" href="#inhalt" aria-label="Novaire Startseite">NOVAIRE</a>
+      <nav class="topbar-links" aria-label="Hauptnavigation">
+        <a href="#entdecken">Die App</a>
+        <a href="#features">Features</a>
+        <a href="#app-in-aktion">In Aktion</a>
+        <a href="#belohnungen">Belohnungen</a>
+        <a href="#plaene">Preise</a>
+        <a href="#geschichte">Geschichte</a>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="language-toggle" data-language-toggle aria-label="Sprache ändern" hidden><span data-language-label>EN</span></button>
+        <a class="header-link header-beta-link" href="beta.html">Zur Beta <span aria-hidden="true">↗</span></a>
+        <button type="button" class="topbar-toggle" aria-expanded="false" aria-controls="site-panel" aria-label="Menü öffnen"><span class="topbar-toggle-lines" aria-hidden="true"></span></button>
+      </div>
+    </div>
+    <div id="site-panel" class="site-panel">
+      <nav class="site-panel-inner" aria-label="Menü">
+        <div class="site-panel-group site-panel-primary"><p>Die App entdecken</p>
+          <a href="#inhalt"><span>Startseite</span></a>
+          <a href="#entdecken"><span>Die App</span></a>
+          <a href="#features"><span>Features</span></a>
+          <a href="#app-in-aktion"><span>App in Aktion</span></a>
+          <a href="#intelligenz"><span>Die KI dahinter</span></a>
+          <a href="#belohnungen"><span>Belohnungen</span></a>
+          <a href="#plaene"><span>Preise</span></a>
+        </div>
+        <div class="site-panel-group"><p>Mehr entdecken</p>
+          <a href="#updates"><span>Updates &amp; Meilensteine</span></a>
+          <a href="#geschichte"><span>Unsere Geschichte</span></a>
+          <a href="#community"><span>Community</span></a>
+          <a href="beta.html"><span>Beta testen</span></a>
+        </div>
+        <div class="site-panel-group"><p>Hilfe &amp; Rechtliches</p>
+          <a href="support.html"><span>Support</span></a>
+          <a href="datenschutz.html"><span>Datenschutz</span></a>
+          <a href="impressum.html"><span>Impressum</span></a>
+          <a href="agb.html"><span>AGB</span></a>
         </div>
       </nav>
-    </details>
-    <a class="header-wordmark" href="#inhalt" aria-label="Novaire Startseite">NOVAIRE</a>
-    <div class="header-actions">
-      <button type="button" class="language-toggle" data-language-toggle aria-label="Sprache ändern" hidden><span data-language-label>EN</span></button>
-      <a class="header-link header-beta-link" href="beta.html">Zur Beta <span aria-hidden="true">↗</span></a>
     </div>
   </header>
 
@@ -95,51 +105,20 @@
               <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="hours" data-no-translate>—</span><span class="launch-countdown-label">Stunden</span></div>
               <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="minutes" data-no-translate>—</span><span class="launch-countdown-label">Minuten</span></div>
               <div class="launch-countdown-unit"><span class="launch-countdown-value" data-launch-unit="seconds" data-no-translate>—</span><span class="launch-countdown-label">Sekunden</span></div>
+              <canvas class="launch-countdown-burst" aria-hidden="true"></canvas>
             </div>
             <p class="launch-countdown-arrived" data-launch-arrived hidden>Der Launch-Tag ist da.</p>
             <p class="launch-countdown-date"><time datetime="2026-11-27T18:00:00+01:00">27. November · 18:00 Uhr MEZ</time></p>
+            <div class="launch-progress-block" data-launch-progress hidden>
+              <div class="launch-progress" role="progressbar" aria-label="Fortschritt bis zum Release" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="launch-progress-fill"></span></div>
+              <p class="launch-progress-labels"><span>Beta-Start 7.11.</span><span>Release 27.11.</span></p>
+            </div>
           </div>
         </aside>
         <div class="hero-explore-links"><a class="beta-button" href="#app-in-aktion">App in Aktion <span aria-hidden="true">↗</span></a><a class="text-link" href="#entdecken">Entdecke Novaire <span aria-hidden="true">↓</span></a></div>
       </div>
       <span class="hero-note">FÜR DEINEN EIGENEN WEG.</span>
-      <a class="hero-index" href="#updates">UNSER NÄCHSTES KAPITEL. <span aria-hidden="true">↓</span></a>
-    </section>
-
-    <section class="section community-section" id="community" aria-labelledby="community-title">
-      <div class="community-heading reveal"><div><p class="eyebrow">NAH DRAN. VON ANFANG AN.</p><h2 id="community-title">Die Geschichte<br><span class="muted">geht weiter.</span></h2></div><p>Neue Einblicke, kleine Fortschritte und die Menschen hinter Novaire. Folge uns und gestalte den Anfang mit.</p></div>
-      <div class="social-links reveal">
-        <a href="https://www.instagram.com/novaireapp" target="_blank" rel="noopener noreferrer" aria-label="Novaire auf Instagram (neuer Tab)"><img src="assets/social-instagram.svg" width="30" height="30" alt=""><span><strong>Instagram</strong><span>@novaireapp</span></span><span class="social-arrow" aria-hidden="true">↗</span></a>
-        <a href="https://www.tiktok.com/@novaireapp" target="_blank" rel="noopener noreferrer" aria-label="Novaire auf TikTok (neuer Tab)"><img src="assets/social-tiktok.svg" width="30" height="30" alt=""><span><strong>TikTok</strong><span>@novaireapp</span></span><span class="social-arrow" aria-hidden="true">↗</span></a>
-        <a href="https://discord.gg/novaireai" target="_blank" rel="noopener noreferrer" aria-label="Novaire auf Discord (neuer Tab)"><img src="assets/social-discord.svg" width="30" height="30" alt=""><span><strong>Discord</strong><span>Unsere Community</span></span><span class="social-arrow" aria-hidden="true">↗</span></a>
-      </div>
-      <div class="business-contact reveal"><span>Geschäftliche Anfragen &amp; Kooperationen</span><a href="mailto:armin.brnicanin@novaireai.de">armin.brnicanin@novaireai.de <span aria-hidden="true">↗</span></a></div>
-    </section>
-
-    <section class="section launch-section" id="updates" aria-labelledby="updates-title">
-      <div class="launch-heading reveal"><div><p class="eyebrow">NOVAIRE / UPDATES</p><h2 id="updates-title">Der nächste Schritt.<br><span class="muted">Mit euch.</span></h2></div><p>Was gerade passiert.<br>Und was als Nächstes kommt.</p></div>
-      <div class="launch-grid">
-        <article class="launch-update reveal" aria-labelledby="beta-update-title">
-          <div class="launch-update-meta"><span class="launch-status"><span class="status-spark" aria-hidden="true"></span>BETA LIVE</span><time datetime="2026-11-07">7. November 2026</time></div>
-          <p class="launch-update-number" aria-hidden="true">01 / BETA</p>
-          <h3 id="beta-update-title">Die Beta ist gestartet.</h3>
-          <p>Unsere geschlossene Beta ist live. Die ausgewählten Tester probieren Novaire jetzt über TestFlight aus. Ihre Einladungen wurden per E-Mail verschickt. Mit eurem Feedback machen wir Novaire Schritt für Schritt besser.</p>
-          <a class="text-link" href="beta.html">Alles zur Beta <span aria-hidden="true">↗</span></a>
-        </article>
-        <div class="application-counter milestone-counter reveal" data-application-counter data-state="loading" aria-labelledby="application-count-label">
-          <div class="milestone-counter-top"><p class="eyebrow">EUER VERTRAUEN.</p><div class="application-count-topline"><span class="application-count-dot" aria-hidden="true"></span><span data-count-badge data-no-translate>BETA</span></div></div>
-          <div class="application-count-total" aria-live="polite" aria-atomic="true"><strong data-count-value data-no-translate>—</strong><span id="application-count-label">Bewerbungen für die Beta</span></div>
-          <p class="milestone-thanks">Hinter jeder Zahl steckt jemand, der mit uns lernen möchte. Danke, dass ihr Teil des Anfangs seid.</p>
-          <div class="milestone-counter-footer"><p class="application-count-status" data-count-status data-no-translate>Die aktuelle Anzahl wird geladen …</p><p class="application-count-note">Gesamtzahl der Bewerbungen — keine Anzeige freier Plätze.</p></div>
-          <noscript><p class="application-count-note">Aktiviere JavaScript, um die aktuelle Anzahl zu sehen.</p></noscript>
-        </div>
-      </div>
-      <div class="milestone-heading reveal"><h3>Schritt für Schritt.</h3><p>Unsere Meilensteine</p></div>
-      <ol class="launch-roadmap reveal" aria-label="Meilensteine auf dem Weg zum Start">
-        <li class="milestone-complete"><div class="milestone-track" aria-hidden="true"><span class="milestone-dot">✓</span></div><p class="milestone-state">ABGESCHLOSSEN</p><h4>Bewerbungsrunde</h4><p>Danke für jede einzelne Bewerbung.</p><time datetime="2026-10-30">30. Oktober 2026</time></li>
-        <li class="milestone-current" aria-current="step"><div class="milestone-track" aria-hidden="true"><span class="milestone-dot"></span></div><p class="milestone-state">JETZT LIVE</p><h4>Die erste Beta</h4><p>Gemeinsam testen. Ehrlich verbessern.</p><time datetime="2026-11-07">7. November 2026</time></li>
-        <li><div class="milestone-track" aria-hidden="true"><span class="milestone-dot"></span></div><p class="milestone-state">APP-START</p><h4>Novaire für iOS</h4><p>Dein Lernuniversum im App Store.</p><time class="milestone-detail" datetime="2026-11-27T18:00:00+01:00">27. November 2026 · 18:00 Uhr MEZ</time></li>
-      </ol>
+      <a class="hero-index" href="#entdecken">ENTDECKE NOVAIRE. <span aria-hidden="true">↓</span></a>
     </section>
 
     <section class="section intro" id="entdecken" aria-labelledby="intro-title">
@@ -168,46 +147,64 @@
       </div>
     </section>
 
-    <section class="section ai-section" id="intelligenz" aria-labelledby="ai-title">
-      <div class="section-heading reveal"><p class="eyebrow">INTELLIGENZ MIT EINER AUFGABE</p><h2 id="ai-title">Gute Modelle.<br><span class="muted">Für deine Fragen.</span></h2><p>Nova ist dein Gegenüber. Im Hintergrund unterstützen KI-Modelle unterschiedliche Lernaufgaben.</p></div>
-      <div class="table-scroll reveal" tabindex="0" role="region" aria-label="KI-Anbieter und Einsatzbereiche">
-        <table class="ai-table">
-          <caption class="sr-only">KI-Anbieter hinter Nova</caption>
-          <thead><tr><th scope="col">Anbieter</th><th scope="col">Modellfamilie</th><th scope="col">Wobei sie hilft</th></tr></thead>
-          <tbody>
-            <tr><th scope="row"><span class="provider"><img src="assets/openai.svg" alt="" width="30" height="30">OpenAI</span></th><td>GPT</td><td>Mathe, Bildverständnis und weitere Lernaufgaben.</td></tr>
-            <tr><th scope="row"><span class="provider"><img src="assets/anthropic.svg" alt="" width="30" height="30">Anthropic</span></th><td>Claude</td><td>Erklärungen, Struktur und das Aufbereiten von Lerninhalten.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="fine-print">KI kann Fehler machen. Prüfe wichtige Antworten und Quellen.</p>
-    </section>
-
-    <section class="section product-section" aria-labelledby="product-title">
-      <div class="section-heading reveal"><h2 id="product-title">Die App entdecken</h2></div>
-      <div class="feature-gallery app-gallery reveal">
-        <div class="feature-tabs" aria-labelledby="product-title" hidden>
-          <button type="button" id="tab-live" aria-controls="feature-live">Nova Live</button>
-          <button type="button" id="tab-cards" aria-controls="feature-cards">Karteikarten</button>
-          <button type="button" id="tab-podcast" aria-controls="feature-podcast">Lernpodcasts</button>
-          <button type="button" id="tab-coding" aria-controls="feature-coding">Coding</button>
+    <section class="section feature-wheel-section" id="features" aria-labelledby="features-title" data-flow-still>
+      <div class="section-heading wheel-heading reveal"><h2 id="features-title">Deine Features,<br><span class="muted">um besser zu werden.</span></h2></div>
+      <div class="wheel-track">
+        <div class="wheel-stage">
+          <ol class="wheel-list" aria-labelledby="features-title">
+            <li class="wheel-item" data-feature="chat"><button type="button" class="wheel-option" aria-describedby="wheel-text-chat">Nova Chat</button></li>
+            <li class="wheel-item" data-feature="live"><button type="button" class="wheel-option" aria-describedby="wheel-text-live">Nova Live</button></li>
+            <li class="wheel-item" data-feature="lernplan"><button type="button" class="wheel-option" aria-describedby="wheel-text-lernplan">Lernplan</button></li>
+            <li class="wheel-item" data-feature="deepfokus"><button type="button" class="wheel-option" aria-describedby="wheel-text-deepfokus">Deep Fokus</button></li>
+            <li class="wheel-item" data-feature="karteikarten"><button type="button" class="wheel-option" aria-describedby="wheel-text-karteikarten">Karteikarten</button></li>
+            <li class="wheel-item" data-feature="vokabeln"><button type="button" class="wheel-option" aria-describedby="wheel-text-vokabeln">Vokabeln</button></li>
+            <li class="wheel-item" data-feature="merksaetze"><button type="button" class="wheel-option" aria-describedby="wheel-text-merksaetze">Merksätze</button></li>
+            <li class="wheel-item" data-feature="formeln"><button type="button" class="wheel-option" aria-describedby="wheel-text-formeln">Formelsammlung</button></li>
+            <li class="wheel-item" data-feature="gedaechtnis"><button type="button" class="wheel-option" aria-describedby="wheel-text-gedaechtnis">Lerngedächtnis</button></li>
+            <li class="wheel-item" data-feature="lernzettel"><button type="button" class="wheel-option" aria-describedby="wheel-text-lernzettel">Lernzettel</button></li>
+            <li class="wheel-item" data-feature="notizen"><button type="button" class="wheel-option" aria-describedby="wheel-text-notizen">Notizen</button></li>
+            <li class="wheel-item" data-feature="unterlagen"><button type="button" class="wheel-option" aria-describedby="wheel-text-unterlagen">Unterlagen</button></li>
+            <li class="wheel-item" data-feature="skript"><button type="button" class="wheel-option" aria-describedby="wheel-text-skript">Skript</button></li>
+            <li class="wheel-item" data-feature="probeklausur"><button type="button" class="wheel-option" aria-describedby="wheel-text-probeklausur">Probeklausur</button></li>
+            <li class="wheel-item" data-feature="muendlich"><button type="button" class="wheel-option" aria-describedby="wheel-text-muendlich">Mündliche Prüfung</button></li>
+            <li class="wheel-item" data-feature="kalender"><button type="button" class="wheel-option" aria-describedby="wheel-text-kalender">Prüfungskalender</button></li>
+            <li class="wheel-item" data-feature="praesentationen"><button type="button" class="wheel-option" aria-describedby="wheel-text-praesentationen">Präsentationen</button></li>
+            <li class="wheel-item" data-feature="podcasts"><button type="button" class="wheel-option" aria-describedby="wheel-text-podcasts">Podcasts</button></li>
+            <li class="wheel-item" data-feature="schrift"><button type="button" class="wheel-option" aria-describedby="wheel-text-schrift">Deine Schrift</button></li>
+            <li class="wheel-item" data-feature="coding"><button type="button" class="wheel-option" aria-describedby="wheel-text-coding">Coding</button></li>
+            <li class="wheel-item" data-feature="wort"><button type="button" class="wheel-option" aria-describedby="wheel-text-wort">Wort des Tages</button></li>
+            <li class="wheel-item" data-feature="community"><button type="button" class="wheel-option" aria-describedby="wheel-text-community">Community</button></li>
+            <li class="wheel-item" data-feature="nachrichten"><button type="button" class="wheel-option" aria-describedby="wheel-text-nachrichten">Nachrichten</button></li>
+            <li class="wheel-item" data-feature="freunde"><button type="button" class="wheel-option" aria-describedby="wheel-text-freunde">Freunde</button></li>
+          </ol>
+          <div class="wheel-details">
+            <article class="wheel-detail" data-feature="chat"><h3>Nova Chat</h3><p id="wheel-text-chat">Frag nach, bis du es verstanden hast.</p></article>
+            <article class="wheel-detail" data-feature="live"><h3>Nova Live</h3><p id="wheel-text-live">Sprich mit Nova und sieh die Erklärung entstehen.</p><a class="wheel-shot" href="assets/app-nova-live.png" data-preview data-title="Nova Live — Sonnenenergie anschaulich erklärt" aria-label="Nova-Live-Lernbild größer ansehen"><img src="assets/app-nova-live.png" alt="Nova Live erklärt den Weg vom Sonnenlicht über Solarmodul und Wechselrichter bis nach Hause, mit einem Diagramm und Alltagsbeispiel" width="780" height="1688" loading="lazy" decoding="async"><span class="wheel-expand" aria-hidden="true">↗</span></a></article>
+            <article class="wheel-detail" data-feature="lernplan"><h3>Lernplan</h3><p id="wheel-text-lernplan">Tag für Tag bis zur Prüfung.</p></article>
+            <article class="wheel-detail" data-feature="deepfokus"><h3>Deep Fokus</h3><p id="wheel-text-deepfokus">Ein Thema am Stück, aus deinem Material.</p></article>
+            <article class="wheel-detail" data-feature="karteikarten"><h3>Karteikarten</h3><p id="wheel-text-karteikarten">Abfragen und wiederholen.</p><a class="wheel-shot" href="assets/app-flashcards.png" data-preview data-title="Karteikarten — dein Wissen aktiv abrufen" aria-label="Karteikarten-Ansicht größer ansehen"><img src="assets/app-flashcards.png" alt="Zellbiologie-Karteikarte mit der Frage nach der Aufgabe der Mitochondrien und den Optionen zum Wiederholen oder Bestätigen" width="780" height="1688" loading="lazy" decoding="async"><span class="wheel-expand" aria-hidden="true">↗</span></a></article>
+            <article class="wheel-detail" data-feature="vokabeln"><h3>Vokabeln</h3><p id="wheel-text-vokabeln">Abfragen, auch vom Foto.</p></article>
+            <article class="wheel-detail" data-feature="merksaetze"><h3>Merksätze</h3><p id="wheel-text-merksaetze">Eselsbrücken, die hängen bleiben.</p></article>
+            <article class="wheel-detail" data-feature="formeln"><h3>Formelsammlung</h3><p id="wheel-text-formeln">Nachschlagen und verstehen.</p></article>
+            <article class="wheel-detail" data-feature="gedaechtnis"><h3>Lerngedächtnis</h3><p id="wheel-text-gedaechtnis">Was schon sitzt und was noch nicht.</p></article>
+            <article class="wheel-detail" data-feature="lernzettel"><h3>Lernzettel</h3><p id="wheel-text-lernzettel">Neu aus Foto, Datei oder Thema.</p></article>
+            <article class="wheel-detail" data-feature="notizen"><h3>Notizen</h3><p id="wheel-text-notizen">Deine Notizen an einem Ort.</p></article>
+            <article class="wheel-detail" data-feature="unterlagen"><h3>Unterlagen</h3><p id="wheel-text-unterlagen">Deine Dateien als Grundlage fürs Lernen.</p></article>
+            <article class="wheel-detail" data-feature="skript"><h3>Skript</h3><p id="wheel-text-skript">Lange PDFs bis 60 Seiten zusammenfassen.</p></article>
+            <article class="wheel-detail" data-feature="probeklausur"><h3>Probeklausur</h3><p id="wheel-text-probeklausur">Eine Klausur zum Üben erstellen.</p></article>
+            <article class="wheel-detail" data-feature="muendlich"><h3>Mündliche Prüfung</h3><p id="wheel-text-muendlich">Das Prüfungsgespräch mit Nova üben.</p></article>
+            <article class="wheel-detail" data-feature="kalender"><h3>Prüfungskalender</h3><p id="wheel-text-kalender">Alle Prüfungstermine im Blick.</p></article>
+            <article class="wheel-detail" data-feature="praesentationen"><h3>Präsentationen</h3><p id="wheel-text-praesentationen">Folien fürs Referat erstellen.</p></article>
+            <article class="wheel-detail" data-feature="podcasts"><h3>Podcasts</h3><p id="wheel-text-podcasts">Nova und Leo erklären zum Hören.</p><a class="wheel-shot" href="assets/app-podcast.png" data-preview data-title="Lernpodcasts — Zellatmung in fünf Minuten" aria-label="Lernpodcast-Player größer ansehen"><img src="assets/app-podcast.png" alt="Novaire-Podcast-Player mit dem Biologie-Podcast Zellatmung in fünf Minuten, Wiedergabesteuerung, Kapiteln und Mitlesefunktion" width="402" height="874" loading="lazy" decoding="async"><span class="wheel-expand" aria-hidden="true">↗</span></a></article>
+            <article class="wheel-detail" data-feature="schrift"><h3>Deine Schrift</h3><p id="wheel-text-schrift">Texte in deiner eigenen Handschrift.</p></article>
+            <article class="wheel-detail" data-feature="coding"><h3>Coding</h3><p id="wheel-text-coding">Programmieren lernen, Schritt für Schritt.</p><a class="wheel-shot" href="assets/app-coding.png" data-preview data-title="Coding — dein Einstieg mit Python, JavaScript oder Java" aria-label="Coding-Bereich größer ansehen"><img src="assets/app-coding.png" alt="Coding-Einstieg in Novaire mit Python, JavaScript und Java, kurzen Beschreibungen und farbigen Codebeispielen" width="780" height="1688" loading="lazy" decoding="async"><span class="wheel-expand" aria-hidden="true">↗</span></a></article>
+            <article class="wheel-detail" data-feature="wort"><h3>Wort des Tages</h3><p id="wheel-text-wort">Ein Wort am Tag, eine kleine Pause.</p></article>
+            <article class="wheel-detail" data-feature="community"><h3>Community</h3><p id="wheel-text-community">Lernzettel anderer entdecken und teilen.</p></article>
+            <article class="wheel-detail" data-feature="nachrichten"><h3>Nachrichten</h3><p id="wheel-text-nachrichten">Privat mit Freunden schreiben.</p></article>
+            <article class="wheel-detail" data-feature="freunde"><h3>Freunde</h3><p id="wheel-text-freunde">Freunde finden und einladen.</p></article>
+          </div>
+          <p class="wheel-count" aria-hidden="true" data-no-translate>01 / 24</p>
         </div>
-        <article class="feature-panel" id="feature-live">
-          <div class="feature-caption"><h3>Nicht nur hören. Auch sehen.</h3><p>Sprich mit Nova über dein Thema. Lernbilder, klare Schritte und Beispiele aus dem Alltag machen Zusammenhänge anschaulich.</p></div>
-          <a class="feature-shot" href="assets/app-nova-live.png" data-preview data-title="Nova Live — Sonnenenergie anschaulich erklärt" aria-label="Nova-Live-Lernbild größer ansehen"><img src="assets/app-nova-live.png" alt="Nova Live erklärt den Weg vom Sonnenlicht über Solarmodul und Wechselrichter bis nach Hause, mit einem Diagramm und Alltagsbeispiel" width="780" height="1688" loading="lazy" decoding="async"><span class="feature-expand" aria-hidden="true">↗</span></a>
-        </article>
-        <article class="feature-panel" id="feature-cards">
-          <div class="feature-caption"><h3>Aus Wiederholen wird Wissen.</h3><p>Eine Frage nach der anderen. Teste dich selbst und behalte im Blick, was schon sitzt und was du noch einmal üben möchtest.</p></div>
-          <a class="feature-shot" href="assets/app-flashcards.png" data-preview data-title="Karteikarten — dein Wissen aktiv abrufen" aria-label="Karteikarten-Ansicht größer ansehen"><img src="assets/app-flashcards.png" alt="Zellbiologie-Karteikarte mit der Frage nach der Aufgabe der Mitochondrien und den Optionen zum Wiederholen oder Bestätigen" width="780" height="1688" loading="lazy" decoding="async"><span class="feature-expand" aria-hidden="true">↗</span></a>
-        </article>
-        <article class="feature-panel" id="feature-podcast">
-          <div class="feature-caption"><h3>Dein Thema. Zum Zuhören.</h3><p>Lerninhalte als Gespräch, das du mitnehmen kannst. Mit Kapiteln, einstellbarem Tempo und Text zum Mitlesen.</p></div>
-          <a class="feature-shot" href="assets/app-podcast.png" data-preview data-title="Lernpodcasts — Zellatmung in fünf Minuten" aria-label="Lernpodcast-Player größer ansehen"><img src="assets/app-podcast.png" alt="Novaire-Podcast-Player mit dem Biologie-Podcast Zellatmung in fünf Minuten, Wiedergabesteuerung, Kapiteln und Mitlesefunktion" width="402" height="874" loading="lazy" decoding="async"><span class="feature-expand" aria-hidden="true">↗</span></a>
-        </article>
-        <article class="feature-panel" id="feature-coding">
-          <div class="feature-caption"><h3>Verstehen, was dein Code macht.</h3><p>Wähle deine Sprache und starte mit verständlichen Beispielen und kleinen Aufgaben. Ohne Vorkenntnisse, Schritt für Schritt.</p></div>
-          <a class="feature-shot" href="assets/app-coding.png" data-preview data-title="Coding — dein Einstieg mit Python, JavaScript oder Java" aria-label="Coding-Bereich größer ansehen"><img src="assets/app-coding.png" alt="Coding-Einstieg in Novaire mit Python, JavaScript und Java, kurzen Beschreibungen und farbigen Codebeispielen" width="780" height="1688" loading="lazy" decoding="async"><span class="feature-expand" aria-hidden="true">↗</span></a>
-        </article>
       </div>
       <p class="fine-print app-gallery-note">Einblicke aus der App mit Beispielinhalten. Die Beta entwickelt sich weiter. Die App-Ansichten sind auf Deutsch.</p>
     </section>
@@ -251,28 +248,6 @@
       <p class="fine-print app-gallery-note">Originalaufnahmen aus der Beta, ohne Ton. Die App-Ansichten sind auf Deutsch. Gezeigte Übungsantworten können Fehler enthalten.</p>
     </section>
 
-    <section class="provider-band" id="anbieter" aria-labelledby="provider-title" data-showcase-motion>
-      <div class="provider-inner">
-        <div class="provider-heading"><h2 id="provider-title">Die Technologie hinter Novaire</h2></div>
-        <div class="provider-window">
-          <div class="provider-belt">
-            <ul class="provider-list" data-no-translate>
-              <li><img src="assets/openai.svg" width="28" height="28" loading="lazy" alt="">OpenAI</li>
-              <li><img src="assets/anthropic.svg" width="28" height="28" loading="lazy" alt="">Anthropic</li>
-              <li><img src="assets/elevenlabs.svg" width="28" height="28" loading="lazy" alt="">ElevenLabs</li>
-              <li><img src="assets/supabase.svg" width="28" height="28" loading="lazy" alt="">Supabase</li>
-              <li><img src="assets/google.svg" width="28" height="28" loading="lazy" alt="">Google</li>
-              <li><img src="assets/revenuecat.svg" width="28" height="28" loading="lazy" alt="">RevenueCat</li>
-              <li><img src="assets/apple.svg" width="28" height="28" loading="lazy" alt="">Apple</li>
-              <li><img src="assets/vercel.svg" width="28" height="28" loading="lazy" alt="">Vercel</li>
-              <li><img src="assets/resend.svg" width="28" height="28" loading="lazy" alt="">Resend</li>
-              <li><img src="assets/ionos.svg" width="28" height="28" loading="lazy" alt="">IONOS</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section onboarding-section" aria-labelledby="onboarding-title">
       <div class="section-heading reveal"><p class="eyebrow">DEIN START. DEINE RICHTUNG.</p><h2 id="onboarding-title">So individuell<br><span class="muted">wie du.</span></h2><p>Dein Lernuniversum beginnt mit dir. Mit deinem Ziel, deiner Klasse und deinem Bundesland.</p></div>
       <div class="product-grid">
@@ -310,40 +285,38 @@
       </div>
     </section>
 
-    <section class="section story-section" id="geschichte" aria-labelledby="story-title">
-      <div class="story-run">
-        <div class="story-frame">
-          <div class="chapter-art" aria-hidden="true">
-            <div class="chapter-plate plate-first"><img src="assets/story/rocket.webp" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-name"><img src="assets/story/lenova.webp" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-build"><img src="assets/app-coding.png" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-orb"><img src="assets/orb.png" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-public"><img src="assets/chat-welcome.png" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-apply"><img src="assets/onboarding-rocket.png" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-community"><canvas data-galaxy="barred" aria-hidden="true"></canvas><img src="assets/orbit-ngc1300.webp" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-beta"><img src="assets/app-flashcards.png" loading="lazy" decoding="async" alt=""></div>
-            <div class="chapter-plate plate-launch"><img src="assets/story/rocket.webp" loading="lazy" decoding="async" alt=""></div>
-          </div>
-          <div class="story-text">
-            <h2 id="story-title">Von Lenova zu Novaire</h2>
-            <div class="story-guide" aria-hidden="true"><span></span><i></i></div>
-            <ol class="story-timeline">
-              <li data-chapter="first" class="chapter"><time datetime="2025-11-27">27.11.2025</time><div><h3>Die Idee.</h3><p>Der erste Gedanke an eine neue Art zu lernen.</p></div></li>
-              <li data-chapter="name" class="chapter"><time datetime="2025-11-28">28.11.2025</time><div><h3>Ein Name. Ein Logo. Eine Website.</h3><p>Wir beginnen zu bauen. Unser erster Name: Lenova.</p></div></li>
-              <li data-chapter="build" class="chapter"><time datetime="2025-12-09">09.12.2025</time><div><h3>Aus der Website wird eine App.</h3><p>Der Start der App-Entwicklung. Danach: testen, dazulernen und immer weiter optimieren.</p></div></li>
-              <li data-chapter="orb" class="chapter story-live"><time datetime="2026-04-23">23.04.2026</time><div><h3>Die Idee des Live Orbs.</h3><p>Unser erster großer Fortschritt: mit Nova sprechen und Erklärungen sichtbar machen.</p><span class="story-orb" aria-hidden="true"></span></div></li>
-              <li data-chapter="public" class="chapter"><time datetime="2026-10-10">10.10.2026</time><div><h3>Wir zeigen euch Novaire.</h3><p>Die ersten Einblicke in die App. Die ersten TikToks.</p></div></li>
-              <li data-chapter="apply" class="chapter"><time datetime="2026-10-15">15.10.2026</time><div><h3>Die Beta-Bewerbungen öffnen.</h3><p>Aus unserer Idee wird ein gemeinsamer Anfang.</p></div></li>
-              <li data-chapter="community" class="chapter story-milestone"><time datetime="2026-10-31">31.10.2026</time><div><h3>Die Bewerbungsrunde ist abgeschlossen.</h3><strong class="story-count">3.712</strong><p>Bewerbungen. Ein riesiges Danke.</p><span class="story-detail">Historischer Abschlussstand · 31. Oktober 2026</span></div></li>
-              <li data-chapter="beta" class="chapter"><time datetime="2026-11-07">07.11.2026</time><div><h3>Die Beta ist gestartet.</h3><p>Die ausgewählten Tester lernen jetzt mit Novaire. Euer Feedback gestaltet die nächsten Schritte mit.</p></div></li>
-              <li data-chapter="launch" class="chapter story-next"><time datetime="2026-11-27T18:00:00+01:00">27.11.2026</time><div><h3>Der Launch rückt näher.</h3><p>Der Start im App Store ist für den 27. November um 18 Uhr MEZ angekündigt.</p></div></li>
-            </ol>
-            <div class="chapter-controls" hidden>
-              <span class="chapter-count" aria-hidden="true" data-no-translate>01 / 09</span>
-              <button type="button" aria-label="Vorheriger Meilenstein"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#prev"/></svg></button>
-              <button type="button" aria-label="Nächster Meilenstein"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="assets/navigation.svg#next"/></svg></button>
-              <span class="sr-only" role="status" data-chapter-status></span>
-            </div>
+    <section class="section ai-section" id="intelligenz" aria-labelledby="ai-title">
+      <div class="section-heading reveal"><p class="eyebrow">INTELLIGENZ MIT EINER AUFGABE</p><h2 id="ai-title">Gute Modelle.<br><span class="muted">Für deine Fragen.</span></h2><p>Nova ist dein Gegenüber. Im Hintergrund unterstützen KI-Modelle unterschiedliche Lernaufgaben.</p></div>
+      <div class="table-scroll reveal" tabindex="0" role="region" aria-label="KI-Anbieter und Einsatzbereiche">
+        <table class="ai-table">
+          <caption class="sr-only">KI-Anbieter hinter Nova</caption>
+          <thead><tr><th scope="col">Anbieter</th><th scope="col">Modellfamilie</th><th scope="col">Wobei sie hilft</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><span class="provider"><img src="assets/openai.svg" alt="" width="30" height="30">OpenAI</span></th><td>GPT</td><td>Mathe, Bildverständnis und weitere Lernaufgaben.</td></tr>
+            <tr><th scope="row"><span class="provider"><img src="assets/anthropic.svg" alt="" width="30" height="30">Anthropic</span></th><td>Claude</td><td>Erklärungen, Struktur und das Aufbereiten von Lerninhalten.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fine-print">KI kann Fehler machen. Prüfe wichtige Antworten und Quellen.</p>
+    </section>
+
+    <section class="provider-band" id="anbieter" aria-labelledby="provider-title" data-showcase-motion>
+      <div class="provider-inner">
+        <div class="provider-heading"><h2 id="provider-title">Die Technologie hinter Novaire</h2></div>
+        <div class="provider-window">
+          <div class="provider-belt">
+            <ul class="provider-list" data-no-translate>
+              <li><img src="assets/openai.svg" width="28" height="28" loading="lazy" alt="">OpenAI</li>
+              <li><img src="assets/anthropic.svg" width="28" height="28" loading="lazy" alt="">Anthropic</li>
+              <li><img src="assets/elevenlabs.svg" width="28" height="28" loading="lazy" alt="">ElevenLabs</li>
+              <li><img src="assets/supabase.svg" width="28" height="28" loading="lazy" alt="">Supabase</li>
+              <li><img src="assets/google.svg" width="28" height="28" loading="lazy" alt="">Google</li>
+              <li><img src="assets/revenuecat.svg" width="28" height="28" loading="lazy" alt="">RevenueCat</li>
+              <li><img src="assets/apple.svg" width="28" height="28" loading="lazy" alt="">Apple</li>
+              <li><img src="assets/vercel.svg" width="28" height="28" loading="lazy" alt="">Vercel</li>
+              <li><img src="assets/resend.svg" width="28" height="28" loading="lazy" alt="">Resend</li>
+              <li><img src="assets/ionos.svg" width="28" height="28" loading="lazy" alt="">IONOS</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -352,47 +325,28 @@
     <section class="section growth-section" id="free-pro" aria-labelledby="growth-title">
       <div class="growth-copy">
         <h2 id="growth-title">Mehr Pro.<br><span class="muted">Mehr für Free.</span></h2>
-        <p>Mit jedem Pro-Abo wächst unser Spielraum für kostenlose Lernangebote. Was das bedeuten kann, kannst du hier durchspielen.</p>
-        <div class="peak-picker" hidden>
-          <label for="peak-month">Beispielmonat</label>
-          <select id="peak-month">
-            <option value="1">Monat 1</option>
-            <option value="2">Monat 2</option>
-            <option value="3">Monat 3</option>
-            <option value="4">Monat 4</option>
-            <option value="5">Monat 5</option>
-            <option value="6" selected>Monat 6</option>
-          </select>
-        </div>
+        <p>Mit jedem Pro-Abo wächst unser Spielraum für kostenlose Lernangebote. Ein Rechenbeispiel zeigt, was das bedeuten kann.</p>
       </div>
-      <div class="peak-pair">
-        <figure class="peak-card peak-pro" data-plan="pro" aria-labelledby="peak-pro-title">
-          <div class="peak-head"><h3 id="peak-pro-title">Pro</h3><span>Rechenbeispiel</span></div>
-          <svg class="peak-plot" viewBox="0 0 320 140" aria-hidden="true">
-            <path class="peak-path" pathLength="1" fill="none"/>
-            <circle class="peak-point" r="4.5" visibility="hidden"/>
-          </svg>
-          <figcaption><strong class="peak-number" data-no-translate>+40 %</strong><span>Pro-Einnahmen gegenüber dem Start</span></figcaption>
-        </figure>
-        <figure class="peak-card peak-free" data-plan="free" aria-labelledby="peak-free-title">
-          <div class="peak-head"><h3 id="peak-free-title">Free</h3><span>Rechenbeispiel</span></div>
-          <svg class="peak-plot" viewBox="0 0 320 140" aria-hidden="true">
-            <path class="peak-path" pathLength="1" fill="none"/>
-            <circle class="peak-point" r="4.5" visibility="hidden"/>
-          </svg>
-          <figcaption><strong class="peak-number" data-no-translate>+20 %</strong><span>Budget für kostenlose Lernangebote gegenüber dem Start</span></figcaption>
-        </figure>
-      </div>
+      <figure class="growth-figure">
+        <svg class="growth-plot" viewBox="0 0 640 260" aria-hidden="true">
+          <path class="growth-baseline" d="M24 236 H616"/>
+          <path class="growth-line growth-line-free" pathLength="1" d="M24 226 C 220 226, 380 172, 600 150"/>
+          <path class="growth-line growth-line-pro" pathLength="1" d="M24 226 C 220 226, 360 92, 600 62"/>
+          <text class="growth-label growth-label-pro" x="600" y="40" text-anchor="end">Pro +40 %</text>
+          <text class="growth-label growth-label-free" x="600" y="128" text-anchor="end">Free +20 %</text>
+        </svg>
+        <figcaption>Rechenbeispiel: Wächst Pro um 40 %, wächst das Budget für kostenlose Lernangebote um 20 %.</figcaption>
+      </figure>
       <details class="peak-method">
         <summary>Wie kommt das Beispiel zustande?</summary>
-        <p>Wir starten im Beispiel mit 1.000 € Pro-Einnahmen und 500 € Free-Budget. Von jedem zusätzlichen Euro aus Pro fließen hier 25 Cent in Free. So würden 400 € mehr Einnahmen das Free-Budget um 100 € erhöhen. Alle sechs Monate sind frei gewählte Beispiele.</p>
+        <p>Wir starten im Beispiel mit 1.000 € Pro-Einnahmen und 500 € Free-Budget. Von jedem zusätzlichen Euro aus Pro fließen hier 25 Cent in Free. So würden 400 € mehr Einnahmen das Free-Budget um 100 € erhöhen. Das Beispiel ist frei gewählt.</p>
       </details>
     </section>
 
     <section class="section plans-section" id="plaene" aria-labelledby="plans-title">
       <div class="section-heading reveal"><p class="eyebrow">ZUGANG &amp; PREISE</p><h2 id="plans-title">Starte mit Free.<br><span class="muted">Entscheide in deinem Tempo.</span></h2><p>Regelmäßig lernen, einen Tag fokussieren oder eine Präsentation erstellen. Du entscheidest, was du brauchst.</p></div>
       <div class="pricing-grid reveal">
-        <article class="pricing-card" aria-labelledby="price-pro-title">
+        <article class="pricing-card pricing-card-pro" aria-labelledby="price-pro-title">
           <h3 id="price-pro-title">Pro</h3>
           <p class="pricing-description">Dein Upgrade für regelmäßiges Lernen.</p>
           <div class="pricing-amount"><p class="pricing-value">9,99 €</p><p class="pricing-unit">pro Monat</p></div>
@@ -412,11 +366,64 @@
       <p class="fine-print pricing-disclaimer reveal">Geplante Preise zum App-Start. Leistungsumfang und Kaufbedingungen siehst du vor einem Kauf in der App. Auf dieser Website ist kein Kauf möglich.</p>
     </section>
 
+    <section class="section story-section" id="geschichte" aria-labelledby="story-title">
+      <div class="story-column">
+        <h2 id="story-title">Von Lenova zu Novaire</h2>
+        <ol class="story-timeline">
+          <li data-chapter="first" class="chapter"><time datetime="2025-11-27">27.11.2025</time><div><h3>Die Idee.</h3><p>Der erste Gedanke an eine neue Art zu lernen.</p></div></li>
+          <li data-chapter="name" class="chapter"><time datetime="2025-11-28">28.11.2025</time><div><h3>Ein Name. Ein Logo. Eine Website.</h3><p>Wir beginnen zu bauen. Unser erster Name: Lenova.</p></div></li>
+          <li data-chapter="build" class="chapter"><time datetime="2025-12-09">09.12.2025</time><div><h3>Aus der Website wird eine App.</h3><p>Der Start der App-Entwicklung. Danach: testen, dazulernen und immer weiter optimieren.</p></div></li>
+          <li data-chapter="orb" class="chapter story-live"><time datetime="2026-04-23">23.04.2026</time><div><h3>Die Idee des Live Orbs.</h3><p>Unser erster großer Fortschritt: mit Nova sprechen und Erklärungen sichtbar machen.</p></div></li>
+          <li data-chapter="public" class="chapter"><time datetime="2026-10-10">10.10.2026</time><div><h3>Wir zeigen euch Novaire.</h3><p>Die ersten Einblicke in die App. Die ersten TikToks.</p></div></li>
+          <li data-chapter="apply" class="chapter"><time datetime="2026-10-15">15.10.2026</time><div><h3>Die Beta-Bewerbungen öffnen.</h3><p>Aus unserer Idee wird ein gemeinsamer Anfang.</p></div></li>
+          <li data-chapter="community" class="chapter story-milestone"><time datetime="2026-10-31">31.10.2026</time><div><h3>Die Bewerbungsrunde ist abgeschlossen.</h3><strong class="story-count" data-count-to="3712" data-no-translate>3.712</strong><p>Bewerbungen. Ein riesiges Danke.</p><span class="story-detail">Historischer Abschlussstand · 31. Oktober 2026</span></div></li>
+          <li data-chapter="beta" class="chapter"><time datetime="2026-11-07">07.11.2026</time><div><h3>Die Beta ist gestartet.</h3><p>Die ausgewählten Tester lernen jetzt mit Novaire. Euer Feedback gestaltet die nächsten Schritte mit.</p></div></li>
+          <li data-chapter="launch" class="chapter story-next"><time datetime="2026-11-27T18:00:00+01:00">27.11.2026</time><div><h3>Der Launch rückt näher.</h3><p>Der Start im App Store ist für den 27. November um 18 Uhr MEZ angekündigt.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section launch-section" id="updates" aria-labelledby="updates-title">
+      <div class="launch-heading reveal"><div><p class="eyebrow">NOVAIRE / UPDATES</p><h2 id="updates-title">Der nächste Schritt.<br><span class="muted">Mit euch.</span></h2></div><p>Was gerade passiert.<br>Und was als Nächstes kommt.</p></div>
+      <div class="launch-grid">
+        <article class="launch-update reveal" aria-labelledby="beta-update-title">
+          <div class="launch-update-meta"><span class="launch-status"><span class="status-spark" aria-hidden="true"></span>BETA LIVE</span><time datetime="2026-11-07">7. November 2026</time></div>
+          <p class="launch-update-number" aria-hidden="true">01 / BETA</p>
+          <h3 id="beta-update-title">Die Beta ist gestartet.</h3>
+          <p>Unsere geschlossene Beta ist live. Die ausgewählten Tester probieren Novaire jetzt über TestFlight aus. Ihre Einladungen wurden per E-Mail verschickt. Mit eurem Feedback machen wir Novaire Schritt für Schritt besser.</p>
+          <a class="text-link" href="beta.html">Alles zur Beta <span aria-hidden="true">↗</span></a>
+        </article>
+        <div class="application-counter milestone-counter reveal" data-application-counter data-state="loading" aria-labelledby="application-count-label">
+          <div class="milestone-counter-top"><p class="eyebrow">EUER VERTRAUEN.</p><div class="application-count-topline"><span class="application-count-dot" aria-hidden="true"></span><span data-count-badge data-no-translate>BETA</span></div></div>
+          <div class="application-count-total" aria-live="polite" aria-atomic="true"><strong data-count-value data-no-translate>—</strong><span id="application-count-label">Bewerbungen für die Beta</span></div>
+          <p class="milestone-thanks">Hinter jeder Zahl steckt jemand, der mit uns lernen möchte. Danke, dass ihr Teil des Anfangs seid.</p>
+          <div class="milestone-counter-footer"><p class="application-count-status" data-count-status data-no-translate>Die aktuelle Anzahl wird geladen …</p><p class="application-count-note">Gesamtzahl der Bewerbungen — keine Anzeige freier Plätze.</p></div>
+          <noscript><p class="application-count-note">Aktiviere JavaScript, um die aktuelle Anzahl zu sehen.</p></noscript>
+        </div>
+      </div>
+      <div class="milestone-heading reveal"><h3>Schritt für Schritt.</h3><p>Unsere Meilensteine</p></div>
+      <ol class="launch-roadmap reveal" aria-label="Meilensteine auf dem Weg zum Start">
+        <li class="milestone-complete"><div class="milestone-track" aria-hidden="true"><span class="milestone-dot">✓</span></div><p class="milestone-state">ABGESCHLOSSEN</p><h4>Bewerbungsrunde</h4><p>Danke für jede einzelne Bewerbung.</p><time datetime="2026-10-30">30. Oktober 2026</time></li>
+        <li class="milestone-current" aria-current="step"><div class="milestone-track" aria-hidden="true"><span class="milestone-dot"></span></div><p class="milestone-state">JETZT LIVE</p><h4>Die erste Beta</h4><p>Gemeinsam testen. Ehrlich verbessern.</p><time datetime="2026-11-07">7. November 2026</time></li>
+        <li><div class="milestone-track" aria-hidden="true"><span class="milestone-dot"></span></div><p class="milestone-state">APP-START</p><h4>Novaire für iOS</h4><p>Dein Lernuniversum im App Store.</p><time class="milestone-detail" datetime="2026-11-27T18:00:00+01:00">27. November 2026 · 18:00 Uhr MEZ</time></li>
+      </ol>
+    </section>
+
     <section class="section beta-invitation reveal" aria-labelledby="beta-invitation-title">
       <p class="eyebrow">DER ANFANG GEHÖRT DIR.</p>
       <h2 id="beta-invitation-title">Ein Anfang.<br><span class="muted">Gemeinsam mit euch.</span></h2>
       <div class="beta-invitation-bottom"><p>Die geschlossene Beta ist gestartet. Für die erste Runde sind 100 Plätze vorgesehen. Ausgewählte Tester können jetzt loslegen — die Einladungen wurden per E-Mail verschickt. Die Bewerbungsrunde bleibt geschlossen.</p><a class="beta-button" href="beta.html">Zum Beta-Status <span aria-hidden="true">↗</span></a></div>
       <p class="fine-print">Die Bewerbungsfrist endete am 30. Oktober 2026. Eine Bewerbung ist noch keine Zusage.</p>
+    </section>
+
+    <section class="section community-section" id="community" aria-labelledby="community-title">
+      <div class="community-heading reveal"><div><p class="eyebrow">NAH DRAN. VON ANFANG AN.</p><h2 id="community-title">Die Geschichte<br><span class="muted">geht weiter.</span></h2></div><p>Neue Einblicke, kleine Fortschritte und die Menschen hinter Novaire. Folge uns und gestalte den Anfang mit.</p></div>
+      <ul class="social-orbs reveal">
+        <li><a class="social-orb social-instagram" href="https://www.instagram.com/novaireapp" target="_blank" rel="noopener noreferrer" aria-label="Novaire auf Instagram (neuer Tab)"><span class="social-fill" aria-hidden="true"></span><img src="assets/social-instagram.svg" width="26" height="26" alt=""><span class="social-name"><strong>Instagram</strong><span>@novaireapp</span></span></a></li>
+        <li><a class="social-orb social-tiktok" href="https://www.tiktok.com/@novaireapp" target="_blank" rel="noopener noreferrer" aria-label="Novaire auf TikTok (neuer Tab)"><span class="social-fill" aria-hidden="true"></span><img src="assets/social-tiktok.svg" width="26" height="26" alt=""><span class="social-name"><strong>TikTok</strong><span>@novaireapp</span></span></a></li>
+        <li><a class="social-orb social-discord" href="https://discord.gg/novaireai" target="_blank" rel="noopener noreferrer" aria-label="Novaire auf Discord (neuer Tab)"><span class="social-fill" aria-hidden="true"></span><img src="assets/social-discord.svg" width="26" height="26" alt=""><span class="social-name"><strong>Discord</strong><span>Unsere Community</span></span></a></li>
+      </ul>
+      <div class="business-contact reveal"><span>Geschäftliche Anfragen &amp; Kooperationen</span><a href="mailto:armin.brnicanin@novaireai.de">armin.brnicanin@novaireai.de <span aria-hidden="true">↗</span></a></div>
     </section>
 
     <section class="section closing reveal" id="start" aria-labelledby="start-title"><p class="eyebrow">DAS IST ERST DER ANFANG.</p><h2 id="start-title">Dein nächster<br><span class="heading-emphasis">Aha-Moment</span> wartet.</h2><p>Geplant für Deutschland, Österreich und die Schweiz.</p><ul class="launch-countries" aria-label="Geplante Länder"><li>Deutschland</li><li>Österreich</li><li>Schweiz</li></ul><div class="platform-roadmap"><div><span class="platform-status"><span class="status-dot" aria-hidden="true"></span>iOS · In Vorbereitung</span><p>27. November 2026 · 18:00 Uhr MEZ</p></div><div><span class="platform-status">Android folgt.</span><p>Geplant · Ein Termin steht noch nicht fest.</p></div></div><a class="text-link" href="support.html">Du hast eine Frage? <span aria-hidden="true">↗</span></a></section>
