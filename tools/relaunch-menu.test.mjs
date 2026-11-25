@@ -68,7 +68,7 @@ test('#site-panel holds every old menu link with its label, plus Features, reada
 test('every visible header string and label has an English entry', async () => {
   const header = headerOf(await read('index.html'));
   const texts = [...header.matchAll(/>([^<>]+)</g)].map((m) => m[1].replace(/&amp;/g, '&').trim())
-    .filter((text) => text && !['↗', 'EN', 'NOVAIRE', 'Features', 'Community', 'Support', 'AGB'].includes(text));
+    .filter((text) => text && !['↗', 'EN', 'Novaire', 'Features', 'Community', 'Support', 'AGB'].includes(text));
   const labels = [...header.matchAll(/aria-label="([^"]+)"/g)].map((m) => m[1]);
   for (const text of [...texts, ...labels, 'Menü schließen']) {
     assert.notEqual(translate(text, 'en'), text, `Missing translation: ${text}`);

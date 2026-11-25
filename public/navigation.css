@@ -40,7 +40,7 @@
   grid-column: 1; justify-self: start;
   position: static; transform: none;
   display: inline-flex; align-items: center; min-height: 44px;
-  font-size: 13px; font-weight: 600; letter-spacing: .34em; white-space: nowrap; color: #f5f5f7;
+  font-size: 20px; font-weight: 600; letter-spacing: -.03em; white-space: nowrap; color: #f5f5f7;
 }
 
 .site-header[data-topbar] .topbar-links { grid-column: 2; justify-self: center; display: flex; align-items: center; }
@@ -129,7 +129,7 @@
 
 @media (pointer: coarse) { .site-header[data-topbar] .site-panel-group a { min-height: 44px; } }
 @media (max-width: 700px) {
-  .marketing-page .site-header[data-topbar] .header-wordmark { display: inline-flex; font-size: 12px; letter-spacing: .26em; }
+  .marketing-page .site-header[data-topbar] .header-wordmark { display: inline-flex; font-size: 19px; letter-spacing: -.03em; }
   .site-header[data-topbar] .header-actions { gap: 6px; }
   .site-header[data-topbar] .site-panel-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 16px; padding: 20px var(--gutter) 32px; }
   .site-header[data-topbar] .site-panel-primary { grid-column: 1 / -1; }

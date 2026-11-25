@@ -72,7 +72,7 @@ h2 { font-weight: 600; letter-spacing: -.042em; }
   height: 84px; border-bottom-color: transparent; background: transparent;
   backdrop-filter: none; -webkit-backdrop-filter: none;
 }
-.header-wordmark { font-size: 13px; font-weight: 600; letter-spacing: .34em; }
+.header-wordmark, .footer-wordmark { font-size: 20px; font-weight: 600; letter-spacing: -.03em; }
 .header-link, .menu summary { font-size: 13px; }
 .marketing-page .header-link { transition: color var(--quick) var(--out), filter 160ms ease, opacity 160ms ease; }
 .marketing-page .header-link:hover { color: #fff; }
