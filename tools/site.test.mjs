@@ -449,7 +449,7 @@ test('updated legal and support copy has the current publication date', async ()
   for (const filename of ['datenschutz.html', 'impressum.html', 'agb.html', 'support.html']) {
     const source = await readFile(path.join(root, filename), 'utf8');
     const date = source.match(/<p class="updated">Novaire · Stand ([^<]+)<\/p>/)?.[1];
-    assert.equal(date, filename === 'support.html' ? '7. November 2026' : '3. November 2026', filename);
+    assert.equal(date, filename === 'support.html' ? '7. November 2026' : filename === 'datenschutz.html' ? '26. November 2026' : '3. November 2026', filename);
   }
 });
 test('only the two exact beta endpoints are reachable; no keys or trackers', async () => {
@@ -568,7 +568,7 @@ test('expired beta stays closed without reopening the campaign or changing its d
 });
 test('parents receive scoped consent, secure transport facts and an actionable deletion guide', async () => {
   const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
-  assert.match(privacy, /3\. November 2026/);
+  assert.match(privacy, /26\. November 2026/);
   assert.match(privacy, /Art\. 8/);
   assert.match(privacy, /unter 16/);
   assert.match(privacy, /HTTPS.*TLS|TLS.*HTTPS/);
@@ -584,4 +584,24 @@ test('parents receive scoped consent, secure transport facts and an actionable d
   assert.doesNotMatch(box, /sofort vollständig|garantiert|ausnahmslos/);
   const css = await readFile(path.join(root, 'styles.css'), 'utf8');
   assert.match(css, /\.legal-main \.privacy-delete-box\{[^}]*border:0;[^}]*background:transparent;box-shadow:none/);
+});
+
+test('privacy names every provider the app uses, matching the in-app consent (26.11.2026)', async () => {
+  const privacy = await readFile(path.join(root, 'datenschutz.html'), 'utf8');
+  const list = privacy.match(/<ul class="privacy-providers privacy-app-providers">([\s\S]*?)<\/ul>/)?.[1];
+  assert.ok(list, 'the app has its own provider list');
+  for (const [name, url] of [
+    ['OpenAI', 'https://openai.com/policies/privacy-policy/'],
+    ['Anthropic', 'https://www.anthropic.com/legal/privacy'],
+    ['Tavily', 'https://tavily.com/privacy'],
+    ['ElevenLabs', 'https://elevenlabs.io/privacy-policy'],
+    ['Google Firebase', 'https://firebase.google.com/support/privacy'],
+    ['RevenueCat', 'https://www.revenuecat.com/privacy/'],
+  ]) {
+    assert.ok(list.includes(`<h3>${name} <span>`), name);
+    assert.ok(list.includes(`href="${url}"`), `${name}: privacy link`);
+  }
+  assert.match(list, /nur, wenn du ab 16 Jahren ausdrücklich zustimmst/);
+  assert.match(privacy, /Lern-Erinnerungen plant die App nur auf deinem Gerät/);
+  assert.match(privacy, /Schreibstil/);
 });
