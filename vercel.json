@@ -90,6 +90,15 @@
       ]
     },
     {
+      "source": "/.well-known/security.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
+    },
+    {
       "source": "/admin/:path*",
       "headers": [
         {
@@ -117,7 +126,7 @@
   ],
   "redirects": [
     {
-      "source": "/:path((?!(?:freunde|podcast)(?:/|$)|\\.well-known/apple-app-site-association$).*)",
+      "source": "/:path((?!(?:freunde|podcast)(?:/|$)|\\.well-known/apple-app-site-association$|\\.well-known/security\\.txt$).*)",
       "has": [
         {
           "type": "host",

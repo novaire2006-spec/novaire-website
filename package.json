@@ -6,6 +6,6 @@
   "scripts": {
     "build": "node tools/build.mjs",
     "preview": "node tools/serve.mjs",
-    "test": "node --test tools/site.test.mjs tools/beta-core.test.mjs tools/i18n.test.mjs tools/application-count.test.mjs tools/media-server.test.mjs tools/app-videos.test.mjs tools/launch-countdown.test.mjs tools/podcast-link.test.mjs tools/relaunch-*.test.mjs tools/admin-dashboard.test.mjs"
+    "test": "node --test tools/site.test.mjs tools/beta-core.test.mjs tools/i18n.test.mjs tools/application-count.test.mjs tools/media-server.test.mjs tools/app-videos.test.mjs tools/launch-countdown.test.mjs tools/podcast-link.test.mjs tools/relaunch-*.test.mjs tools/admin-dashboard.test.mjs tools/security-txt.test.mjs"
   }
 }
