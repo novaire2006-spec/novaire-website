@@ -40,7 +40,7 @@ export async function callRpc(fetchImpl, token, name, params = {}) {
 const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : Number.isFinite(Number(v)) && v !== null && v !== '' ? Number(v) : null);
 
 /** Green, yellow or red, with the reasons in plain German. */
-export function trafficLight({ overview = {}, errors = {} } = {}) {
+export function trafficLight({ overview = {}, business = {}, errors = {} } = {}) {
   const kpis = overview.kpis ?? {};
   const cost = overview.ai_cost ?? {};
   const red = [], yellow = [];
@@ -49,6 +49,8 @@ export function trafficLight({ overview = {}, errors = {} } = {}) {
   if (used !== null && used > 80) red.push(`KI-Kosten heute bei ${Math.round(used)} % der Tagesgrenze`);
   const today = num(errors.today) ?? 0, avg = num(errors.avg_7d) ?? 0;
   if (today >= 5 && today > 3 * avg) red.push(`Viele Fehler heute (${today})`);
+  const stale = num(business?.reports_stale) ?? 0;
+  if (stale > 0) red.push(`${stale} Meldungen seit über 24 Stunden offen`);
   if ((num(kpis.reports_open) ?? 0) > 0) yellow.push(`${kpis.reports_open} offene Meldungen`);
   if ((num(kpis.feedback_new) ?? 0) > 0) yellow.push(`${kpis.feedback_new} neues Feedback`);
   if (red.length) return { level: 'red', reasons: [...red, ...yellow] };

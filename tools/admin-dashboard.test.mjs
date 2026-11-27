@@ -114,3 +114,28 @@ test('the demo data only loads on this computer', async () => {
   const src = await read('public/admin/admin.js');
   assert.match(src, /location\.hostname === '127\.0\.0\.1'/);
 });
+
+test('traffic light: red when a report waits longer than 24 hours', () => {
+  const s = structuredClone(calm); s.business = { reports_stale: 1 };
+  const r = core.trafficLight(s);
+  assert.equal(r.level, 'red');
+  assert.ok(r.reasons.some((x) => x.includes('24')));
+});
+
+test('signing out empties every section and the board waits for a first answer', async () => {
+  const src = await read('public/admin/admin.js');
+  const logout = src.slice(src.indexOf('function logout('), src.indexOf('async function load('));
+  for (const id of ['kpis', 'series', 'money', 'retention', 'business', 'errors', 'feedback']) {
+    assert.match(logout, new RegExp(`'${id}'`), `logout clears #${id}`);
+  }
+  // A load that was started by an older session never renders.
+  assert.match(src, /if \(session !== started\) return/);
+  // The board shows only after the first successful load.
+  const submit = src.slice(src.indexOf("addEventListener('submit'"));
+  assert.doesNotMatch(submit.slice(0, submit.indexOf('await load()')), /show\('board'\)/);
+});
+
+test('no sync-based subscription numbers on the page', async () => {
+  const src = await read('public/admin/admin.js');
+  assert.doesNotMatch(src, /subs\.new_7d|subs\.new_30d|ended_30d/);
+});

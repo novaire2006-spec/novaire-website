@@ -47,14 +47,20 @@ function logout(message = '') {
   session = null;
   clearInterval(timer); timer = null;
   $('password').value = '';
+  // Nothing of the last session stays in the page.
+  for (const id of ['kpis', 'series', 'money', 'retention', 'business', 'errors', 'feedback']) $(id).replaceChildren();
+  $('light-text').textContent = 'Lädt …';
+  delete $('light').dataset.level;
+  boardError('');
   show('login');
   loginError(message);
 }
 
 async function load() {
-  if (!session) return;
-  if (Date.now() > session.expiresAt - 30_000) return logout('Bitte melde dich neu an.');
-  const rpc = (name, params) => callRpc(fetchImpl, session.token, name, params);
+  if (!session) return false;
+  if (Date.now() > session.expiresAt - 30_000) { logout('Bitte melde dich neu an.'); return false; }
+  const started = session;
+  const rpc = (name, params) => callRpc(fetchImpl, started.token, name, params);
   try {
     const [overview, business, errors, feedback] = await Promise.all([
       rpc('admin_dashboard_overview'),
@@ -62,12 +68,17 @@ async function load() {
       rpc('admin_dashboard_errors', { p_days: 7 }),
       rpc('admin_dashboard_feedback', { p_limit: 20 }),
     ]);
+    // Signed out (or someone else signed in) while this was loading.
+    if (session !== started) return false;
     boardError('');
     render({ overview, business, errors, feedback });
+    return true;
   } catch (e) {
-    if (e.message === 'expired') return logout('Bitte melde dich neu an.');
-    if (e.message === 'forbidden') return logout('Kein Zugriff. Dieses Konto ist kein Admin.');
+    if (session !== started) return false;
+    if (e.message === 'expired') { logout('Bitte melde dich neu an.'); return false; }
+    if (e.message === 'forbidden') { logout('Kein Zugriff. Dieses Konto ist kein Admin.'); return false; }
     boardError(e.message === 'offline' ? 'Keine Verbindung. Die Zahlen sind vom letzten Abruf.' : 'Abruf hat nicht geklappt. Es wird gleich erneut versucht.');
+    return !$('kpis').children.length ? false : true;
   }
 }
 
@@ -106,7 +117,7 @@ function render(d) {
     row('KI-Kosten Monat', usd(k.ai_usd_month), `ca. ${euro(costMonthEur)}`),
     el('div', { class: `result ${result >= 0 ? 'plus' : 'minus'}` },
       el('span', { text: 'Ergebnis Monat' }), el('strong', { text: euro(result) })),
-    row('Heute: Umsatz / KI', `${euro(rev.gross_today_eur)} / ${usd(k.ai_usd_today)}`),
+    row('Heute: Einzelkäufe / KI', `${euro(rev.gross_today_eur)} / ${usd(k.ai_usd_today)}`),
     row('Tagesgrenze KI genutzt', pct(cost.day_used_pct)));
 
   const f = b.funnel ?? {}, r = b.retention ?? {};
@@ -129,8 +140,6 @@ function render(d) {
   fill('business',
     row('Pro monatlich', int(subs.active_monthly)),
     row('Pro jährlich', int(subs.active_yearly)),
-    row('Neu in 7 / 30 Tagen', `${int(subs.new_7d)} / ${int(subs.new_30d)}`),
-    row('Beendet in 30 Tagen', int(subs.ended_30d)),
     row('24h-Pässe diesen Monat', int(one.pass_month), `${int(one.pass_total)} gesamt`),
     row('Präsentationen diesen Monat', int(one.presentation_month), `${int(one.presentation_total)} gesamt`),
     row('Wiederkehrend pro Monat', euro(rev.mrr_eur)));
@@ -202,8 +211,12 @@ $('login-form').addEventListener('submit', async (ev) => {
   try {
     session = await signIn(fetchImpl, $('email').value.trim(), $('password').value);
     $('password').value = '';
+    // The board appears only once the server has answered as for an admin.
+    if (!await load()) {
+      if (session) { session = null; loginError('Abruf hat nicht geklappt. Bitte versuch es gleich noch einmal.'); }
+      return;
+    }
     show('board');
-    await load();
     clearInterval(timer);
     timer = setInterval(() => { if (document.visibilityState === 'visible') load(); }, 60_000);
   } catch (e) {
